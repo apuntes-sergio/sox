@@ -1,0 +1,66 @@
+# mkdocs.yml
+# Configuración de MkDocs para el sitio de Apuntes Sistemas Operativos en Red
+site_name: Apuntes Sistemas Operativos en Red
+site_url: https://sergio-apuntes.github.io/sox/
+
+
+theme:
+  name: material
+  language: es
+  features:
+    - navigation.indexes
+    - navigation.instant
+    - navigation.instant.progress
+    - toc.follow
+    - navigation.top              # Muestra el botón para volver al principio
+    - content.code.copy           # Botón de copiar en bloques de código
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - attr_list
+  - md_in_html
+  # los siguientes son para los bloques de código
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+  # Tabs para códigos de dos lenguajes o más
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true  
+
+
+plugins:
+  - search
+  - glightbox
+
+
+nav:
+  - Presentación: 
+    - index.md
+
+  - UD01 Introducción a los Sistemas Operativos de Servidor:
+    - 01_1_introducción.md
+    - 01_2_arquitectura_cliente_servidor.md
+    - 01_3_funciones_SO.md
+    - 01_4_sistemas_operativos_servidor.md
+  
+  - UD02 Instalación de sistemas operativos de servidor privativos:
+    - 02_1_instalacion_SO_introduccion.md
+    - 02_2_instalacion_windows_server.md
+
+
+
+
+    
+    
