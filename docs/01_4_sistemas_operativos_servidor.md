@@ -64,12 +64,12 @@ Windows Server utiliza un modelo de **dominio**, que agrupa equipos cliente y se
 #### Tipos de servidores en el dominio
 
 1. **Controladores de dominio**  
-   - Gestionan el Directorio Activo  
-   - Controlan usuarios, equipos y políticas de seguridad
+    - Gestionan el Directorio Activo  
+    - Controlan usuarios, equipos y políticas de seguridad
 
 2. **Servidores de servicios**  
-   - Ofrecen funciones específicas como impresión, almacenamiento o aplicaciones  
-   - Pueden coexistir con los controladores de dominio o ser independientes
+    - Ofrecen funciones específicas como impresión, almacenamiento o aplicaciones  
+    - Pueden coexistir con los controladores de dominio o ser independientes
 
 ### Coste de licencias
 
@@ -84,7 +84,81 @@ El uso de Windows Server implica dos tipos de licencias:
 
 
 
+## Ediciones de Microsoft Windows (11) para equipos cliente.
 
+Windows 11 está disponible en varias **ediciones** diseñadas para distintos tipos de usuarios y entornos, desde uso doméstico hasta grandes organizaciones. Aquí tienes un resumen actualizado de las principales versiones de Windows 11 y sus características clave:
+
+### Ediciones principales de Windows 11
+
+| Versión                         | Público objetivo           | Características destacadas |
+|--------------------------------|----------------------------|-----------------------------|
+| **Windows 11 Home**            | Usuarios domésticos        | Interfaz moderna, apps básicas, sin unión a dominio |
+| **Windows 11 Pro**             | Profesionales y PYMEs      | Unión a dominio, BitLocker, Hyper-V, políticas de grupo |
+| **Windows 11 Enterprise**      | Grandes empresas           | Seguridad avanzada, control granular, AppLocker, DirectAccess |
+| **Windows 11 Education**       | Centros educativos         | Similar a Enterprise, adaptado a entornos académicos |
+| **Windows 11 SE**              | Educación básica (equipos low-cost) | Simplificado, optimizado para dispositivos con pocos recursos |
+| **Windows 11 Pro for Workstations** | Estaciones de trabajo | Soporte para hardware avanzado, sistema de archivos ReFS, memoria persistente |
+| **Windows 11 IoT Enterprise**  | Dispositivos industriales  | Personalización profunda, soporte extendido, sin interfaz gráfica por defecto |
+
+!!!info "Versiones por actualización"
+
+    Microsoft publica actualizaciones anuales con mejoras de seguridad y nuevas funciones. Las más recientes son:
+
+    - **Windows 11 24H2** (octubre 2024): versión estable actual, con soporte hasta 2026 para ediciones Home y Pro, y hasta 2027 para Enterprise y Education.
+    - **Windows 11 25H2** (prevista para finales de 2025): actualmente en vista previa, incluye mejoras menores, eliminación de herramientas obsoletas como PowerShell 2.0 y WMIC, y más control sobre apps preinstaladas.
+
+
+### Características principales ediciones principales de Windows 11
+
+**Windows 11** se distribuye en distintas ediciones, cada una diseñada para un tipo de usuario o entorno. En contextos empresariales, especialmente cuando se trabaja con redes gestionadas mediante dominios, no todas las ediciones son válidas. A continuación se explican las principales licencias disponibles y cuáles son aptas para entornos corporativos.
+
+#### Windows 11 Home
+- Pensada para uso doméstico.
+- Incluye funciones básicas como Microsoft Store, Cortana, y sincronización con OneDrive.
+- **Limitaciones importantes**:
+    - No permite unirse a un dominio de Active Directory.
+    - No incluye herramientas de administración como políticas de grupo (Group Policy).
+    - No tiene soporte para Hyper-V ni BitLocker completo.
+
+#### Windows 11 Pro
+- Dirigida a profesionales y pequeñas empresas.
+- Incluye todas las funciones de la edición Home, además de:
+    - **Unión a dominios locales (Active Directory) y en la nube (Azure AD)**
+    - BitLocker para cifrado de disco
+    - Hyper-V para virtualización
+    - Políticas de grupo
+    - Escritorio remoto como host
+    - Windows Update for Business
+
+#### Windows 11 Enterprise
+- Pensada para grandes organizaciones.
+- Se distribuye mediante licencias por volumen o suscripciones (Microsoft 365 E3/E5).
+- Incluye todo lo de la edición Pro, más:
+    - Seguridad avanzada (Credential Guard, AppLocker, Windows Defender Application Control)
+    - Control granular de dispositivos y aplicaciones
+    - DirectAccess y gestión remota avanzada
+    - Integración con herramientas de virtualización y administración centralizada
+
+#### Comparativa rápida
+
+| Edición           | Uso recomendado        | ¿Puede unirse a dominio? | Características clave                    |
+|-------------------|------------------------|---------------------------|------------------------------------------|
+| Windows 11 Home   | Uso doméstico          | ❌ No                     | Básico, sin gestión centralizada         |
+| Windows 11 Pro    | PYMEs y profesionales  | ✅ Sí                     | BitLocker, políticas de grupo, Hyper-V   |
+| Windows 11 Enterprise | Empresas grandes   | ✅ Sí                     | Seguridad avanzada, control granular     |
+
+!!!Note "Windows Home no sirve en entornos empresariales"
+
+    Las redes empresariales suelen estar basadas en **dominios**, gestionados por servidores con Active Directory. Esto permite:
+
+    - Autenticación centralizada de usuarios
+    - Aplicación de políticas de seguridad
+    - Control de acceso a recursos compartidos
+    - Administración remota de equipos
+
+    La edición **Home** no incluye el cliente de dominio ni las herramientas necesarias para integrarse en este tipo de redes. Por tanto, **solo las ediciones Pro y Enterprise** permiten que un equipo se una a un dominio y sea gestionado de forma centralizada.
+
+---
 
 ## Sistemas Operativos de Red Linux
 
