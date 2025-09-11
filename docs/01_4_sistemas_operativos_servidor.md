@@ -149,14 +149,14 @@ Windows 11 está disponible en varias **ediciones** diseñadas para distintos ti
 
 !!!Note "Windows Home no sirve en entornos empresariales"
 
-    Las redes empresariales suelen estar basadas en **dominios**, gestionados por servidores con Active Directory. Esto permite:
+  Las redes empresariales suelen estar basadas en **dominios**, gestionados por servidores con Active Directory. Esto permite:
 
-    - Autenticación centralizada de usuarios
-    - Aplicación de políticas de seguridad
-    - Control de acceso a recursos compartidos
-    - Administración remota de equipos
+  - Autenticación centralizada de usuarios
+  - Aplicación de políticas de seguridad
+  - Control de acceso a recursos compartidos
+  - Administración remota de equipos
 
-    La edición **Home** no incluye el cliente de dominio ni las herramientas necesarias para integrarse en este tipo de redes. Por tanto, **solo las ediciones Pro y Enterprise** permiten que un equipo se una a un dominio y sea gestionado de forma centralizada.
+  La edición **Home** no incluye el cliente de dominio ni las herramientas necesarias para integrarse en este tipo de redes. Por tanto, **solo las ediciones Pro y Enterprise** permiten que un equipo se una a un dominio y sea gestionado de forma centralizada.
 
 ---
 

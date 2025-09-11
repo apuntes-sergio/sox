@@ -58,6 +58,10 @@ nav:
   - UD02 Instalación de sistemas operativos de servidor privativos:
     - 02_1_instalacion_SO_introduccion.md
     - 02_2_instalacion_windows_server.md
+    - 02_3_config_basica.md
+    - 02_4_documentar_instalacion.md
+    - 02_5_administrar_discos.md
+    - 02_6_dominio.md
 
 
 

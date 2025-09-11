@@ -75,7 +75,7 @@ Las versiones más comunes de Windows Server son:
 Lo habitual es instalar la versión más reciente disponible, siempre que sea compatible con el hardware y el software que vamos a utilizar. Sin embargo, también es importante elegir la **edición adecuada** dentro de cada versión (Standard, Datacenter, Essentials, etc.), ya que cada una ofrece características distintas y precios diferentes.
 
 <figure markdown="span" align="center">
-  ![Image title](./imgs/intro/Pantalla-de-instalacion-de-Windows-Server-2025-1.png){ width="70%"}
+  ![Image title](./imgs/instalacion/Pantalla-de-instalacion-de-Windows-Server-2025-1.png){ width="70%"}
   <figcaption>Windows Server 2025 selección de versión</figcaption>
 </figure>
 
@@ -217,7 +217,7 @@ Desde el panel **Administrador del servidor → Servidor local**, realizamos las
 En servidores, lo habitual es utilizar **direcciones IP estáticas**, ya que suelen actuar como servidores DHCP para los clientes. Si no se ha hecho durante la instalación, ahora es el momento de asignar las IPs correspondientes a cada tarjeta de red.
 
 <figure markdown="span" align="center">
-  ![Image title](./imgs/intro/ConexionesDeRed.png){ width="80%"}
+  ![Image title](./imgs/instalacion/ConexionesDeRed.png){ width="80%"}
   <figcaption>Panel de control. Conexiones de Red</figcaption>
 </figure>
 
@@ -257,7 +257,7 @@ Por ello, muchos administradores prefieren que las actualizaciones se **descargu
 Desde el Administrador del servidor (en modo gráfico) o mediante PowerShell, podemos **agregar o quitar roles y características**:
 
 <figure markdown="span" align="center">
-  ![Image title](./imgs/intro/WindowsServerRolesCaracgaristicas.png){ width="70%"}
+  ![Image title](./imgs/instalacion/WindowsServerRolesCaracgaristicas.png){ width="70%"}
   <figcaption>Agregar roles y características</figcaption>
 </figure>
 
@@ -274,7 +274,7 @@ Si hemos instalado una versión de evaluación de Windows Server, podemos consul
 slmgr.vbs -dli
 ```
 <figure markdown="span" align="center">
-  ![Image title](./imgs/intro/WindowsServerPeriodoPrueba.png){ width="70%"}
+  ![Image title](./imgs/instalacion/WindowsServerPeriodoPrueba.png){ width="70%"}
   <figcaption>Agregar roles y características</figcaption>
 </figure>
 
@@ -296,7 +296,7 @@ slmgr.vbs -rearm
 Cuando instalamos **Windows Server sin entorno gráfico (Server Core)**, la configuración debe realizarse desde la terminal. Al iniciar el sistema, se abre automáticamente la herramienta **`sconfig`**, que permite configurar de forma sencilla aspectos básicos como el nombre del equipo, la red, el dominio, actualizaciones, etc.
 
 <figure markdown="span" align="center">
-  ![Image title](./imgs/intro/ServerCore.png){ width="80%"}
+  ![Image title](./imgs/instalacion/ServerCore.png){ width="80%"}
   <figcaption>Server Core. Configuración con sconfig</figcaption>
 </figure>
 
