@@ -77,11 +77,21 @@ Sin DNS, los usuarios tendrían que recordar y escribir direcciones IP para acce
 En redes locales, se puede usar:
 
 - Un DNS público (como `8.8.8.8` de Google)
-- Un DNS interno (si hay un servidor de dominio)
+- **Un DNS interno** (si hay un servidor de dominio)
+
+!!!importante 
+
+    Debemos tener claro quien es el DNS de nuestro sistemas, ya que no es lo mismo traducir nombres asociados a internet que traducir nombres asociados a un dominio. Si tengo el nombre de un equipo y quiero obtener cual es su dirección IP, entonces el servidor DNS será el servidor de la red, ya que por ejemplo el servidor de google, no sabrá quien es ese equipo.
+
+    De la misma forma, debemos saber que cuando ponemos como DNS nuestro router, este tiene configurado un DNS internamente, normalmente proporcionado por el IPS ( *Internet Service Provider* )
 
 Más información: [Qué es el DNS y cómo funciona](https://www.redeszone.net/tutoriales/redes-lan/que-es-dns/)
 
-## Configuración básica de red local (sin dominio)
+## Configuración básica de red local
+
+Vamos a ver ejemplos de cómo se configura un equipo, para ello veremos la diferencia que hay al configurar un equipo dentro de una red local domestica y un equipo que se encuentra dentro de una red local controlada por un dominio.
+
+### Red local domestica (sin dominio)
 
 Cuando no hay un dominio, cada equipo se gestiona de forma independiente. La red puede funcionar con IPs estáticas o dinámicas (DHCP), pero no hay control centralizado de usuarios ni políticas.
 
@@ -98,7 +108,7 @@ Cuando no hay un dominio, cada equipo se gestiona de forma independiente. La red
 
     En este caso, cada equipo se configura manualmente o por DHCP del router, y los usuarios se gestionan localmente en cada máquina.
 
-## Red local dentro de un dominio
+### Red local dentro de un dominio
 
 Cuando la red está **dentro de un dominio**, hay un **servidor central** (Controlador de Dominio) que gestiona usuarios, equipos y recursos. Este servidor usa **Active Directory** para organizar todo.
 
@@ -115,7 +125,7 @@ Cuando la red está **dentro de un dominio**, hay un **servidor central** (Contr
 
 Una vez comprendidos los conceptos fundamentales de redes (IP, máscara de subred, puerta de enlace, DNS...), es momento de aplicar ese conocimiento en un caso práctico: el diseño de una red local para unas oficinas.
 
-### ¿Qué vamos a representar?
+### Elementos básicos de un diagrama de red
 
 El objetivo es crear un **diagrama de red** que refleje cómo se conectan los distintos dispositivos de una oficina. Este diagrama debe incluir:
 
@@ -135,7 +145,7 @@ Cada dispositivo debe estar identificado con:
 
     Es buena práctica reservar rangos para cada tipo de departamento. Por ejemplo, del `.1` al `.20` para infraestructura, del `.50` al `.60` para PCs de un departamento... , y del `.200` en adelante para periféricos.
 
-### ¿Cómo hacer el diagrama?
+### Herramientas y recomendaciones de uso.
 
 Puedes usar herramientas como **draw.io**, **Lucidchart**, o incluso papel y lápiz. Lo importante es que el diagrama sea claro y represente:
 
