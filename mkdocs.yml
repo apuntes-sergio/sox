@@ -54,7 +54,7 @@ nav:
     - 01_2_arquitectura_cliente_servidor.md
     - 01_3_funciones_SO.md
     - 01_4_sistemas_operativos_servidor.md
-  
+    - 01_5_recordatorio_red.md
   - UD02 Instalación de sistemas operativos de servidor privativos:
     - 02_1_instalacion_SO_introduccion.md
     - 02_2_instalacion_windows_server.md
