@@ -60,8 +60,13 @@ Todos los equipos de la red deben tener configurada la misma puerta de enlace pa
 
     Si el router tiene la IP `192.168.1.1`, esa será la puerta de enlace para todos los dispositivos.
 
-Más información:  
-[Puerta de enlace predeterminada](https://www.redeszone.net/tutoriales/redes-lan/puerta-enlace/)
+Todo esto quiere decir que **si un equipo no queremos que se conecte a internet o a otras redes** que se encuentren fuera del alcance definido por su máscara, entonces simplemente **dejamos la puerta de enlace en blanco**.
+
+!!!Tip
+
+    Los equipos destinados a producción que no queremos que accedan a internet para evitar cualquier tipo de *malware*, los dejamos sin GW.
+
+Más información: [Puerta de enlace predeterminada](https://www.redeszone.net/tutoriales/redes-lan/puerta-enlace/)
 
 ### Servidor DNS
 
