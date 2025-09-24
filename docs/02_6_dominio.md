@@ -3,10 +3,6 @@ title: Active Directory
 description:  Instalar un dominio o Active Directory en Windows Server
 ---
 
-Perfecto, Sergio. Aquí tienes el texto actualizado con el dominio **iesconsueloaranda.es** y las versiones más recientes de **Windows Server 2022** y **Windows Server 2025** incluidas. También he ajustado y ampliado algunos conceptos para que la explicación sea más completa y actual:
-
----
-
 # Administración centralizada de redes con Active Directory
 
 En la actualidad, los ordenadores de cualquier organización suelen estar conectados en red, lo que permite compartir información, recursos y servicios de forma eficiente. Esta conectividad, sin embargo, requiere una administración adecuada para garantizar la seguridad, el rendimiento y la disponibilidad de los sistemas.

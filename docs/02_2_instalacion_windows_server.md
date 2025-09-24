@@ -3,12 +3,6 @@ title: Instalación de Windows Server
 description:  Instalación de sistemas operativos de servidor privativos - Windows Server
 ---
 
-## Introducción a la instalación de un sistema operativos
-
-Antes de comenzar la instalación debemos respondernos varios preguntas: 
-
-### ¿Por qué es fundamental el sistema operativo?
-
 El **sistema operativo (SO)** es el componente esencial que permite que el hardware de un equipo funcione correctamente y que el usuario pueda interactuar con él. La elección del sistema operativo influye directamente en:
 
 - La **compatibilidad con el software** disponible  
@@ -21,7 +15,7 @@ El **sistema operativo (SO)** es el componente esencial que permite que el hardw
     Ejemplo: Un sistema operativo ligero como Linux puede aprovechar mejor recursos limitados, mientras que Windows ofrece mayor compatibilidad con software comercial.
 
 
-### Elección del sistema operativo
+## Elección del sistema operativo
 
 Cambiar de sistema operativo no es una tarea trivial. Implica:
 
@@ -46,7 +40,7 @@ Antes de instalar un sistema operativo, hay que evaluar cuidadosamente el equipo
     Instalar un sistema en un equipo con recursos limitados puede provocar lentitud, errores o incluso fallos de instalación.
 
 
-## Planificación de la instalación
+### Planificación de la instalación
 
 Una vez elegido el sistema operativo, especialmente en entornos de servidor, es fundamental **planificar la instalación**:
 
@@ -200,11 +194,11 @@ Una vez completada la instalación del sistema operativo, es recomendable realiz
 
 Una vez revisado todo, se recomienda reiniciar el equipo para confirmar que el arranque se realiza sin problemas.
 
-### Configuración básica inicial
+## Configuración básica inicial
 
 Desde el panel **Administrador del servidor → Servidor local**, realizamos las siguientes tareas:
 
-#### Información del equipo
+### Información del equipo
 
 - **Nombre del equipo**: Debe ser único dentro del dominio, no superar los 15 caracteres y utilizar únicamente letras, números o guiones.
 - **Dominio o grupo de trabajo**: Si el servidor se integrará en un dominio existente, indicamos su nombre. Si será el controlador de dominio o no se usará dominio, lo dejamos como grupo de trabajo (más adelante se podrá crear el dominio).
@@ -212,7 +206,7 @@ Desde el panel **Administrador del servidor → Servidor local**, realizamos las
 - **Escritorio remoto**: Podemos habilitarlo si los usuarios van a conectarse al servidor mediante Terminal Server.
 - **Zona horaria**: Es recomendable verificarla y ajustarla si es necesario.
 
-#### Configuración de red
+### Configuración de red
 
 En servidores, lo habitual es utilizar **direcciones IP estáticas**, ya que suelen actuar como servidores DHCP para los clientes. Si no se ha hecho durante la instalación, ahora es el momento de asignar las IPs correspondientes a cada tarjeta de red.
 
@@ -249,8 +243,6 @@ Por ello, muchos administradores prefieren que las actualizaciones se **descargu
 
     En nuestro caso, desactivaremos las actualizaciones automáticas para evitar saturar la red del instituto.
 
-
----
 
 ### Roles y características
 

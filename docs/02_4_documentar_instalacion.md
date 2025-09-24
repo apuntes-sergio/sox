@@ -49,8 +49,14 @@ Durante el proceso de instalación de un servidor, es fundamental registrar toda
 
 - La documentación debe mantenerse actualizada cada vez que se realice un cambio en la configuración del servidor.
 - Es recomendable utilizar una plantilla estructurada para facilitar la recogida de datos.
-- Puedes consultar un ejemplo de plantilla en la documentación oficial o en recursos como [SomeBooks.es](https://somebooks.es/plantilla-para-documentar-maquinas-del-sistema/) (si se desea incluir un enlace real).
+- Puedes consultar un ejemplo de plantilla en la documentación oficial o en recursos como [la propuesta de textcortex.com](https://textcortex.com/es/post/technical-documentation-template).
 
+## Documento ejemplo
+
+A continuación tienes enlace a documento tipo ejemplo para documentar:
+
+> [Descargar documentación del equipo ISCA](files/Documentacion_Equipo_ISCA.docx)
+> 
 ## Recomendación post-instalación
 
 Una vez finalizada la instalación y configuración del servidor, es **muy recomendable crear una imagen del sistema**. Esta copia de seguridad permitirá restaurar el servidor rápidamente en caso de fallo grave, corrupción del sistema o pérdida de datos.
