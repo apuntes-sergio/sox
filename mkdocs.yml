@@ -2,32 +2,39 @@
 # Configuración de MkDocs para el sitio de Apuntes Sistemas Operativos en Red
 site_name: Apuntes Sistemas Operativos en Red
 site_url: https://sergio-apuntes.github.io/sox/
+site_author: Sergio Rey Martínez
 
+copyright: Sergio Rey Martínez - SMX - SOX - 2025
 
 theme:
   name: material
   language: es
   palette:
-    - scheme: default
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
       primary: indigo
       accent: indigo
       toggle:
-        icon: material/weather-night
+        icon: material/brightness-7
         name: Cambiar a modo oscuro
-    - scheme: slate
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
       primary: indigo
       accent: indigo
       toggle:
-        icon: material/weather-sunny
+        icon: material/brightness-4
         name: Cambiar a modo claro
   features:
     - navigation.indexes
+    - navigation.footer
     - navigation.instant
     - navigation.instant.progress
     - toc.follow
     - navigation.top              # Muestra el botón para volver al principio
     - content.code.copy           # Botón de copiar en bloques de código
 
+
+  
 markdown_extensions:
   - admonition
   - pymdownx.details
@@ -51,7 +58,6 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true  
-
 
 plugins:
   - search
@@ -81,6 +87,8 @@ nav:
     - 03_03_grupos.md
     - 03_04_equipos.md
     - 03_05_unidades_organizativas.md
+    - 03_06_herramientas_administracion.md
+    - 03_07_perfiles_usuarios.md
 
 
 
