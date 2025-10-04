@@ -89,6 +89,10 @@ nav:
     - 03_05_unidades_organizativas.md
     - 03_06_herramientas_administracion.md
     - 03_07_perfiles_usuarios.md
+  - UD04 Gestión de recursos compartidos en Windows Server:
+    - 04_01_permisos_derechos.md
+    - 04_02_servidor_archivos.md
+    - 04_03_compartir_impresoras.md
 
 
 
