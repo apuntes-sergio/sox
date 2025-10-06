@@ -7,12 +7,11 @@ Esta unidad de trabajo se centra en la administración de usuarios y recursos de
 
 También se aprenderá a incorporar equipos al dominio, aplicar restricciones de acceso, y administrar recursos locales y compartidos como carpetas e impresoras. Se abordarán los mecanismos de seguridad que permiten proteger la información y garantizar que cada usuario acceda únicamente a lo que le corresponde. Esta unidad combina la gestión técnica con la aplicación de políticas de seguridad, ofreciendo una visión completa del control de acceso en redes Windows.
 
-
 ## Permisos y derechos en sistemas Windows
 
 Para controlar qué acciones puede realizar un usuario o grupo en un sistema Windows, se utilizan dos mecanismos complementarios: los **derechos** y los **permisos**. Aunque ambos regulan el acceso y las capacidades dentro del sistema, operan en niveles distintos y tienen implicaciones diferentes.
 
-Un **derecho** permite ejecutar acciones que afectan al sistema en su conjunto, como iniciar sesión, apagar el equipo o realizar copias de seguridad. Estos derechos están definidos por el sistema y no se aplican sobre objetos concretos, sino sobre funciones globales. Cada derecho tiene una lista de usuarios o grupos que lo poseen, y no se pueden crear derechos nuevos. Por ejemplo, los miembros del grupo *Operadores de copia de seguridad* pueden hacer copias de todos los archivos, incluso de aquellos sobre los que no tienen permisos, y el usuario *Administrador* puede tomar posesión de cualquier archivo del sistema.
+Un **derecho** permite ejecutar acciones que afectan al sistema en su conjunto, como iniciar sesión, apagar el equipo o realizar copias de seguridad. Estos derechos están definidos por el sistema y no se aplican sobre objetos concretos, sino sobre funciones globales. Cada derecho tiene una lista de usuarios o grupos que lo poseen. Por ejemplo, los miembros del grupo *Operadores de copia de seguridad* pueden hacer copias de todos los archivos, incluso de aquellos sobre los que no tienen permisos, y el usuario *Administrador* puede tomar posesión de cualquier archivo del sistema.
 
 Un **permiso**, en cambio, se aplica sobre recursos específicos como archivos, carpetas, impresoras o claves del registro. Determina qué tipo de acceso tiene cada usuario: lectura, escritura, modificación, eliminación, etc. Cada recurso mantiene su propia lista de control de acceso (ACL), donde se define quién puede hacer qué.
 
@@ -42,7 +41,6 @@ Cuando un recurso tiene definidos ambos tipos de permisos (SMB y NTFS), el siste
 
 Este comportamiento garantiza una protección eficaz de los recursos, tanto en el plano local como en el plano de red, y permite a los administradores definir políticas de acceso coherentes y seguras.
 
-
 ## Permisos NTFS
 
 El sistema de archivos **NTFS** permite definir con gran precisión qué puede hacer cada usuario o grupo sobre archivos y carpetas. Estos permisos se aplican tanto en acceso local como remoto, y son fundamentales para garantizar la seguridad y el control de los recursos.
@@ -60,10 +58,9 @@ Cada archivo puede tener asignados distintos niveles de acceso. Los principales 
 | Leer                 | Leer el archivo y consultar sus atributos, propietario y permisos.                    |
 
 <figure markdown="span" align="center">
-  ![Image title](./imgs/recursos/permisos_ntfs_archivo.png){ width="80%"}
+  ![Permisos NTFS en Archivos](./imgs/recursos/permisos_ntfs_archivo.png){ width="80%"}
   <figcaption>Permisos NTFS en Archivos.</figcaption>
 </figure>
-
 
 ### Permisos sobre carpetas
 
@@ -79,10 +76,9 @@ Las carpetas permiten un conjunto similar de permisos, con algunas diferencias e
 | Listar contenido carpeta  | Ver los nombres de los archivos y subcarpetas.                                        |
 
 <figure markdown="span" align="center">
-  ![Image title](./imgs/recursos/permisos_ntfs_carpetas.png){ width="80%"}
+  ![Permisos NTFS en Carpetas](./imgs/recursos/permisos_ntfs_carpetas.png){ width="80%"}
   <figcaption>Permisos NTFS en Carpetas.</figcaption>
 </figure>
-
 
 ### Permisos estándar más utilizados
 
@@ -98,12 +94,43 @@ Además, existen otros permisos más específicos como:
 - **Lectura**: acceso a contenido y atributos.
 - **Escritura**: permite crear o modificar contenido, pero no necesariamente visualizarlo si no se tiene permiso de lectura.
 
-Además, si pulsamos la opción de Mostrar permisos avanzados, podemos aumentar la granularidad de los permisos, aunque tal y como hemos comentado antes, es mejor utilizar los 3 primeros y solo acceder a esta granularidad en ocasiones muy concretas:
-
 <figure markdown="span" align="center">
-  ![Image title](./imgs/recursos/editar_permiso_ntfa_fichero.png){ width="80%"}
+  ![Edición de permisos NTFS en archivos](./imgs/recursos/editar_permiso_ntfa_fichero.png){ width="80%"}
   <figcaption>Edición de permisos NTFS en archivos.</figcaption>
 </figure>
+
+
+### Tabla resumen Permisos especiales en archivos y carpetas
+
+La siguiente tabla muestra cómo se componen los distintos niveles de permisos estándar en Windows a partir de los permisos especiales. Esta estructura permite entender qué acciones están incluidas en cada tipo de permiso (Control total, Modificar, Leer y ejecutar, etc.).
+
+| Permiso especial                                      | Control total | Modificar | Leer y ejecutar | Mostrar contenido de carpeta (solo carpetas) | Lectura | Escritura |
+|-------------------------------------------------------|:-------------:|:---------:|:---------------:|:--------------------------------------------:|:-------:|:---------:|
+| Recorrer carpeta / Ejecutar archivo                   |      x        |           |        x        |                      x                       |         |           |
+| Listar carpeta / Leer datos                           |      x        |     x     |        x        |                      x                       |    x    |           |
+| Atributos de lectura                                  |      x        |     x     |        x        |                      x                       |    x    |           |
+| Atributos extendidos de lectura                       |      x        |     x     |        x        |                      x                       |    x    |           |
+| Crear archivos / Escribir datos                       |      x        |     x     |                 |                                                |         |     x     |
+| Crear carpetas / Anexar datos                         |      x        |     x     |                 |                                                |         |     x     |
+| Atributos de escritura                                |      x        |     x     |                 |                                                |         |     x     |
+| Atributos extendidos de escritura                     |      x        |     x     |                 |                                                |         |     x     |
+| Eliminar subcarpetas y archivos                       |      x        |           |                 |                                                |         |           |
+| Eliminar                                              |      x        |     x     |                 |                                                |         |           |
+| Permisos de lectura                                   |      x        |     x     |        x        |                      x                       |    x    |           |
+| Cambiar permisos                                      |      x        |           |                 |                                                |         |           |
+| Tomar posesión                                        |      x        |           |                 |                                                |         |           |
+| Sincronizar                                           |      x        |     x     |        x        |                      x                       |    x    |     x     |
+
+!!!note "**Notas:**"
+
+    - Los permisos **Control total** incluyen todos los permisos especiales.
+    - El permiso **Modificar** permite cambiar contenido pero no cambiar permisos ni tomar posesión.
+    - El permiso **Leer y ejecutar** incluye lectura básica y ejecución de archivos.
+    - El permiso **Mostrar contenido de carpeta** solo aplica a carpetas, no a archivos.
+    - Los permisos **Lectura** y **Escritura** agrupan subconjuntos específicos de permisos especiales.
+
+Esta tabla es útil para comprender cómo se estructuran los permisos NTFS en Windows y cómo se pueden personalizar para controlar el acceso a archivos y carpetas de forma granular.
+
 
 ### Establecer permisos NTFS
 
@@ -111,46 +138,35 @@ Además, si pulsamos la opción de Mostrar permisos avanzados, podemos aumentar 
 
 1. Clic derecho sobre el archivo o carpeta → Propiedades → pestaña **Seguridad**.
 2. Pulsar **Editar** para modificar los permisos estándar.
-    <figure markdown="span" align="center">
-      ![Image title](./imgs/recursos/permisos_ntfs_graficos.png){ width="90%"}
-      <figcaption>Edición de permisos NTFS en entorno gráfico.</figcaption>
-    </figure>
 3. Acceder a **Opciones avanzadas** para:
-    - Deshabilitar la herencia.
-    - Ver permisos heredados y explícitos.
-    - Cambiar el propietario del recurso.
-    <figure markdown="span" align="center">
-      ![Image title](./imgs/recursos/permisos_ntfs_opciones_avanzadas.png){ width="90%"}
-      <figcaption>Edición de permisos Avanzados NTFS en entorno gráfico.</figcaption>
-    </figure>
-  
+   - Deshabilitar la herencia.
+   - Ver permisos heredados y explícitos.
+   - Cambiar el propietario del recurso.
+
+<figure markdown="span" align="center">
+  ![Edición de permisos NTFS en entorno gráfico](./imgs/recursos/permisos_ntfs_graficos.png){ width="90%"}
+  <figcaption>Edición de permisos NTFS en entorno gráfico.</figcaption>
+</figure>
+
+<figure markdown="span" align="center">
+  ![Opciones avanzadas de seguridad NTFS](./imgs/recursos/permisos_ntfs_opciones_avanzadas.png){ width="90%"}
+  <figcaption>Opciones avanzadas de seguridad NTFS.</figcaption>
+</figure>
 
 #### Desde la terminal
 
 Windows incluye el comando `icacls` para gestionar permisos NTFS desde línea de comandos. Algunos ejemplos:
 
-- Conceder control total al grupo Ventas:
+```bash
+icacls D:\Pruebas /grant INFO2\Ventas:(F)
+icacls D:\Pruebas /inheritance:d
+icacls D:\Pruebas /remove:gUsuarios
+```
 
-  ```bash
-  icacls D:\Pruebas /grant INFO2\Ventas:(F)
-  ```
-
-- Deshabilitar herencia:
-
-  ```bash
-  icacls D:\Pruebas /inheritance:d
-  ```
-
-- Eliminar permisos al grupo Usuarios:
-
-  ```bash
-  icacls D:\Pruebas /remove:gUsuarios
-  ```
-
-Los permisos se indican con letras:  
-- `F` para Control total  
-- `W` para Escritura  
-- `R` para Lectura  
+Los permisos se indican con letras:
+- `F` para Control total
+- `W` para Escritura
+- `R` para Lectura
 - `(R,W)` para Modificar
 
 
@@ -163,10 +179,11 @@ El propietario de un archivo o carpeta es el usuario que lo crea. Tanto el propi
 3. Pulsar **Cambiar** para asignar otro propietario.
 
 <figure markdown="span" align="center">
-  ![Image title](./imgs/recursos/configuracion_avanzada_ntfs.png){ width="80%"}
+  ![Cambio de propietario](./imgs/recursos/configuracion_avanzada_ntfs.png){ width="80%"}
   <figcaption>Cambio de propietario en configuración avanzada.</figcaption>
 </figure>
 
+---
 
 ### Herencia de permisos
 
@@ -184,52 +201,43 @@ Al crear un archivo o carpeta, hereda los permisos del contenedor en el que se e
 
 Desde las opciones avanzadas se puede ver si un permiso es heredado o explícito. Los heredados aparecen deshabilitados en la pestaña Seguridad y no pueden modificarse directamente, a menos que se deshabilite la herencia.
 
-
 <figure markdown="span" align="center">
-  ![Image title](./imgs/recursos/herencia_permisos_ntfs.png){ width="80%"}
-  <figcaption>Cambio de propietario en configuración avanzada.</figcaption>
+  ![Permisos heredados y explícitos](./imgs/recursos/herencia_permisos_ntfs.png){ width="80%"}
+  <figcaption>Visualización de permisos heredados y explícitos.</figcaption>
 </figure>
 
-En este ejemplo el permiso del grupo Administradores 'es heredado y el del grupo' Ventas' es explícito. También se ve desde la pestaña de Seguridad que los heredados están deshabilitados:
-
 <figure markdown="span" align="center">
-  ![Image title](./imgs/recursos/ntfs_permisos_heredados_explicitos.png){ width="60%"}
-  <figcaption>Permisos heredados y explicitos.</figcaption>
+  ![Permisos heredados deshabilitados](./imgs/recursos/ntfs_permisos_heredados_explicitos.png){ width="60%"}
+  <figcaption>Permisos heredados deshabilitados en la pestaña Seguridad.</figcaption>
 </figure>
-
-Los permisos heredados no los podemos quitar a menos que deshabilitamos la herencia en la carpeta.
 
 #### Deshabilitar la herencia
 
 Si queremos modificar los permisos heredados de una carpeta debemos deshabilitar la herencia desde la ventana de Opciones avanzadas:
-
-Para modificar los permisos heredados:
 
 1. Ir a Opciones avanzadas → pulsar **Deshabilitar herencia**.
 2. Elegir entre:
    - **Convertir en permisos explícitos**: conserva los permisos actuales pero permite editarlos.
    - **Quitar todos los permisos heredados**: elimina los permisos heredados por completo.
 
-Una vez deshabilitada la herencia, los nuevos permisos asignados no se propagarán automáticamente.
-
 <figure markdown="span" align="center">
-  ![Image title](./imgs/recursos/ntfs_deshabilitar_herencia.png){ width="80%"}
-  <figcaption>Deshabilitar la herencia.</figcaption>
+  ![Deshabilitar herencia](./imgs/recursos/ntfs_deshabilitar_herencia.png){ width="80%"}
+  <figcaption>Deshabilitar la herencia en una carpeta.</figcaption>
 </figure>
 
-También cuando asignamos un nuevo permiso a una carpeta podemos hacer que no se herede a las carpetas y archivos que contiene si lo hacemos desde opciones avanzadas:
+También cuando asignamos un nuevo permiso a una carpeta podemos hacer que no se herede a las carpetas y archivos que contiene si lo hacemos desde opciones avanzadas. Además de la opción predeterminada que es que el permiso se aplique a “Esta carpeta, subcarpetas y archivos”, podemos elegir otras opciones como que solo se aplique a “Esta carpeta” y así evitar que lo hereden las subcarpetas y archivos que contiene.
 
-Además de la opción predeterminada que es que el permiso se aplique a '`Esta carpeta, subcarpetas y archivos`' podemos elegir otras opciones como que sólo se aplique a '`Esta carpeta`' y así evitamos que lo heredan las subcarpetas y archivos que contiene.
+---
 
-#### Comportamiento al copiar o mover archivos
+### Comportamiento al copiar o mover archivos
 
-Si copiamos un archivo o carpeta a otra ubicación se quitan sus permisos y heredará los permisos del lugar donde se copia.
-
-Si se mueve un archivo o carpeta dentro del mismo volumen conserva sus permisos pero si es a otro volumen pasa igual que en la copia.
+El comportamiento de los permisos al copiar o mover archivos depende del destino y del volumen:
 
 - **Copiar**: el archivo o carpeta pierde sus permisos originales y hereda los del destino.
 - **Mover dentro del mismo volumen**: conserva los permisos originales.
 - **Mover a otro volumen**: se comporta como una copia, heredando los permisos del nuevo destino.
+
+---
 
 ### Reglas de aplicación de permisos
 
@@ -243,8 +251,6 @@ Por último, revisemos algunas reglas que se producen al aplicar permisos sobre 
 
 Por ejemplo, si un usuario tiene permiso de lectura por pertenecer a un grupo, pero se le deniega explícitamente ese permiso, no podrá acceder. La denegación siempre tiene prioridad.
 
-Perfecto, Sergio. Aquí tienes la continuación reestructurada con introducciones claras en cada apartado, manteniendo el contenido técnico y respetando tu estilo. He integrado las explicaciones sin abusar de listas, y he reforzado los conceptos clave para facilitar su uso en clase o en documentación.
-
 
 ## Permisos SMB
 
@@ -257,7 +263,7 @@ Antes de configurar cualquier permiso, es imprescindible asegurarse de que está
 Para establecer los permisos SMB sobre una carpeta, se accede a sus propiedades y se utiliza la pestaña **Compartir**. Desde ahí, el botón **Uso compartido avanzado** permite configurar el recurso de forma más precisa, definiendo qué grupos o usuarios pueden acceder y con qué nivel de control.
 
 <figure markdown="span" align="center">
-  ![Image title](./imgs/recursos/smb_compartir.png){ width="70%"}
+  ![Compartir una carpeta. Siempre con Uso Compartido Avanzado.](./imgs/recursos/smb_compartir.png){ width="70%"}
   <figcaption>Compartir una carpeta. Siempre con Uso Compartido Avanzado.</figcaption>
 </figure>
 
@@ -270,12 +276,11 @@ Los niveles de permiso disponibles son:
 Cada nivel incluye al anterior, por lo que *Control total* implica también *Cambiar* y *Leer*. Estos permisos son equivalentes a los permisos NTFS de **Control total**, **Modificar** y **Lectura y ejecución**, respectivamente.
 
 <figure markdown="span" align="center">
-  ![Image title](./imgs/recursos/smb_compartir_2.png){ width="70%"}
+  ![Compartir una carpeta. Siempre con Uso Compartido Avanzado.](./imgs/recursos/smb_compartir_2.png){ width="70%"}
   <figcaption>Compartir una carpeta. Siempre con Uso Compartido Avanzado.</figcaption>
 </figure>
 
 Al configurar los permisos, se puede elegir entre **Permitir** o **Denegar**. La opción de denegación debe utilizarse con precaución, ya que tiene prioridad sobre cualquier permiso concedido.
-
 
 ### Gestión de permisos SMB
 
@@ -287,10 +292,9 @@ Los permisos de compartición pueden modificarse desde distintas ubicaciones:
 
 Es importante recordar que los permisos SMB **solo se aplican cuando el acceso se realiza desde otro equipo a través de la red**. Si el usuario accede localmente, estos permisos no se evalúan; en ese caso, se aplican únicamente los permisos NTFS.
 
-
 ### Compartir simple vs uso compartido avanzado
 
-Windows ofrece dos formas de compartir una carpeta: el **uso compartido simple** y el **uso compartido avanzado**. Aunque ambos permiten publicar la carpeta en la red, su comportamiento es distinto.
+Windows ofrece dos formas de compartir una carpeta: el **uso compartido simple** y el **uso compartido avanzado**. Aunque ambos permiten publicar la carpeta en la red, su comportamiento es distinto:
 
 - El **uso compartido avanzado** permite configurar exclusivamente los permisos SMB, sin alterar los permisos NTFS ya definidos. Es la opción recomendada cuando se quiere mantener un control preciso sobre el acceso local y remoto.
 - El **uso compartido simple**, en cambio, modifica tanto los permisos SMB como los NTFS. Esto puede ser útil en configuraciones iniciales o para usuarios principiantes, pero no debe utilizarse una vez que se han establecido permisos NTFS manualmente, ya que puede sobrescribirlos y provocar pérdida de configuraciones específicas.
@@ -304,4 +308,3 @@ La asignación de permisos debe hacerse con criterio para evitar errores de segu
 - Una estrategia común consiste en conceder **Control total** en los permisos de compartición y gestionar los permisos NTFS de forma más detallada. Esto simplifica la configuración sin perder precisión.
 - Usar la opción **Denegar** con precaución. Si se deniega un permiso a un grupo genérico como *Usuarios*, puede afectar a cuentas que también pertenecen a ese grupo, como el *Administrador*. En caso de conflicto, la denegación tiene prioridad sobre la concesión.
 - Si no se marca ninguna opción (ni permitir ni denegar), el usuario o grupo no tendrá ningún permiso efectivo. En ese caso, es preferible **eliminar** el grupo o usuario de la lista para evitar confusiones.
-
