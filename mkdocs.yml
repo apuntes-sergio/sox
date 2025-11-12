@@ -93,6 +93,12 @@ nav:
     - 04_01_permisos_derechos.md
     - 04_02_servidor_archivos.md
     - 04_03_compartir_impresoras.md
+  - UD05 Directivas de grupo en Windows Server:
+    - 05_01_introduccion_directivas.md
+    - 05_02_creacion_directivas.md
+    - 05_03_herencia_directivas.md
+    - 05_04_configuacion_directivas_comunes.md
+    - 05_05_verificacion_problemas.md
 
 
 

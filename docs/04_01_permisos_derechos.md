@@ -100,7 +100,7 @@ Además, existen otros permisos más específicos como:
 </figure>
 
 
-### Tabla resumen Permisos especiales en archivos y carpetas
+### Tabla resumen NTFS
 
 La siguiente tabla muestra cómo se componen los distintos niveles de permisos estándar en Windows a partir de los permisos especiales. Esta estructura permite entender qué acciones están incluidas en cada tipo de permiso (Control total, Modificar, Leer y ejecutar, etc.).
 

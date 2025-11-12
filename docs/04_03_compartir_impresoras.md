@@ -197,4 +197,4 @@ La solución consiste en crear una **impresora lógica adicional** que esté dis
 
 Los usuarios pueden enviar sus trabajos según el tipo y la urgencia, y el sistema se encargará de procesarlos en el momento adecuado sin interferir con el resto de la actividad.
 
-Esta técnica permite optimizar el uso
+Esta técnica permite optimizar el uso de recursos y evitar cuellos de botella en la cola de impresión, especialmente en entornos con alta carga de trabajo.
