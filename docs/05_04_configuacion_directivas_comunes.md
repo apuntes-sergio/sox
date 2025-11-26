@@ -256,10 +256,10 @@ Configuración del equipo
 1. Editar una GPO vinculada al dominio (afecta a todos los usuarios)
 2. Navegar a la ruta de directivas de contraseñas
 3. Configurar:
-   * Longitud mínima: **12 caracteres**
-   * Vigencia máxima: **90 días**
-   * Requisitos de complejidad: **Habilitada**
-   * Historial: **24 contraseñas**
+    * Longitud mínima: **12 caracteres**
+    * Vigencia máxima: **90 días**
+    * Requisitos de complejidad: **Habilitada**
+    * Historial: **24 contraseñas**
 
 <figure markdown="span" align="center">
     ![](./imgs/directivas/directiva_contrasenya.png){ width="85%" }
