@@ -99,9 +99,19 @@ nav:
     - 05_03_herencia_directivas.md
     - 05_04_configuacion_directivas_comunes.md
     - 05_05_verificacion_problemas.md
-
-
-
+  - UD06 Configuración avanzada de Windows Server:
+    - 06_01_configuraciones_adicionales.md
+    - 06_02_carpetas_compartidas_ocultas.md
+    - 06_03_cuotas_discos.md
+    - 06_04_servidor_dhcp.md
+    - 06_05_escritorio_remoto.md
+    - 06_06_redes_virtuales_VPN.md
+    - 06_07_rsat.md
+    - 06_08_backups.md
+    - 06_09_controlador_secundario.md
+    - 06_10_supervision_monitorizacion.md 
+    - 06_11_servicios.md
+    - 06_12_actualizacion_despliegue.md
 
     
     
