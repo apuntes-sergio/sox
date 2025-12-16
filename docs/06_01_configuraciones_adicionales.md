@@ -21,3 +21,4 @@ En este tema nos centraremos en las herramientas y servicios avanzados de Window
 | **Auditorías Windows Server** | Configuración de directivas de auditoría para rastrear eventos de seguridad, como intentos de acceso o cambios en archivos. |
 | **Windows Update Services (WSUS)** | Despliegue centralizado de parches y actualizaciones de seguridad de Microsoft en la red. |
 | **Windows Deployment Services (WDS)** | Instalación de sistemas operativos de forma remota a través de la red mediante PXE. |
+| **Integración de equipos Linux en AD** | Permite que equipos Linux como por ejemplo Ubuntu puedan trabajar dentro del dominio. |
