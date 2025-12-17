@@ -12,8 +12,15 @@ Windows Server Backup es una **característica** que debe instalarse en el servi
 ### Instalación y Ejecución de WSB
 
 Windows Server Backup es una herramienta integrada en el sistema operativo, pero no se instala de forma predeterminada. Su acceso y utilización es posible tanto a través de una consola gráfica como mediante la línea de comandos.
+    
 
 * **Instalación:** WSB es una **Característica** (*Feature*), no un Rol de servidor. Debe añadirse al sistema operativo utilizando el **Asistente para agregar roles y características** (*Add Roles and Features Wizard*) en el **Administrador del Servidor** antes de que pueda ser utilizada.
+
+<figure markdown="span" align="center">
+    ![](./imgs/adicional/wbadmin-01.png){ width="90%" }
+    <figcaption>Agregar características de copias de seguridad</figcaption>
+</figure>
+
 * **Ejecución Gráfica (GUI):** Una vez instalada, la consola de WSB se puede iniciar de dos maneras principales:
     1.  Desde el **Administrador del Servidor**, navegando al menú **Herramientas** (*Tools*) y seleccionando **Windows Server Backup**.
     2.  Buscando directamente **Windows Server Backup** en el menú de inicio del servidor.
@@ -43,6 +50,7 @@ La configuración de WSB se centra en la automatización de las copias para cump
 #### Destino Recomendado
 
 WSB está optimizado para almacenar copias de seguridad en:
+
 * **Discos Duros Locales Dedicados:** El destino más rápido y recomendado.
 * **Carpetas Compartidas en Red:** Es una opción viable, pero puede tener limitaciones de rendimiento y debe ser monitoreada.
 

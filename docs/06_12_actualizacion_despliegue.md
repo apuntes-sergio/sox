@@ -23,6 +23,41 @@ El funcionamiento de WSUS se basa en la sincronización y la definición de pol�
 * **Sincronización:** El servidor WSUS se conecta periódicamente a Microsoft Update para obtener las listas de nuevas actualizaciones.
 * **Despliegue con Directiva de Grupo (GPO):** La configuración de los equipos clientes para que utilicen el servidor WSUS, en lugar de Microsoft Update, se realiza mediante una Directiva de Grupo (GPO) aplicada a la Unidad Organizativa (OU) que contiene los equipos. Esta GPO define la URL del servidor WSUS y la frecuencia de la búsqueda de actualizaciones.
 
+
+### Instalación y configuración
+
+Para la instalación debemos añadir el nuevo rol **Windows Server Update Services**
+
+<figure markdown="span" align="center">
+    ![](./imgs/adicional/WSUS-01.png){ width="90%" }
+    <figcaption>Nuevo Rol: Windows Server Update Services</figcaption>
+</figure>
+
+Dentro de la instalación, seleccionamos las opciones siguientes:
+
+<figure markdown="span" align="center">
+    ![](./imgs/adicional/WSUS-02.png){ width="90%" }
+    <figcaption>Nuevo Rol: Windows Server Update Services</figcaption>
+</figure>
+
+Y lo más importantes seleccionamos la carpeta compartida donde vamos a dejar las actualizaciones para que accedan el resto de equipos del dominio. 
+
+Debemos crear una carpeta nueva y compartirla con permisos para todos los equipos y usuarios del dominio, e indicar al ruta de la carpeta compartida:
+
+<figure markdown="span" align="center">
+    ![](./imgs/adicional/WSUS-03.png){ width="90%" }
+    <figcaption>Ruta de la carpeta donde se dejan las actualizaciones.</figcaption>
+</figure>
+
+Posteriormente, debemos esperar a que se configure el rol una vez instalado, y así poder configurarlo con las actualizaciones que deseemos.
+
+<figure markdown="span" align="center">
+    ![](./imgs/adicional/WSUS-04.png){ width="90%" }
+    <figcaption>Nuevo Rol: Windows Server Update Services. Instalado y preparado para ser usado.</figcaption>
+</figure>
+
+A partir de aqui se trata de configurar y seleccionar los elementos a actualizar.
+
 ---
 
 ## 13. Windows Deployment Services (WDS)
@@ -36,6 +71,17 @@ Para que WDS funcione correctamente, se requiere la existencia y correcta config
 * **Servicios de Dominio de Active Directory (AD DS):** WDS debe ser un miembro o un Controlador de Dominio para acceder a la configuración de la red.
 * **Servidor DNS y DHCP:** El servicio **DHCP** es esencial para asignar direcciones IP a los nuevos clientes que se conectan a la red, y el servicio **DNS** debe estar operativo para la resolución de nombres.
 * **Volumen NTFS:** Se requiere un volumen con el sistema de archivos NTFS para almacenar las imágenes de instalación y arranque.
+
+
+### Instalacción: 
+
+Se debe instalar el rol de **Servicios de implementación de Windows**
+
+<figure markdown="span" align="center">
+    ![](./imgs/adicional/WDS-01.png){ width="90%" }
+    <figcaption>Nuevo Rol: Windows Server Update Services. Instalado y preparado para ser usado.</figcaption>
+</figure>
+
 
 ### Componentes de Despliegue
 
@@ -54,6 +100,4 @@ El despliegue de WDS se basa en el estándar **PXE (Preboot Execution Environmen
 2.  **Solicitud PXE:** El cliente realiza una solicitud al servidor DHCP. El servidor DHCP o el servidor WDS (dependiendo de la configuración) dirige al cliente al servidor WDS.
 3.  **Descarga de Imagen de Arranque:** El cliente descarga el archivo de imagen de arranque (*Boot Image*) y carga el entorno de preinstalación, donde el usuario puede seleccionar la imagen de sistema operativo deseada para su instalación.
 
----
 
-Con esto, se completa la documentación de los trece temas clave para la guía del alumno.
