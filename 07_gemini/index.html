@@ -1,0 +1,2172 @@
+<!DOCTYPE html><html lang="es" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Sergio Rey Martínez">
+      
+      
+        <link rel="canonical" href="https://sergio-apuntes.github.io/sox/07_gemini/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>07 gemini - Apuntes Sistemas Operativos en Red</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ud07-linux-server-esencial-y-administracion-remota" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href=".." title="Apuntes Sistemas Operativos en Red" class="md-header__button md-logo" aria-label="Apuntes Sistemas Operativos en Red" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Apuntes Sistemas Operativos en Red
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              07 gemini
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Cambiar a modo oscuro" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Cambiar a modo claro" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Apuntes Sistemas Operativos en Red" class="md-nav__button md-logo" aria-label="Apuntes Sistemas Operativos en Red" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    Apuntes Sistemas Operativos en Red
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1">
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href=".." class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Presentación
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Presentación
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD01 Introducción a los Sistemas Operativos de Servidor
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD01 Introducción a los Sistemas Operativos de Servidor
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_1_introducci%C3%B3n/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_2_arquitectura_cliente_servidor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura cliente/servidor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_3_funciones_SO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Funciones de Sistemas Operativos en Red
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_4_sistemas_operativos_servidor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principales sistemas operativos servidor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_5_recordatorio_red/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Repaso conceptos de red
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD02 Instalación de sistemas operativos de servidor privativos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD02 Instalación de sistemas operativos de servidor privativos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_1_instalacion_SO_introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_2_instalacion_windows_server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instalación de Windows Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_3_config_basica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración básica
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_4_documentar_instalacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_5_administrar_discos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administrar discos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_6_dominio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD03 Administración de usuarios y grupos en Windows Server
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD03 Administración de usuarios y grupos en Windows Server
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_01_objetos_dominios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Objetos del Dominio en Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_02_usuarios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cuentas de Usuario en un Dominio Windows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_03_grupos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grupos en Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_04_equipos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Equipos en Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_05_unidades_organizativas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidades Organizativas en Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_06_herramientas_administracion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Herramientas de administración en Windows Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_07_perfiles_usuarios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Perfiles de usuario en Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD04 Gestión de recursos compartidos en Windows Server
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD04 Gestión de recursos compartidos en Windows Server
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_01_permisos_derechos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Permisos y derechos en sistemas Windows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_02_servidor_archivos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    El servidor de archivos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_03_compartir_impresoras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compartir impresoras en red
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6">
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD05 Directivas de grupo en Windows Server
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD05 Directivas de grupo en Windows Server
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_01_introduccion_directivas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción a las directivas de grupo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_02_creacion_directivas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creación y ámbito de aplicación de GPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_03_herencia_directivas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Herencia de directivas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_04_configuacion_directivas_comunes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración de directivas comunes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_05_verificacion_problemas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Verificación y resolución de problemas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7">
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD06 Configuración avanzada de Windows Server
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD06 Configuración avanzada de Windows Server
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_01_configuraciones_adicionales/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración avanzada de Windows Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_02_carpetas_compartidas_ocultas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Recursos Compartidos Ocultos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_03_cuotas_discos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cuotas de discos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_04_servidor_dhcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Servidor DHCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_05_escritorio_remoto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Escritorio Remoto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_06_redes_virtuales_VPN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Red VPN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_07_rsat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Herramientas de Administración Remota del Servidor (RSAT)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_08_backups/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Copias de seguridad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_09_controlador_secundario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Controlador de Dominio Secundario
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_10_supervision_monitorizacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización Windows Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_11_servicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Servicios en Windows Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_12_actualizacion_despliegue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WSUS &amp; WDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ud07-linux-server-esencial-y-administracion-remota" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UD07: Linux Server Esencial y Administración Remota
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="UD07: Linux Server Esencial y Administración Remota">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#contextualizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contextualización
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-gestion-del-sistema-de-archivos-y-lvm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Gestión del Sistema de Archivos y LVM
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Gestión del Sistema de Archivos y LVM">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-la-jerarquia-del-sistema-de-ficheros-fhs-en-servidores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1. La Jerarquía del Sistema de Ficheros (FHS) en Servidores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-lvm-logical-volume-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2. LVM: Logical Volume Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-acls-y-administracion-segura-con-ssh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. ACLs y Administración Segura con SSH
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. ACLs y Administración Segura con SSH">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-listas-de-control-de-acceso-acls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1. Listas de Control de Acceso (ACLs)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-administracion-segura-con-ssh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2. Administración Segura con SSH
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-enunciado-de-la-practica-detallada-para-el-proyecto-iscasox" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Enunciado de la Práctica Detallada para el Proyecto ISCASOX
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Enunciado de la Práctica Detallada para el Proyecto ISCASOX">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ud0701-instalacion-y-bases-del-servidor-linux-iscasox" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UD07.01: Instalación y Bases del Servidor Linux ISCASOX
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>07 gemini</h1>
+
+<h2 id="ud07-linux-server-esencial-y-administracion-remota">UD07: Linux Server Esencial y Administración Remota</h2>
+<h3 id="contextualizacion">Contextualización</h3>
+<p>Tras haber establecido el Directorio Activo (AD) de la empresa ISCASOX bajo el dominio <code>DOMXXX</code> y haber configurado la base de la red con Windows Server, el siguiente paso es integrar un servidor basado en software libre. Este nuevo servidor, denominado provisionalmente <code>SRVLINUXXXX</code>, asumirá roles de servidor de archivos y otras funciones de infraestructura. Para que un servidor GNU/Linux pueda gestionar datos de la empresa de manera segura y eficiente, es imprescindible dominar dos aspectos fundamentales: la <strong>gestión flexible del almacenamiento</strong> mediante LVM (Logical Volume Management) y la <strong>aplicación de políticas de acceso complejas</strong> mediante ACLs (Access Control Lists). Esta unidad nos prepara para alojar servicios robustos y para la posterior integración con el entorno Windows, tal como exige la formación del Técnico en Sistemas Microinformáticos y Redes.</p>
+<hr>
+<h3 id="1-gestion-del-sistema-de-archivos-y-lvm">1. Gestión del Sistema de Archivos y LVM</h3>
+<h4 id="11-la-jerarquia-del-sistema-de-ficheros-fhs-en-servidores">1.1. La Jerarquía del Sistema de Ficheros (FHS) en Servidores</h4>
+<p>La Jerarquía del Sistema de Ficheros (FHS) es un estándar que organiza el sistema de directorios en GNU/Linux, estableciendo dónde se deben encontrar los ficheros y directorios para garantizar la coherencia y la facilidad de administración. En un servidor de red como el que estamos desplegando, es vital comprender las funciones de los directorios clave para poder planificar la gestión de almacenamiento, especialmente en lo relativo a datos que deben crecer o ser respaldados por separado.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Directorio</th>
+<th style="text-align: left;">Función Clave en Servidor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>/etc</code></td>
+<td style="text-align: left;">Contiene los ficheros de configuración estáticos de todo el sistema y de todos los servicios.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/var</code></td>
+<td style="text-align: left;">Aloja datos variables, como los ficheros de <em>log</em> de los servicios (<code>/var/log</code>), el contenido de servidores web y las colas de impresión. Este directorio tiende a crecer y a menudo se aísla en una partición separada.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/home</code></td>
+<td style="text-align: left;">Contiene los directorios personales de los usuarios. Aunque en el proyecto ISCASOX los perfiles de usuario se gestionarán mayormente en el AD, este es el lugar para los administradores locales del sistema.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/srv</code></td>
+<td style="text-align: left;">Es el directorio recomendado por la FHS para almacenar los datos de los servicios que sirve el sistema. Por ejemplo, los directorios que serán compartidos a través de Samba o NFS. <strong>En nuestro proyecto, esta es la ubicación ideal para los datos de ISCASOX.</strong></td>
+</tr>
+</tbody>
+</table>
+<p>El administrador debe decidir qué directorios críticos deben residir en volúmenes separados para permitir copias de seguridad selectivas o para evitar que el crecimiento de <em>logs</em> (en <code>/var</code>) sature el sistema operativo (en <code>/</code>).</p>
+<h4 id="12-lvm-logical-volume-management">1.2. LVM: Logical Volume Management</h4>
+<p>La gestión tradicional de particiones obliga a definir tamaños fijos al instalar el sistema. Si una partición se llena, la única solución es redimensionar el disco, lo cual históricamente requería desmontar la partición y, a menudo, implicaba tiempo de inactividad.</p>
+<p>El <strong>Logical Volume Management (LVM)</strong> es una capa de abstracción que se interpone entre el sistema operativo y los discos físicos. El propósito principal de LVM es proporcionar una gestión de almacenamiento flexible que permita al administrador extender o reducir volúmenes de datos <strong>incluso mientras están en uso</strong>, minimizando el tiempo de inactividad.</p>
+<p><strong>Componentes de LVM y su Función Explicativa:</strong></p>
+<ol>
+<li><strong>Volumen Físico (PV - Physical Volume):</strong> Es la unidad base de LVM. Se trata de un disco duro físico o una partición tradicional que se ha marcado como disponible para LVM. Para crear un PV se utiliza el comando <code>pvcreate</code>.</li>
+<li><strong>Grupo de Volúmenes (VG - Volume Group):</strong> Actúa como un <em>pool</em> de almacenamiento unificado. Uno o varios PVs se agrupan para formar un VG, creando un espacio total de almacenamiento. Este grupo es la fuente de donde se "extraen" los volúmenes lógicos. El comando para crearlo es <code>vgcreate</code>.</li>
+<li><strong>Volumen Lógico (LV - Logical Volume):</strong> Son las particiones lógicas que el sistema operativo reconoce y que se montan. Estos LVs se crean dentro de un VG, y su tamaño puede ser modificado a demanda. Son la clave de la flexibilidad de LVM, ya que el espacio no utilizado del VG se puede asignar a cualquier LV que lo necesite. Se crean con el comando <code>lvcreate</code>.</li>
+</ol>
+<p><strong>Pasos para el Redimensionamiento Explicados:</strong>
+Si el Volumen Lógico <code>lv_datasox</code> necesita más espacio, el administrador solo tiene que:
+1.  <strong>Extender el LV:</strong> Utilizar el comando <code>lvextend</code> para añadir más espacio del VG al LV.
+2.  <strong>Redimensionar el Sistema de Archivos:</strong> El sistema de archivos (ej. ext4) debe ser informado del cambio de tamaño, lo que se realiza con el comando <code>resize2fs</code> (o equivalente para otros sistemas de archivos).</p>
+<p>Este procedimiento garantiza que el servidor <code>SRVLINUXXXX</code> de ISCASOX pueda adaptarse a las necesidades de almacenamiento futuras de la empresa sin requerir una reinstalación o periodos largos de mantenimiento.</p>
+<hr>
+<h3 id="2-acls-y-administracion-segura-con-ssh">2. ACLs y Administración Segura con SSH</h3>
+<h4 id="21-listas-de-control-de-acceso-acls">2.1. Listas de Control de Acceso (ACLs)</h4>
+<p>En el proyecto ISCASOX, los permisos de los recursos compartidos deben ser granulares. El sistema de permisos tradicional de Linux (<code>chmod</code>) es insuficiente cuando se necesita otorgar acceso de escritura a un usuario específico y acceso de solo lectura a un grupo distinto, sobre un directorio cuya propiedad pertenece a un tercer usuario de sistema (como podría ser el usuario de Samba).</p>
+<p>Las <strong>ACLs (Access Control Lists)</strong> son una capa de permisos más avanzada que permite definir reglas de acceso a nivel de usuario o grupo de forma específica, sobrepasando las limitaciones del modelo tradicional. Su uso es esencial en la administración de servidores para implementar políticas de seguridad detalladas.</p>
+<p><strong>Mecanismos de Control de ACLs:</strong></p>
+<ol>
+<li><strong>Definición de Permisos (setfacl):</strong> Permite añadir (<code>-m</code>) o eliminar (<code>-x</code>) reglas específicas. Por ejemplo, podemos indicar que el grupo de <strong>Comercial</strong> (creado en el AD, pero reconocido en Linux, como veremos en la UD08) tenga permisos de solo lectura (<code>r-x</code>) sobre una carpeta, mientras que el propietario del directorio mantiene sus permisos originales.<ul>
+<li>Ejemplo: <code>setfacl -m g:nombre_grupo:r-x /ruta</code></li>
+</ul>
+</li>
+<li><strong>Consulta de Permisos (getfacl):</strong> Este comando muestra tanto los permisos estándar (propietario, grupo, otros) como la lista de reglas de ACLs que se han aplicado al fichero o directorio, incluyendo la información de la máscara.</li>
+<li><strong>La Máscara (mask):</strong> Cuando se aplica una ACL, el permiso efectivo máximo que cualquier usuario o grupo puede tener sobre ese objeto está limitado por la máscara. Si a un grupo le otorgamos <code>rwx</code> pero la máscara es <code>r-x</code>, el grupo solo podrá leer y ejecutar, no escribir. El administrador debe verificar y gestionar la máscara para asegurar que la intención de seguridad se cumple.</li>
+</ol>
+<p>El uso de ACLs en <code>SRVLINUXXXX</code> nos permite implementar la política de que el equipo de Desarrollo Web y el de Comercial tengan accesos distintos y simultáneos a un mismo recurso, sin interferir en los permisos del propietario (el administrador de sistema).</p>
+<h4 id="22-administracion-segura-con-ssh">2.2. Administración Segura con SSH</h4>
+<p>El servidor Linux se administra casi exclusivamente de forma remota, generalmente a través de la terminal, utilizando el protocolo <strong>Secure Shell (SSH)</strong>. En un entorno de red profesional, la seguridad de este canal de administración es crítica.</p>
+<p><strong>Autenticación por Claves SSH:</strong></p>
+<p>El método más seguro y recomendado es el uso de pares de claves asimétricas:</p>
+<ul>
+<li><strong>Clave Pública:</strong> Es la llave que se deposita en el servidor (<code>SRVLINUXXXX</code>) y se hace pública.</li>
+<li><strong>Clave Privada:</strong> Es la llave que solo posee el administrador en su equipo local. Es un fichero que debe estar cifrado y protegido con una frase de paso (<code>passphrase</code>).</li>
+</ul>
+<p>Cuando el administrador intenta conectarse, el servidor desafía al cliente pidiéndole que demuestre que posee la clave privada, un proceso que es imposible de interceptar o de adivinar mediante fuerza bruta (a diferencia de una contraseña).</p>
+<p><strong>Refuerzo de la Configuración de SSH (<em>Hardening</em>):</strong></p>
+<p>Para proteger el servidor <code>SRVLINUXXXX</code> de posibles ataques por fuerza bruta o <em>login</em> no autorizado, se realizan modificaciones en el fichero de configuración principal <code>/etc/ssh/sshd_config</code>:</p>
+<ol>
+<li><strong>Deshabilitar la Autenticación por Contraseña (<code>PasswordAuthentication no</code>):</strong> Una vez que la autenticación por clave funciona, se deshabilita el <em>login</em> por contraseña, eliminando la vía más común de ataque.</li>
+<li><strong>Restricción de Acceso Root (<code>PermitRootLogin no</code>):</strong> Se prohíbe el acceso directo al usuario <code>root</code> por SSH. El administrador debe iniciar sesión con una cuenta de usuario normal y luego elevar privilegios con <code>sudo</code>, lo que proporciona un mejor registro de auditoría de las acciones críticas.</li>
+</ol>
+<p>Mediante estas técnicas, aseguramos que la administración del servidor de ISCASOX sea segura y auditable.</p>
+<hr>
+<h3 id="3-enunciado-de-la-practica-detallada-para-el-proyecto-iscasox">3. Enunciado de la Práctica Detallada para el Proyecto ISCASOX</h3>
+<h4 id="ud0701-instalacion-y-bases-del-servidor-linux-iscasox">UD07.01: Instalación y Bases del Servidor Linux ISCASOX</h4>
+<p><strong>Módulo Profesional:</strong> Sistemas Informáticos en Red (0224)
+<strong>Unidad Didáctica:</strong> UD07 - Linux Server Esencial y Administración Remota
+<strong>Duración:</strong> 2 Semanas (12 horas)</p>
+<p><strong>Objetivo General:</strong> Desplegar el servidor de archivos Linux de la empresa ISCASOX, planificar su almacenamiento con LVM y aplicar políticas de permisos avanzados con ACLs, configurando un acceso remoto seguro.</p>
+<p><strong>Contexto del Proyecto (Empresa ISCASOX - Dominio DOMXXX):</strong>
+* <strong>Servidor a Configurar:</strong> <code>SRVLINUXXXX</code> (VM Linux Server).
+* <strong>Recurso a Proteger:</strong> Se requiere un volumen de datos flexible para la información de los proyectos de la empresa.
+* <strong>Grupos de Seguridad a Usar (Creados en el AD):</strong>
+    * <code>gDesarrolloXXX</code> (Grupo de Programadores Web - <strong>Necesitan Control Total</strong>).
+    * <code>gComercialXXX</code> (Grupo de Vendedores - <strong>Solo Necesitan Lectura</strong>).</p>
+<p><strong>Procedimiento Detallado de las Tareas:</strong></p>
+<ol>
+<li>
+<p><strong>Preparación del Servidor y Particionado LVM:</strong></p>
+<ul>
+<li>Instale su sistema operativo servidor Linux (se recomienda una distribución LTS sin entorno gráfico, como Debian o Ubuntu Server).</li>
+<li>Configure la interfaz de red para que tenga una <strong>IP estática coherente</strong> con el esquema de red de <code>DOMXXX</code> (ej. 192.168.1.X) y apunte al Windows Server como DNS principal.</li>
+<li>Añada un segundo disco duro virtual (mínimo 50 GB) a la máquina virtual.</li>
+<li><strong>Implemente LVM:</strong> Convierta el segundo disco en un <strong>Volumen Físico (PV)</strong>.</li>
+<li><strong>Cree un Grupo de Volúmenes (VG)</strong> llamado <code>vg_ISCASOX</code>.</li>
+<li><strong>Cree un Volumen Lógico (LV)</strong> de 30 GB llamado <code>lv_datasox</code> dentro del VG, formatéelo con <code>ext4</code>.</li>
+<li><strong>Cree el punto de montaje</strong> <code>/srv/datasox</code> y monte allí el LV, asegurando que el montaje se realice automáticamente al reiniciar.</li>
+</ul>
+</li>
+<li>
+<p><strong>Gestión de Espacio y Flexibilidad (LVM):</strong></p>
+<ul>
+<li>Simule que la carpeta de datos se llena. Utilice los comandos de LVM para <strong>extender el <code>lv_datasox</code></strong> en 10 GB de espacio libre que quede en el VG.</li>
+<li>Asegure que el sistema de archivos (ext4) refleje el nuevo tamaño sin perder datos.</li>
+</ul>
+</li>
+<li>
+<p><strong>Implementación de ACLs para la Empresa ISCASOX:</strong></p>
+<ul>
+<li>En el volumen recién creado, <strong>cree la siguiente estructura de directorios</strong> para la empresa: <code>/srv/datasox/Proyectos/Proyecto_Web</code>.</li>
+<li><strong>Instale</strong> las utilidades necesarias para usar ACLs (<code>acl</code>).</li>
+<li><strong>Aplique la política de acceso mediante <code>setfacl</code>:</strong><ul>
+<li>Otorgue permisos de <strong>lectura, escritura y ejecución (rwx)</strong> al grupo <code>gDesarrolloXXX</code> sobre la carpeta <code>Proyecto_Web</code>.</li>
+<li>Otorgue permisos de <strong>lectura y ejecución (r-x)</strong> al grupo <code>gComercialXXX</code> sobre la misma carpeta.</li>
+</ul>
+</li>
+<li><strong>Verifique</strong> los permisos efectivos del directorio y la máscara.</li>
+</ul>
+</li>
+<li>
+<p><strong>Refuerzo de la Seguridad Remota (SSH):</strong></p>
+<ul>
+<li>Desde su equipo cliente, <strong>genere un par de claves SSH</strong> (clave pública y privada).</li>
+<li><strong>Copie la clave pública</strong> del administrador al servidor <code>SRVLINUXXXX</code>.</li>
+<li><strong>Modifique el fichero de configuración de SSH</strong> (<code>/etc/ssh/sshd_config</code>) para:<ul>
+<li>Deshabilitar la autenticación por contraseña (<code>PasswordAuthentication no</code>).</li>
+<li>Deshabilitar el acceso directo como <code>root</code> (<code>PermitRootLogin no</code>).</li>
+</ul>
+</li>
+<li>Reinicie el servicio SSH para aplicar los cambios.</li>
+<li><strong>Compruebe</strong> que solo puede acceder con la clave privada.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Entregable (Memoria Técnica):</strong></p>
+<ol>
+<li><strong>Plan de Almacenamiento:</strong> Esquema detallado del LVM (salida de <code>pvs</code>, <code>vgs</code>, <code>lvs</code> y <code>df -h</code>).</li>
+<li><strong>Comprobación de Flexibilidad:</strong> Capturas de pantalla que muestren la extensión exitosa del volumen lógico.</li>
+<li><strong>Implementación de ACLs:</strong> Salida del comando <strong><code>getfacl /srv/datasox/Proyectos/Proyecto_Web</code></strong> que confirme las políticas de acceso de <code>gDesarrolloXXX</code> y <code>gComercialXXX</code>.</li>
+<li><strong>Seguridad SSH:</strong> Captura de la parte modificada de <code>/etc/ssh/sshd_config</code> y una captura que demuestre el acceso exitoso con la clave y el fallo al intentar acceder con contraseña.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Sergio Rey Martínez - SMX - SOX - 2025
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.indexes", "navigation.footer", "navigation.instant", "navigation.instant.progress", "toc.follow", "navigation.top", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
