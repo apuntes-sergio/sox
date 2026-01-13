@@ -2,228 +2,234 @@
 
 ## Introducción: Redes heterogéneas
 
-Hasta ahora hemos trabajado solo con Windows Server. Hemos montado un dominio, compartido recursos, aplicado directivas... todo en Windows. Pero cuando visitéis empresas medianas o grandes, veréis que lo habitual es encontrar **Windows y Linux trabajando juntos**. A esto se le llama una **red heterogénea**.
-
-> **IMAGEN SUGERIDA**: Diagrama simple mostrando servidor Windows + servidor Linux conectados, con clientes accediendo a ambos
+Hasta ahora hemos trabajado exclusivamente con Windows Server. Hemos montado un dominio, compartido recursos y aplicado directivas en un entorno completamente Microsoft. Sin embargo, cuando visitéis empresas medianas o grandes, os daréis cuenta de que lo habitual es encontrar **Windows y Linux trabajando juntos**. A esto se le llama una **red heterogénea**.
 
 ### Por qué mezclar Windows y Linux
 
-Las empresas no mezclan sistemas por capricho. Hay razones muy concretas:
+Las empresas no mezclan sistemas operativos por capricho. Existen razones muy concretas que justifican esta decisión:
 
-**Ahorro de costes**: Windows Server requiere licencias que cuestan cientos de euros por servidor. Linux es gratuito. Una empresa con 10 servidores puede ahorrarse miles de euros usando Linux donde sea posible.
+**Ahorro de costes**: Windows Server requiere licencias que cuestan cientos de euros por servidor y por cliente. Linux, en cambio, es gratuito. Una empresa con 10 servidores puede ahorrarse miles de euros anuales usando Linux donde sea técnicamente viable.
 
-**Cada sistema tiene sus fortalezas**:
-- Windows destaca en: gestión centralizada (AD), integración con Office/Exchange, aplicaciones empresariales específicas
-- Linux destaca en: servidores web, estabilidad (meses sin reiniciar), seguridad, rendimiento con pocos recursos
+**Cada sistema tiene sus fortalezas**: 
 
-**Aplicaciones modernas**: Muchas tecnologías actuales (Docker, Kubernetes, la mayoría de frameworks web) están optimizadas para Linux. Si quieres usarlas, necesitas servidores Linux.
+Windows destaca en gestión centralizada mediante Active Directory, integración perfecta con Office y Exchange, y soporte nativo para aplicaciones empresariales que solo existen en este ecosistema (por ejemplo, muchas aplicaciones de gestión empresarial, contabilidad o ERP).
 
-> **IMAGEN SUGERIDA**: Tabla comparativa simple Windows Server vs Linux Server con iconos
+Linux destaca en servidores web (la mayoría de sitios web del mundo corren en Linux), estabilidad excepcional (servidores que funcionan meses sin reiniciar), mayor seguridad por diseño y rendimiento óptimo incluso con recursos limitados.
+
+**Aplicaciones modernas**: Muchas tecnologías actuales como Docker, Kubernetes y la mayoría de frameworks de desarrollo web están optimizadas para Linux. Si una empresa quiere usar estas tecnologías, necesita servidores Linux en su infraestructura.
 
 ### El reto: que todo funcione junto
 
-El desafío no es técnico, es de integración. **Los usuarios no deben notar que hay sistemas diferentes**. Cuando un empleado accede a una carpeta compartida, no debería importarle si está en Windows o Linux. Debe usar las mismas credenciales para todo.
+El desafío no es técnico en sí mismo, sino de integración. Los usuarios finales no deben notar que existen sistemas diferentes trabajando detrás. Cuando un empleado accede a una carpeta compartida, no debería importarle si está físicamente en Windows o en Linux. Debe poder usar las mismas credenciales para todo y el sistema debe comportarse de manera uniforme.
 
-Para conseguir esto usamos **protocolos estándar** que ambos sistemas entienden:
-- **SMB/CIFS**: compartir archivos (lo usa Windows, Samba lo implementa en Linux)
-- **LDAP**: directorios de usuarios
-- **Kerberos**: autenticación segura
-- **DNS**: resolución de nombres
+Para conseguir esta transparencia usamos **protocolos estándar** que ambos sistemas entienden:
 
-> **IMAGEN SUGERIDA**: Diagrama de flujo mostrando usuario → autenticación AD → acceso a recursos Windows y Linux
+- **SMB/CIFS**: protocolo para compartir archivos. Windows lo usa nativamente y en Linux lo implementamos mediante Samba.
+
+- **LDAP**: protocolo de directorios de usuarios que permite consultar y gestionar información de autenticación de forma centralizada.
+
+- **Kerberos**: sistema de autenticación segura que usa tokens cifrados para verificar identidades.
+
+- **DNS**: sistema de resolución de nombres que permite usar nombres de equipo en lugar de direcciones IP.
+
+---
 
 ## Linux: conceptos básicos
 
 ### Qué es Linux
 
-Linux no es un sistema operativo completo, es un **kernel** (núcleo). Las **distribuciones** toman el kernel y le añaden todo lo necesario: herramientas, gestores de paquetes, servicios...
+Linux no es un sistema operativo completo, es un **kernel** (núcleo del sistema). Las **distribuciones** toman ese kernel y le añaden todo lo necesario: herramientas del sistema, gestores de paquetes, servicios, interfaces gráficas, etc.
 
-Nosotros usaremos **Ubuntu Server 22.04 LTS** porque:
-- Es gratuita
-- Tiene soporte hasta 2027
-- Comunidad enorme (fácil encontrar ayuda)
-- La más usada en cloud (AWS, Azure, Google Cloud)
-- Ideal para aprender
+Nosotros usaremos **Ubuntu Server 22.04 LTS** por varias razones prácticas:
 
-> **IMAGEN SUGERIDA**: Logos de distribuciones populares (Ubuntu, Debian, Red Hat, CentOS)
+Es completamente gratuita y tiene soporte oficial hasta 2027. Cuenta con una comunidad enorme, lo que facilita encontrar ayuda y documentación. Es la distribución más usada en entornos cloud (AWS, Azure, Google Cloud), por lo que lo que aprendáis aquí os servirá en entornos profesionales reales. Además, es especialmente adecuada para aprender por su facilidad de uso y abundante documentación.
 
 ### Diferencias clave con Windows Server
 
-**Interfaz**: Windows tiene ventanas y menús. Linux Server se administra por **terminal** (línea de comandos). Parece más difícil pero consume menos recursos y facilita la automatización.
-
-> **IMAGEN SUGERIDA**: Captura de pantalla de terminal Linux vs ventana de Windows
+**Interfaz de administración**: Windows Server tiene ventanas, menús y herramientas gráficas. Linux Server se administra principalmente por **terminal** (línea de comandos). Aunque pueda parecer más difícil al principio, consume muchísimos menos recursos y facilita enormemente la automatización de tareas mediante scripts.
 
 **Sistema de archivos**: 
-- Windows: letras de unidad (C:, D:, E:)
-- Linux: un único árbol que empieza en `/` (raíz). Los discos se "montan" en carpetas.
 
-Ejemplo: en Windows tienes `D:\datos`. En Linux sería `/datos` (el disco se monta ahí).
+En Windows tenemos letras de unidad separadas (C:, D:, E:) para cada disco o partición. En Linux existe un único árbol jerárquico que empieza en `/` (raíz). Los discos adicionales se "montan" como carpetas dentro de este árbol.
 
-> **IMAGEN SUGERIDA**: Esquema del árbol de directorios Linux (/, /home, /etc, /var, /srv)
+Por ejemplo, en Windows tendríamos `D:\datos`. En Linux sería `/datos` y el disco físico se monta en esa ubicación.
 
 **Instalación de programas**:
-- Windows: descargas .exe y haces doble clic
-- Linux: usas el gestor de paquetes `apt`
+
+En Windows descargamos ejecutables .exe y hacemos doble clic. En Linux usamos el **gestor de paquetes** `apt`, que funciona como una tienda de aplicaciones pero mucho más potente.
 
 ```bash
 sudo apt install nombre_programa
 ```
 
-Todo descarga, instala y configura automáticamente. Es como una tienda de aplicaciones pero más potente.
+Este comando descarga el programa, lo instala, configura dependencias y lo deja listo para usar, todo automáticamente.
 
-**Usuarios y permisos**: Linux es multiusuario desde su origen. Hay un superusuario llamado **root** (como Administrador en Windows), pero por seguridad no trabajamos como root. Usamos `sudo` para ejecutar comandos con privilegios elevados.
+**Usuarios y permisos**: 
 
-**Configuración**: En Windows está en el Registro. En Linux, todo son **archivos de texto** en `/etc/`. Ventajas: puedes editarlos, copiarlos, hacer backups fácilmente.
+Linux es multiusuario desde su diseño original. Existe un superusuario llamado **root** (equivalente a Administrador en Windows), pero por seguridad nunca trabajamos directamente como root. Usamos el comando `sudo` para ejecutar comandos específicos con privilegios elevados.
+
+**Configuración del sistema**: 
+
+En Windows la configuración está en el Registro, una base de datos binaria compleja. En Linux, toda la configuración son **archivos de texto plano** ubicados principalmente en `/etc/`. Esto tiene enormes ventajas: puedes editarlos con cualquier editor, copiarlos fácilmente, hacer backups simples y compartirlos entre sistemas.
+
+---
 
 ## Qué vamos a hacer en este tema
 
-Vamos a incorporar un servidor Linux a nuestra red ISCASOX. No será un sistema aislado, sino integrado con el dominio Windows desde el principio.
+Vamos a incorporar un servidor Linux a nuestra red ISCASOX. No será un sistema aislado, sino completamente integrado con el dominio Windows desde el principio.
+
+El tema se estructura en cuatro bloques principales:
 
 **Bloque 1: Instalación y configuración básica**
-- Instalar Ubuntu Server en VirtualBox
-- Configurar red estática con Netplan
-- Configurar SSH para administrar remotamente
+
+Instalaremos Ubuntu Server en VirtualBox, configuraremos una dirección IP estática usando Netplan (el gestor de red de Ubuntu) y habilitaremos SSH para poder administrar el servidor remotamente desde nuestro equipo Windows.
 
 **Bloque 2: LVM (Logical Volume Manager)**
-- Gestión flexible de almacenamiento
-- Crear, ampliar y gestionar volúmenes sin reiniciar
+
+Aprenderemos a gestionar el almacenamiento de forma flexible. Crearemos, ampliaremos y gestionaremos volúmenes lógicos sin necesidad de reiniciar el servidor ni interrumpir servicios.
 
 **Bloque 3: Samba**
-- Instalar Samba (permite que Linux hable SMB de Windows)
-- Crear recursos compartidos básicos
-- Probar acceso desde Windows
+
+Instalaremos y configuraremos Samba, el software que permite que Linux "hable" el protocolo SMB de Windows. Crearemos recursos compartidos básicos y probaremos el acceso desde clientes Windows.
 
 **Bloque 4: Integración con Active Directory**
-- Unir el servidor Linux al dominio Windows
-- Usuarios del AD pueden autenticarse en Linux
-- Recursos compartidos respetan permisos del AD
 
-> **IMAGEN SUGERIDA**: Diagrama del resultado final: AD Windows + Linux integrado + clientes accediendo a ambos
+Esta es la parte más interesante: uniremos el servidor Linux al dominio Windows. Los usuarios del Active Directory podrán autenticarse en Linux y los recursos compartidos respetarán los permisos establecidos en el AD.
 
-Al final tendremos una infraestructura híbrida real, como las que veréis en empresas.
+Al final de este tema tendremos una infraestructura híbrida completamente funcional, similar a las que encontraréis en empresas reales.
 
-## Cómo trabajar en este tema
+---
 
-**En clase**: Explicaremos conceptos y haremos demos de procesos complejos.
+!!!top "Cómo trabajar en este tema"
 
-**En los apuntes**: Guías paso a paso muy detalladas que seguís a vuestro ritmo.
+    **En clase** explicaremos los conceptos fundamentales y haremos demostraciones en vivo de los procesos más complejos.
 
-**Importante**: 
-- Haced **snapshots** (instantáneas) de la VM antes de cambios importantes
-- Si algo falla, restauráis y lo intentáis de nuevo
-- No tengáis miedo a "romper" el sistema: estáis en VMs
-- **No copiéis comandos sin leer**: entended qué hace cada comando
-- Los errores en Linux suelen ser muy informativos. Leedlos.
+    **En los apuntes** encontraréis guías paso a paso muy detalladas que podréis seguir a vuestro ritmo.
 
-**Cuando algo no funcione**:
-1. Lee el mensaje de error completo
-2. Busca el error en Google (copia el mensaje exacto)
-3. Consulta al profesor
+    **Aspectos importantes a tener en cuenta**:
 
-> **IMAGEN SUGERIDA**: Captura mostrando cómo hacer snapshot en VirtualBox
+    Haced **snapshots** (instantáneas) de la máquina virtual antes de realizar cambios importantes. Si algo falla, simplemente restauráis la instantánea y volvéis a intentarlo sin perder todo el trabajo anterior.
 
-## Herramientas de ayuda
+    No tengáis miedo a "romper" el sistema. Estáis trabajando en máquinas virtuales, así que experimentad tranquilamente. Los errores son parte del aprendizaje.
 
-**Comandos útiles para obtener ayuda**:
-```bash
-man nombre_comando    # Manual completo del comando
-comando --help        # Ayuda rápida del comando
-```
+    **No copiéis comandos sin leer qué hacen**. Es fundamental que entendáis cada comando antes de ejecutarlo. Los errores en Linux suelen ser muy informativos si os tomáis el tiempo de leerlos.
 
-**Herramientas gráficas opcionales**:
-- **Webmin**: panel web de administración
-- **Cockpit**: panel moderno de gestión del sistema
+    **Cuando algo no funcione**, seguid estos pasos:
 
-No son obligatorias, pero pueden ayudar cuando empezáis.
+    Primero, leed el mensaje de error completo, palabra por palabra. Segundo, buscad el error exacto en Google (copiad el mensaje tal cual). Tercero, consultad al profesor si seguís atascados después de intentar solucionarlo.
 
-> **IMAGEN SUGERIDA**: Captura del dashboard de Cockpit
+    **Herramientas de ayuda**: Linux tiene sistemas de ayuda integrados muy potentes:
 
+    ```bash
+    man nombre_comando    # Manual completo y detallado del comando
+    comando --help        # Ayuda rápida con las opciones principales
+    ```
 
-# 2. Instalación de Ubuntu Server
+    Existen también herramientas gráficas opcionales como **Webmin** o **Cockpit** que proporcionan paneles web de administración. No son obligatorias, pero pueden ayudar cuando estáis empezando a familiarizaros con el sistema.
 
-Una vez creada la máquina virtual, la iniciamos y comenzará el proceso de instalación desde el ISO.
+---
 
-Ubuntu Server no tiene entorno gráfico, todo se hace desde la terminal. No te preocupes, el instalador es muy intuitivo y guiado.
+## 1. Instalación de Ubuntu Server
 
-#### Proceso de instalación paso a paso
+### Preparación de la máquina virtual
 
-**Pantalla de idioma:**
-- Seleccionamos **English** (es más fácil buscar ayuda en inglés si hay problemas)
-- Pulsamos `Enter`
+Vamos a crear una nueva máquina virtual en VirtualBox específicamente para Ubuntu Server. La configuración debe ser la siguiente:
 
-**Keyboard configuration:**
-- Layout: **Spanish**
-- Variant: **Spanish**
-- Pulsamos `Done` (con las flechas nos movemos, con `Enter` seleccionamos)
+**Parámetros básicos**:
 
-**Choose type of install:**
-- Dejamos seleccionado **Ubuntu Server** (por defecto)
-- Pulsamos `Done`
+- Nombre: `SERVERXXX_Linux` (donde XXX es tu nombre)
+- Tipo: Linux
+- Versión: Ubuntu (64-bit)
+- Memoria RAM: 2048 MB (2 GB)
+- Procesadores: 2 CPUs
+- Disco duro: 25 GB (reservado dinámicamente)
 
-**Network connections:**
-Aquí veremos nuestras 3 tarjetas de red. De momento todas tendrán configuración automática (DHCP) o sin configurar. Esto lo arreglaremos después de la instalación.
-- No tocamos nada por ahora
-- Pulsamos `Done`
+**Configuración de red**:
 
-**Configure proxy:**
-- Dejamos en blanco (no necesitamos proxy)
-- Pulsamos `Done`
+Para simplificar el montaje, vamos a usar una única tarjeta de red que conectará el servidor Linux directamente a la red de departamentos de nuestra empresa ISCASOX.
 
-**Configure Ubuntu archive mirror:**
-- Dejamos la URL por defecto
-- Pulsamos `Done`
+Adaptador 1: Red interna `red_departamentos`. IP estática `192.168.100.5/24`. Esta red conecta con el Windows Server (`192.168.100.1`) y con todos los departamentos de la empresa (gestión, taller, comercial, desarrollo).
 
-**Guided storage configuration:**
-Esta es una de las pantallas más importantes. Aquí decidimos cómo particionar el disco.
+Esta configuración es suficiente porque el Windows Server ya tiene salida a Internet y actúa como gateway. El servidor Linux podrá comunicarse con Internet a través del Windows Server.
 
-Para esta instalación inicial, vamos a usar el **particionado automático**. Más adelante añadiremos discos y configuraremos LVM manualmente.
+**Añadir el ISO de instalación**:
 
-- Dejamos seleccionado **Use an entire disk**
-- Dejamos seleccionado **Set up this disk as an LVM group**
-- Pulsamos `Done`
+Descarga Ubuntu Server 22.04 LTS desde la [página oficial de Ubuntu](https://releases.ubuntu.com/jammy/). En la configuración de la VM, en la sección Almacenamiento, añadid el archivo ISO descargado como disco óptico.
 
-Nos aparecerá un resumen del particionado. Veremos algo como:
+### Proceso de instalación paso a paso
+
+Una vez creada la máquina virtual, la iniciamos. Arrancará automáticamente desde el ISO y comenzará el instalador.
+
+**Pantalla de idioma**: Seleccionamos **English**. Aunque sea en inglés, es más fácil buscar ayuda en Internet cuando aparecen mensajes en este idioma. Pulsamos Enter.
+
+**Configuración del teclado**: 
+
+Layout: **Spanish**
+
+Variant: **Spanish**
+
+Navegamos con las flechas del teclado y seleccionamos con Enter. Pulsamos "Done" para continuar.
+
+**Tipo de instalación**: Dejamos seleccionado **Ubuntu Server** (es la opción por defecto). Pulsamos Done.
+
+**Configuración de red**: 
+
+Aquí veremos la tarjeta de red que configuramos en VirtualBox. De momento tendrá configuración automática o sin configurar. No os preocupéis, esto lo arreglaremos después de la instalación. No tocamos nada y pulsamos Done.
+
+**Configuración de proxy**: Dejamos el campo en blanco (no necesitamos proxy) y pulsamos Done.
+
+**Mirror de Ubuntu**: Dejamos la URL por defecto y pulsamos Done.
+
+**Configuración del almacenamiento**:
+
+Esta es una de las pantallas más importantes. Aquí decidimos cómo particionar el disco. Para esta instalación inicial vamos a usar el particionado automático. Más adelante añadiremos discos adicionales y configuraremos LVM manualmente.
+
+Dejamos seleccionado **Use an entire disk** y **Set up this disk as an LVM group**. Pulsamos Done.
+
+Nos mostrará un resumen del particionado propuesto. Veremos algo como:
+
 ```
 USED DEVICES
 ubuntu-lv     /     12.000G
 ```
 
-- Pulsamos `Done`
-- Nos preguntará si estamos seguros → Seleccionamos `Continue`
+Pulsamos Done y nos preguntará si estamos seguros. Seleccionamos Continue para proceder.
 
-**Profile setup:**
-Aquí configuramos el usuario administrador principal del sistema.
+**Configuración de perfil**:
+
+Aquí configuramos el usuario administrador principal del sistema. Este usuario tendrá permisos para usar `sudo` y administrar el servidor.
 
 ```
 Your name: Administrador
 Your server's name: SRVXXX_Linux  (XXX = tu nombre)
 Pick a username: admin
-Choose a password: (contraseña sencilla que recordemos)
+Choose a password: (contraseña sencilla que recordéis)
 Confirm your password: (repetir contraseña)
 ```
 
-**IMPORTANTE**: Apunta este usuario y contraseña, lo necesitarás constantemente.
+**IMPORTANTE**: Apuntad este usuario y contraseña en algún lugar seguro. Lo necesitaréis constantemente.
 
-**SSH Setup:**
-SSH (Secure Shell) es el protocolo que usaremos para conectarnos remotamente al servidor desde Windows. Es fundamental instalarlo.
+**Configuración SSH**:
 
-- Marcamos con `Espacio` la opción **Install OpenSSH server**
-- Dejamos desmarcado "Import SSH identity"
-- Pulsamos `Done`
+SSH (Secure Shell) es el protocolo que usaremos para conectarnos remotamente al servidor desde Windows. Es absolutamente fundamental instalarlo.
 
-**Featured Server Snaps:**
-Nos ofrece instalar algunos paquetes populares. De momento no instalamos nada.
-- No marcamos ninguno
-- Pulsamos `Done`
+Marcamos con la barra espaciadora la opción **Install OpenSSH server**. Dejamos desmarcado "Import SSH identity". Pulsamos Done.
 
-**Instalación:**
-Comenzará la instalación. Tardará unos minutos. Veremos el progreso en pantalla.
+**Paquetes adicionales**: 
 
-Cuando termine la instalación, aparecerá un botón `Reboot Now`.
-- Pulsamos `Reboot Now`
-- Si nos pide que quitemos el medio de instalación, simplemente pulsamos `Enter`
+El instalador nos ofrece instalar algunos paquetes populares. De momento no instalamos ninguno. Pulsamos Done sin marcar nada.
 
-El sistema se reiniciará y nos aparecerá una pantalla de login en modo texto:
+**Instalación**: 
+
+Comenzará el proceso de instalación. Tardará varios minutos. Podemos ver el progreso en pantalla con mensajes como "Installing system", "Configuring apt", etc.
+
+**Reinicio**: 
+
+Cuando termine la instalación aparecerá un botón "Reboot Now". Pulsamos sobre él. Si nos pide que quitemos el medio de instalación, simplemente pulsamos Enter. El sistema se reiniciará automáticamente.
+
+### Primer acceso al sistema
+
+Tras el reinicio, aparecerá una pantalla de login en modo texto:
 
 ```
 Ubuntu 22.04.X LTS SRVXXX_Linux tty1
@@ -231,19 +237,17 @@ Ubuntu 22.04.X LTS SRVXXX_Linux tty1
 SRVXXX_Linux login: _
 ```
 
-**¡Enhorabuena! Has instalado Ubuntu Server.**
+Introducimos nuestras credenciales:
 
-### 1.3. Primer acceso al sistema
-
-Ahora vamos a acceder por primera vez a nuestro servidor.
-
-En la pantalla de login, introducimos:
 ```
 login: admin
 password: (nuestra contraseña)
 ```
 
-Si todo va bien, veremos algo como:
+La contraseña no se ve al escribir, es una medida de seguridad. Es completamente normal.
+
+Si todo va bien, veremos la pantalla de bienvenida y el prompt del sistema:
+
 ```
 Welcome to Ubuntu 22.04.X LTS (GNU/Linux 5.15.0-XX-generic x86_64)
 
@@ -255,161 +259,190 @@ Last login: ...
 admin@SRVXXX_Linux:~$ _
 ```
 
-Este es el **prompt** de Linux. Nos indica:
-- **admin**: usuario actual
+Este es el **prompt** de Linux. Nos proporciona información importante:
+
+- **admin**: el usuario con el que estamos trabajando
 - **SRVXXX_Linux**: nombre del servidor
-- **~**: estamos en nuestra carpeta personal (`/home/admin`)
-- **$**: símbolo que indica que somos un usuario normal (no root)
+- **~**: indica que estamos en nuestra carpeta personal (`/home/admin`)
+- **$**: símbolo que indica que somos un usuario normal (no root). Si fuéramos root, aparecería `#`
 
-#### Comandos básicos para orientarnos
+### Comandos básicos para orientarnos
 
-Vamos a ejecutar algunos comandos básicos para familiarizarnos:
+Vamos a ejecutar algunos comandos básicos para familiarizarnos con el sistema y verificar que todo funciona correctamente.
 
-**Ver en qué directorio estamos:**
+**Ver en qué directorio estamos**:
+
 ```bash
 pwd
 ```
+
 Resultado: `/home/admin`
 
-**Listar archivos del directorio actual:**
+Este comando significa "Print Working Directory" (imprimir directorio de trabajo). Siempre nos dice dónde estamos en el árbol de directorios.
+
+**Listar archivos del directorio actual**:
+
 ```bash
 ls
 ```
 
-**Listar archivos con detalles:**
+Probablemente no veamos nada porque el directorio está vacío al ser recién creado.
+
+**Listar archivos con detalles**:
+
 ```bash
 ls -la
 ```
 
-**Ver información del sistema:**
+La opción `-l` muestra formato largo con permisos, propietario, tamaño y fecha. La opción `-a` muestra también archivos ocultos (los que empiezan por punto).
+
+**Ver información del sistema**:
+
 ```bash
 uname -a
 ```
 
-**Ver información de red:**
+Muestra información sobre el kernel: versión, arquitectura, nombre del host, etc.
+
+**Ver información de red**:
+
 ```bash
 ip addr
 ```
-Aquí veremos nuestras tarjetas de red. Deberían aparecer 3 interfaces (además de `lo` que es la interfaz local):
-- `enp0s3`: adaptador 1 (NAT o puente)
-- `enp0s8`: adaptador 2 (red departamentos)
-- `enp0s9`: adaptador 3 (red aula)
 
-Los nombres pueden variar ligeramente (`enp0s3`, `ens33`, `eth0`, etc.), pero habrá 3 interfaces.
+Este comando es fundamental. Muestra todas las interfaces de red. Deberíamos ver algo similar a:
 
-**Verificar conectividad a Internet:**
-```bash
-ping -c 4 google.com
 ```
-El `-c 4` indica que haga 4 pings y pare (en Linux, ping no para automáticamente como en Windows).
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    inet 127.0.0.1/8 scope host lo
 
-Si funciona, veremos algo como:
-```
-64 bytes from ... time=20ms
-...
-4 packets transmitted, 4 received, 0% packet loss
+2: enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    inet 192.168.10.X/24 brd 192.168.10.255 scope global dynamic enp0s3
 ```
 
-**Actualizar el sistema:**
-Es buena práctica actualizar el sistema recién instalado:
+Aquí vemos:
+
+- `lo`: interfaz de loopback local (siempre presente)
+- `enp0s3`: nuestra interfaz de red (puede que aún sin configurar o con IP temporal)
+
+El nombre exacto (`enp0s3`, `eth0`, `ens33`, etc.) puede variar según la configuración de VirtualBox y el hardware virtualizado.
+
+**Actualizar el sistema**:
+
+Es buena práctica actualizar el sistema recién instalado para tener todas las últimas correcciones de seguridad:
 
 ```bash
 sudo apt update
 ```
 
-Nos pedirá la contraseña de `admin`. La escribimos (no se verá nada al escribir, es normal) y pulsamos `Enter`.
+La primera vez que usamos `sudo` nos pedirá la contraseña de nuestro usuario `admin`. La escribimos (no se verá nada al escribir, es normal por seguridad) y pulsamos Enter.
 
-Este comando actualiza la lista de paquetes disponibles.
+Este comando actualiza la lista de paquetes disponibles desde los repositorios.
 
 ```bash
 sudo apt upgrade -y
 ```
 
-Este comando instala las actualizaciones. El `-y` responde automáticamente "yes" a todas las preguntas.
+Este comando instala las actualizaciones disponibles. El parámetro `-y` responde automáticamente "yes" a todas las preguntas de confirmación.
 
-Puede tardar unos minutos. Espera a que termine.
+Puede tardar varios minutos. Es normal. Esperamos pacientemente a que termine.
 
-#### ¿Qué es sudo?
+### Qué es sudo
 
-En Linux, las tareas de administración requieren permisos de **root** (el superusuario, equivalente a "Administrador" en Windows).
+En Linux, las tareas de administración del sistema requieren permisos de **root** (el superusuario, equivalente a "Administrador" en Windows).
 
-Por seguridad, no trabajamos como root directamente. En su lugar, usamos el comando `sudo` (SuperUser DO) antes de comandos que requieren permisos elevados.
+Por razones de seguridad, no trabajamos directamente como root. En su lugar, usamos el comando `sudo` (que significa "SuperUser DO") delante de comandos que requieren permisos elevados.
 
-Cuando usamos `sudo`, nos pide la contraseña de nuestro usuario, y si tenemos permisos, ejecuta el comando como root.
+Cuando usamos `sudo`, el sistema:
+
+1. Nos pide la contraseña de nuestro usuario actual
+2. Verifica que nuestro usuario tiene permisos para usar sudo
+3. Ejecuta el comando con privilegios de root
+4. Registra la acción en los logs del sistema
+
+La primera vez que usamos `sudo` en una sesión pide contraseña. Durante los siguientes 15 minutos no volverá a pedirla (por comodidad). Después de ese tiempo, volverá a solicitarla.
 
 ---
 
 ## 2. Configuración de red estática con Netplan
 
-### 2.1. ¿Por qué configuración estática?
+### Por qué configuración estática
 
-Cuando instalamos Ubuntu Server, las tarjetas de red se configuran automáticamente mediante DHCP (si hay un servidor DHCP disponible) o quedan sin configurar.
+Cuando instalamos Ubuntu Server, la tarjeta de red se configura automáticamente mediante DHCP si hay un servidor DHCP disponible, o queda sin configurar si no lo hay.
 
-Para un servidor, necesitamos que las direcciones IP sean **fijas** (estáticas), no pueden cambiar cada vez que se reinicia. Imagina si cada vez que se reinicia el servidor cambia su IP: los clientes no sabrían dónde encontrarlo.
+Para un servidor, es imprescindible que la dirección IP sea **fija** (estática). No puede cambiar cada vez que se reinicia el sistema. Imaginad si cada vez que el servidor se reinicia su IP cambia: los clientes no sabrían dónde encontrarlo, las configuraciones de red fallarían y todo dejaría de funcionar.
 
-### 2.2. Netplan: el gestor de red de Ubuntu
+### Netplan: el gestor de red de Ubuntu
 
-Ubuntu Server usa **Netplan** para configurar la red. Netplan es un sistema que lee archivos de configuración en formato YAML y aplica la configuración de red.
+Ubuntu Server usa **Netplan** para configurar la red. Netplan es un sistema que:
 
-Los archivos de configuración de Netplan están en:
-```
-/etc/netplan/
-```
+- Lee archivos de configuración en formato YAML
+- Genera la configuración para el gestor de red subyacente (NetworkManager o systemd-networkd)
+- Aplica los cambios de forma consistente
 
-Vamos a ver qué archivos hay:
+Los archivos de configuración de Netplan están en el directorio `/etc/netplan/`.
+
+Veamos qué archivos hay:
+
 ```bash
 ls /etc/netplan/
 ```
 
-Normalmente encontraremos un archivo llamado `00-installer-config.yaml` o similar.
+Normalmente encontraremos un archivo llamado `00-installer-config.yaml` o algo similar. Los números al principio determinan el orden de aplicación si hay varios archivos.
 
-Vamos a ver su contenido:
+Veamos su contenido actual:
+
 ```bash
 sudo cat /etc/netplan/00-installer-config.yaml
 ```
 
-Veremos algo como:
+Veremos algo parecido a esto:
+
 ```yaml
 network:
   ethernets:
     enp0s3:
       dhcp4: true
-    enp0s8:
-      dhcp4: true
-    enp0s9:
-      dhcp4: true
   version: 2
 ```
 
-Esto significa que las 3 interfaces están configuradas para obtener IP automáticamente mediante DHCP.
+Esto significa que la interfaz está configurada para obtener IP automáticamente mediante DHCP.
 
-### 2.3. Configurar IPs estáticas
+### Configurar IP estática
 
-Vamos a modificar este archivo para configurar IPs estáticas en las interfaces de las redes internas (`enp0s8` y `enp0s9`). La primera interfaz (`enp0s3`) la dejaremos con DHCP para que tenga salida a Internet automáticamente.
+Vamos a modificar este archivo para configurar una IP estática en nuestra interfaz de red.
 
-#### Esquema de red a configurar
+**Esquema de red a configurar**:
 
-Según el diseño de nuestra red ISCASOX:
+Según el diseño de nuestra red ISCASOX, la configuración quedará así:
 
-- **enp0s3** (Adaptador 1): DHCP (salida a Internet)
-- **enp0s8** (Adaptador 2 - red departamentos): `192.168.10.2/24`
-  - Gateway: `192.168.10.1` (Windows Server)
-- **enp0s9** (Adaptador 3 - red aula): `172.16.X.2/24` (X = número de tu equipo)
-  - Gateway: `172.16.X.1` (Windows Server)
+**enp0s3** (única interfaz - red departamentos):
+- IP: `192.168.10.2/24`
+- Gateway: `192.168.10.1` (Windows Server)
+- DNS: `192.168.10.1`, `8.8.8.8`
 
-**IMPORTANTE**: Los nombres de las interfaces (`enp0s3`, `enp0s8`, `enp0s9`) pueden variar en tu sistema. Usa el comando `ip addr` para verificar los nombres reales de tus interfaces.
+El Windows Server actuará como puerta de enlace para dar salida a Internet a nuestro servidor Linux.
 
-#### Editar el archivo de configuración
+**IMPORTANTE**: El nombre de la interfaz puede variar en vuestro sistema. Usad el comando `ip addr` para verificar el nombre real y ajustad la configuración en consecuencia.
 
-Para editar archivos en Linux desde la terminal, usamos un editor de texto. Los más comunes son `nano` (más sencillo) y `vi` (más potente pero complejo).
+### Editar el archivo de configuración
 
-Usaremos **nano** por ser más intuitivo:
+Para editar archivos en Linux desde la terminal usamos editores de texto. Los más comunes son:
+
+- **nano**: más sencillo e intuitivo, ideal para principiantes
+- **vi** o **vim**: más potente pero con curva de aprendizaje pronunciada
+
+Usaremos **nano** porque es más fácil de usar:
 
 ```bash
 sudo nano /etc/netplan/00-installer-config.yaml
 ```
 
-Borramos todo el contenido y escribimos la siguiente configuración:
+Nos pedirá la contraseña de sudo si han pasado más de 15 minutos desde la última vez que lo usamos.
+
+El editor nano se abrirá mostrando el contenido actual del archivo. En la parte inferior veremos atajos de teclado (el símbolo `^` representa la tecla Ctrl).
+
+Borramos todo el contenido actual (con Supr o Backspace) y escribimos la siguiente configuración:
 
 ```yaml
 network:
@@ -417,101 +450,123 @@ network:
   renderer: networkd
   ethernets:
     enp0s3:
-      dhcp4: true
-    enp0s8:
       addresses:
         - 192.168.10.2/24
       routes:
         - to: default
           via: 192.168.10.1
-          metric: 200
       nameservers:
         addresses:
           - 192.168.10.1
           - 8.8.8.8
-    enp0s9:
-      addresses:
-        - 172.16.X.2/24
-      nameservers:
-        addresses:
-          - 192.168.10.1
 ```
 
-**IMPORTANTE**: 
-- Sustituye la `X` por el número de tu equipo
-- En YAML, la **indentación es crítica**. Debe ser con **espacios**, no tabuladores
-- Cada nivel de indentación son **2 espacios**
-- Verifica los nombres de tus interfaces con `ip addr` y ajusta si son diferentes
+**IMPORTANTE - Aspectos críticos de YAML**:
 
-#### Guardar el archivo
+En YAML, la **indentación es absolutamente crítica**. El formato usa espacios para indicar jerarquía.
 
-Para guardar en nano:
-- `Ctrl + O` (letra O, de "Output") → Confirmar con `Enter`
-- `Ctrl + X` para salir
+Debe indentarse con **espacios**, NUNCA con tabuladores. Si usáis tabuladores, dará error.
 
-#### Aplicar la configuración
+Cada nivel de indentación son exactamente **2 espacios**.
 
-Antes de aplicar, verificamos que la sintaxis del archivo es correcta:
+Los dos puntos (`:`) después de cada clave son obligatorios.
+
+Las listas se indican con guiones (`-`).
+
+Verificad cuidadosamente que el nombre de vuestra interfaz coincide con el que mostró `ip addr`. Si en vuestro sistema la interfaz se llama `ens33`, `eth0`, etc., debéis usar ese nombre.
+
+**Explicación de la configuración**:
+
+- `addresses`: la IP estática que asignamos al servidor
+- `routes`: definimos la ruta por defecto (gateway) hacia el Windows Server
+- `nameservers`: servidores DNS que usará el sistema (primero el Windows Server, luego Google DNS como backup)
+
+### Guardar el archivo
+
+Para guardar los cambios en nano:
+
+1. Pulsamos `Ctrl + O` (letra O, de "Output" o salida)
+2. Nos preguntará el nombre del archivo. Como no lo cambiamos, simplemente pulsamos `Enter`
+3. Para salir del editor: `Ctrl + X`
+
+### Aplicar la configuración
+
+Antes de aplicar la configuración definitivamente, Netplan nos permite probarla de forma segura:
 
 ```bash
 sudo netplan try
 ```
 
-Este comando aplica la configuración temporalmente y nos pregunta si funciona. Si no respondemos en 120 segundos, revierte los cambios. Esto es una medida de seguridad para no quedarnos sin acceso.
+Este comando es muy inteligente. Aplica la configuración temporalmente y nos pregunta si funciona. Si no respondemos en 120 segundos, **revierte automáticamente** los cambios. Esto es una medida de seguridad fundamental para no quedarnos sin acceso al servidor.
 
 Si todo va bien, veremos:
+
 ```
 Do you want to keep these settings?
 
 Press ENTER before the timeout to accept the new configuration
 
 Changes will revert in 120 seconds
+Configuration accepted.
 ```
 
-Pulsamos `Enter` para aceptar.
+Pulsamos Enter para aceptar definitivamente la nueva configuración.
 
-Si da algún error de sintaxis, nos lo indicará. Los errores más comunes son:
-- Indentación incorrecta (usar tabuladores en vez de espacios)
-- Nombres de interfaces incorrectos
-- Falta de dos puntos (`:`) después de las claves
+**Si hay errores de sintaxis**, nos los mostrará. Los errores más comunes son:
 
-#### Verificar la configuración
+- Indentación incorrecta (usar tabuladores en vez de espacios, o número incorrecto de espacios)
+- Nombre de interfaz incorrecto
+- Falta de dos puntos (`:`) después de las claves YAML
+- Guiones (`-`) mal colocados en las listas
 
-Una vez aplicada, verificamos las IPs:
+Si hay error, el comando no aplicará los cambios. Debemos volver a editar el archivo y corregir.
+
+### Verificar la configuración
+
+Una vez aplicada correctamente, verificamos que la IP se ha asignado:
 
 ```bash
 ip addr show
 ```
 
-Deberíamos ver nuestras 3 interfaces con las IPs configuradas:
-- `enp0s3`: IP automática (DHCP)
-- `enp0s8`: `192.168.10.2/24`
-- `enp0s9`: `172.16.X.2/24`
+Deberíamos ver nuestra interfaz con la dirección IP configurada:
 
-Verificamos conectividad a Internet:
-```bash
-ping -c 4 google.com
+```
+2: enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP>
+    inet 192.168.10.2/24 brd 192.168.10.255 scope global enp0s3
 ```
 
-Verificamos conectividad con el Windows Server:
+Verificamos que podemos comunicarnos con el Windows Server:
+
 ```bash
 ping -c 4 192.168.10.1
 ```
 
-Si todo funciona, ¡perfecto! Ya tenemos la red configurada.
+Si el Windows Server está configurado correctamente como gateway, deberíamos tener también acceso a Internet:
 
-### 2.4. Configurar el nombre del servidor (hostname)
+```bash
+ping -c 4 google.com
+```
 
-El nombre del servidor se configura con el comando `hostnamectl`:
+Si ambos funcionan, ¡perfecto! La red está correctamente configurada.
+
+**Nota**: Si el ping a Internet no funciona, aseguraos de que el Windows Server tiene configurado correctamente el enrutamiento y el NAT para dar salida a Internet a las redes internas.
+
+### Configurar el nombre del servidor (hostname)
+
+El nombre del servidor (hostname) se configura con el comando `hostnamectl`:
 
 ```bash
 sudo hostnamectl set-hostname SRVXXX_Linux
 ```
 
-Para ver el nombre actual:
+Para verificar que se ha cambiado correctamente:
+
 ```bash
 hostnamectl
 ```
+
+Veremos información detallada del sistema incluyendo el nuevo hostname.
 
 **IMPORTANTE**: También debemos editar el archivo `/etc/hosts` para que el sistema resuelva correctamente su propio nombre:
 
@@ -519,7 +574,8 @@ hostnamectl
 sudo nano /etc/hosts
 ```
 
-Debe contener al menos estas líneas:
+El archivo debe contener al menos estas líneas:
+
 ```
 127.0.0.1 localhost
 127.0.1.1 SRVXXX_Linux
@@ -532,126 +588,168 @@ ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 ```
 
-Guardamos (`Ctrl+O`, `Enter`, `Ctrl+X`).
+La línea importante es `127.0.1.1 SRVXXX_Linux`. Aseguraos de que coincide con vuestro hostname.
 
-Para que los cambios se apliquen completamente, reiniciamos:
+Guardamos el archivo (`Ctrl+O`, `Enter`, `Ctrl+X`).
+
+Para que todos los cambios se apliquen completamente, reiniciamos el servidor:
+
 ```bash
 sudo reboot
 ```
 
-El sistema se reiniciará. Esperamos unos segundos y volvemos a hacer login.
+El sistema se reiniciará. Esperamos unos 30 segundos y volvemos a hacer login. El prompt debería mostrar ya el nuevo nombre del servidor:
+
+```
+admin@SRVXXX_Linux:~$
+```
 
 ---
 
 ## 3. Gestión avanzada de almacenamiento con LVM
 
-### 3.1. ¿Qué es LVM y por qué usarlo?
+### Qué es LVM y por qué usarlo
 
-**LVM** (Logical Volume Manager) es un sistema de gestión de almacenamiento que añade una capa de abstracción entre los discos físicos y el sistema de archivos.
+**LVM** (Logical Volume Manager) es un sistema de gestión de almacenamiento que añade una capa de abstracción entre los discos físicos y el sistema de archivos. Esta abstracción nos proporciona una flexibilidad extraordinaria que no existe con las particiones tradicionales.
 
 #### Comparación: Particiones tradicionales vs LVM
 
-**Con particiones tradicionales:**
-- Creas particiones de tamaño fijo en el disco
-- Si una partición se queda sin espacio, es **muy difícil** ampliarla
-- No puedes "mover" espacio de una partición a otra fácilmente
-- No puedes combinar varios discos en una sola partición
+**Con particiones tradicionales**:
 
-**Con LVM:**
-- Puedes **ampliar** volúmenes fácilmente (incluso con el sistema en funcionamiento)
-- Puedes **reducir** volúmenes si necesitas recuperar espacio
-- Puedes **combinar** varios discos físicos en un único volumen
-- Puedes crear **snapshots** (copias instantáneas) de volúmenes
-- Puedes **mover** datos entre discos sin parar el sistema
+Cuando creamos una partición, definimos su tamaño de forma fija en el disco. Si esa partición se queda sin espacio más adelante, ampliarla es extremadamente complicado y arriesgado. Normalmente requiere:
 
-**Analogía**: 
-- Particiones tradicionales son como habitaciones de una casa con paredes de hormigón: muy difícil cambiar su tamaño.
-- LVM es como una oficina con paneles modulares: puedes mover las "paredes" y reorganizar el espacio fácilmente.
+- Parar el sistema completamente
+- Redimensionar la partición con herramientas especiales
+- Rezar para que no haya corrupción de datos
+- Reiniciar el sistema
 
-En Windows Server algo similar serían los **Storage Spaces**, aunque LVM es más potente y flexible.
+No podemos "mover" espacio libre de una partición a otra fácilmente. Si tenemos 50GB libres en una partición y otra se ha quedado sin espacio, no hay forma sencilla de transferir ese espacio.
 
-### 3.2. Conceptos de LVM
+Tampoco podemos combinar varios discos físicos para formar una única partición grande. Cada disco es independiente.
 
-LVM funciona con 3 niveles:
+**Con LVM**:
 
-1. **PV (Physical Volume - Volumen Físico)**:
-   - Es un disco duro físico (o partición) preparado para LVM
-   - Comando para crear: `pvcreate`
-   - Comando para ver: `pvs` o `pvdisplay`
+Podemos **ampliar** volúmenes fácilmente, incluso con el sistema en funcionamiento y sin parar servicios. Los usuarios ni se enterarán.
 
-2. **VG (Volume Group - Grupo de Volúmenes)**:
-   - Es un "conjunto" de uno o más PVs
-   - Es como una "bolsa de espacio" que puedes repartir
-   - Comando para crear: `vgcreate`
-   - Comando para ver: `vgs` o `vgdisplay`
+Podemos **reducir** volúmenes si necesitamos recuperar espacio para asignarlo a otro volumen.
 
-3. **LV (Logical Volume - Volumen Lógico)**:
-   - Es el "volumen" que usaremos realmente
-   - Se crea dentro de un VG
-   - Es lo que montaremos como carpeta en el sistema
-   - Comando para crear: `lvcreate`
-   - Comando para ver: `lvs` o `lvdisplay`
+Podemos **combinar** varios discos físicos en un único espacio de almacenamiento lógico.
 
-**Ejemplo visual:**
+Podemos crear **snapshots** (copias instantáneas) de volúmenes, ideales para backups o pruebas.
+
+Podemos **mover** datos entre discos sin detener el sistema ni afectar a las aplicaciones.
+
+**Analogía práctica**: 
+
+Las particiones tradicionales son como habitaciones de una casa con paredes de hormigón. Una vez construidas, cambiar su tamaño implica derribar paredes, lo cual es costoso y arriesgado.
+
+LVM es como una oficina moderna con paneles modulares. Puedes mover los "tabiques" fácilmente, combinar espacios, dividirlos o reorganizarlos según las necesidades cambien, todo sin obras mayores.
+
+En Windows Server existe algo similar llamado **Storage Spaces** o **Espacios de almacenamiento**, aunque LVM es más maduro, estable y potente al tener décadas de desarrollo.
+
+### Conceptos fundamentales de LVM
+
+LVM funciona con tres niveles jerárquicos que debemos entender claramente:
+
+**1. PV (Physical Volume - Volumen Físico)**:
+
+Es la base de todo. Un PV es un disco duro físico (o partición) que hemos "preparado" para que LVM pueda trabajar con él. Básicamente le decimos a LVM: "este disco está disponible para que lo gestiones".
+
+Comandos principales:
+- `pvcreate`: convierte un disco en PV
+- `pvs` o `pvdisplay`: muestra información de los PVs
+
+**2. VG (Volume Group - Grupo de Volúmenes)**:
+
+Es un "contenedor" que agrupa uno o varios PVs. Pensad en el VG como una "bolsa común de espacio" donde depositamos todos nuestros discos. Este espacio conjunto luego lo repartiremos como queramos.
+
+Por ejemplo, si tenemos tres discos de 10GB cada uno, los agrupamos en un VG y tenemos 30GB de espacio total para trabajar.
+
+Comandos principales:
+- `vgcreate`: crea un nuevo grupo de volúmenes
+- `vgs` o `vgdisplay`: muestra información de los VGs
+
+**3. LV (Logical Volume - Volumen Lógico)**:
+
+Es el "volumen" que usaremos realmente. Los LV se crean dentro de un VG, tomando el espacio que necesitemos de la "bolsa común". Este es el que finalmente montaremos como carpeta en el sistema y donde guardaremos datos.
+
+Por ejemplo, de nuestros 30GB totales del VG, podemos crear:
+- Un LV de 15GB para datos de empresa
+- Un LV de 10GB para carpetas de usuarios
+- Un LV de 5GB para backups
+
+Comandos principales:
+- `lvcreate`: crea un nuevo volumen lógico
+- `lvs` o `lvdisplay`: muestra información de los LVs
+
+**Diagrama conceptual**:
+
 ```
-Discos físicos: [Disco1] [Disco2] [Disco3]
-       ↓           ↓         ↓        ↓
-       └───────── PVs ─────────┘
-                   ↓
-               [VG: vg_datos]  ← Grupo que agrupa los 3 discos
-                   ↓
-       ┌───────────┴───────────┐
-       ↓           ↓           ↓
-  [LV: empresa] [LV: usuarios] [LV: backup]
-       ↓           ↓           ↓
-   /srv/empresa /srv/usuarios /srv/backup
+Discos físicos:  [Disco 10GB] [Disco 10GB] [Disco 10GB]
+                    ↓            ↓            ↓
+                    └───────── PVs ───────────┘
+                              ↓
+                    [VG: vg_datos - 30GB]
+                              ↓
+              ┌───────────────┴───────────────┐
+              ↓               ↓               ↓
+      [LV: lv_empresa]  [LV: lv_usuarios]  [LV: lv_backup]
+           15GB              10GB              5GB
+              ↓               ↓               ↓
+        /srv/empresa    /srv/usuarios    /srv/backup
 ```
 
-### 3.3. Añadir discos a la máquina virtual
+### Añadir discos a la máquina virtual
 
-Antes de trabajar con LVM, necesitamos añadir discos adicionales a nuestra VM.
+Antes de poder trabajar con LVM, necesitamos añadir discos adicionales a nuestra máquina virtual. Vamos a añadir tres discos de 10GB cada uno.
 
-#### Apagar la máquina virtual
+**Apagar la máquina virtual**:
 
-Desde la terminal del servidor:
+Desde la terminal del servidor ejecutamos:
+
 ```bash
 sudo poweroff
 ```
 
-#### Añadir 3 discos en VirtualBox
+El sistema se apagará de forma ordenada, cerrando todos los servicios correctamente.
 
-Con la VM apagada, en VirtualBox:
+**Añadir 3 discos en VirtualBox**:
 
-1. Seleccionamos la VM `SRVXXX_Linux`
+Con la VM completamente apagada (no pausada, apagada), en VirtualBox:
+
+1. Seleccionamos nuestra VM `SRVXXX_Linux`
 2. Click en **Configuración**
-3. Vamos a **Almacenamiento**
-4. En **Controladora: SATA**, click en el icono de disco con el `+` (Añadir disco duro)
+3. Navegamos a la sección **Almacenamiento**
+4. En el controlador **Controladora: SATA**, hacemos click en el icono de disco con el símbolo `+` (Añadir disco duro)
 5. Click en **Crear**
-6. Configurar el disco:
-   - Tipo: **VDI**
-   - Reservado dinámicamente
+6. Configuramos el nuevo disco:
+   - Tipo de archivo: **VDI (VirtualBox Disk Image)**
+   - Almacenamiento: **Reservado dinámicamente** (solo usa espacio real cuando se escribe en él)
    - Tamaño: **10 GB**
-   - Click en **Crear**
-7. Repetimos el proceso 2 veces más para tener **3 discos de 10GB**
+   - Nombre: dejamos el sugerido (VirtualBox le pondrá un nombre automático)
+7. Click en **Crear**
+8. Repetimos todo el proceso 2 veces más para tener un total de **3 discos nuevos de 10GB**
 
-Al final deberíamos tener en la controladora SATA:
-- `SRVXXX_Linux.vdi` (disco principal, 25GB)
+Al finalizar, en la sección de almacenamiento de la controladora SATA deberíamos ver:
+
+- `SRVXXX_Linux.vdi` (disco principal del sistema, 25GB)
 - `SRVXXX_Linux_1.vdi` (disco adicional 1, 10GB)
 - `SRVXXX_Linux_2.vdi` (disco adicional 2, 10GB)
 - `SRVXXX_Linux_3.vdi` (disco adicional 3, 10GB)
 
-Click en **Aceptar** para guardar cambios.
+Hacemos click en **Aceptar** para guardar todos los cambios.
 
-#### Iniciar la VM y verificar discos
+**Iniciar la VM y verificar discos**:
 
-Iniciamos la VM y hacemos login.
+Iniciamos la máquina virtual normalmente y hacemos login con nuestro usuario `admin`.
 
-Verificamos que los nuevos discos se detectan:
+Verificamos que el sistema ha detectado los nuevos discos:
+
 ```bash
 lsblk
 ```
 
-Este comando lista los dispositivos de bloque (discos). Deberíamos ver algo como:
+Este comando lista todos los dispositivos de bloque (discos) disponibles en el sistema. Deberíamos ver algo similar a:
 
 ```
 NAME                      MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
@@ -665,37 +763,41 @@ sdc                         8:32   0   10G  0 disk
 sdd                         8:48   0   10G  0 disk 
 ```
 
-Aquí vemos:
-- `sda`: disco principal (25GB) con el sistema ya instalado
-- `sdb`, `sdc`, `sdd`: los 3 discos nuevos de 10GB que acabamos de añadir
+**Interpretación de la salida**:
 
-**Nota**: Los nombres pueden ser diferentes en tu sistema (`vda`, `vdb`, etc.). Lo importante es identificar los 3 discos de 10GB.
+- `sda`: nuestro disco principal (25GB) donde ya está instalado Ubuntu. Vemos sus particiones (`sda1`, `sda2`, `sda3`)
+- `sdb`, `sdc`, `sdd`: los tres discos nuevos de 10GB que acabamos de añadir. Aparecen sin particiones ni formato, completamente vírgenes.
 
-### 3.4. Crear la estructura LVM
+**Nota importante**: Los nombres de los discos (`sda`, `sdb`, etc.) pueden variar ligeramente según la configuración. En algunos sistemas pueden aparecer como `vda`, `vdb`, etc. Lo importante es identificar visualmente los tres discos de 10GB que acabamos de añadir.
 
-Vamos a crear paso a paso nuestra estructura LVM.
+### Crear la estructura LVM paso a paso
+
+Ahora vamos a crear nuestra estructura LVM completa, nivel por nivel, de forma muy detallada.
 
 #### Paso 1: Crear Physical Volumes (PVs)
 
-Convertimos los 3 discos en volúmenes físicos para LVM:
+El primer paso es convertir nuestros tres discos físicos en volúmenes físicos que LVM pueda gestionar:
 
 ```bash
 sudo pvcreate /dev/sdb /dev/sdc /dev/sdd
 ```
 
-Deberías ver:
+Deberíamos ver una confirmación para cada disco:
+
 ```
   Physical volume "/dev/sdb" successfully created.
   Physical volume "/dev/sdc" successfully created.
   Physical volume "/dev/sdd" successfully created.
 ```
 
-Verificamos:
+Verificamos que se han creado correctamente:
+
 ```bash
 sudo pvs
 ```
 
-Resultado:
+La salida mostrará:
+
 ```
   PV         VG        Fmt  Attr PSize  PFree 
   /dev/sda3  ubuntu-vg lvm2 a--  23.00g    0 
@@ -704,71 +806,109 @@ Resultado:
   /dev/sdd             lvm2 ---  10.00g 10.00g
 ```
 
-Vemos los 3 PVs nuevos (`/dev/sdb`, `/dev/sdc`, `/dev/sdd`) sin asignar a ningún VG todavía.
+**Interpretación**:
+
+- `/dev/sda3`: el PV que se creó automáticamente durante la instalación para el sistema
+- `/dev/sdb`, `/dev/sdc`, `/dev/sdd`: nuestros tres PVs nuevos, todavía sin asignar a ningún VG (columna VG vacía)
+- La columna `PFree` muestra que los 10GB de cada disco están completamente disponibles
 
 #### Paso 2: Crear Volume Group (VG)
 
-Ahora agrupamos los 3 PVs en un único VG llamado `vg_datos`:
+Ahora agrupamos nuestros tres PVs en un único grupo llamado `vg_datos`:
 
 ```bash
 sudo vgcreate vg_datos /dev/sdb /dev/sdc /dev/sdd
 ```
 
-Resultado:
+Confirmación:
+
 ```
   Volume group "vg_datos" successfully created
 ```
 
-Verificamos:
+Verificamos el grupo creado:
+
 ```bash
 sudo vgs
 ```
 
-Resultado:
+Salida:
+
 ```
   VG        #PV #LV #SN Attr   VSize  VFree 
   ubuntu-vg   1   1   0 wz--n- 23.00g     0 
   vg_datos    3   0   0 wz--n- 29.99g 29.99g
 ```
 
-Vemos nuestro VG `vg_datos` con ~30GB de espacio (10GB × 3 discos).
+**Interpretación**:
+
+- `vg_datos`: nuestro nuevo grupo de volúmenes
+- `#PV`: 3 (contiene 3 volúmenes físicos)
+- `#LV`: 0 (todavía no hemos creado volúmenes lógicos dentro)
+- `VSize`: ~30GB (10GB × 3 discos, menos un pequeño espacio para metadatos de LVM)
+- `VFree`: ~30GB (todo el espacio está disponible)
+
+Podemos ver más detalles con:
+
+```bash
+sudo vgdisplay vg_datos
+```
+
+Esto muestra información completa sobre el grupo, incluyendo el tamaño exacto de las unidades de asignación (PE - Physical Extents), cuántas hay libres, etc.
 
 #### Paso 3: Crear Logical Volumes (LVs)
 
-Ahora creamos 3 volúmenes lógicos dentro de `vg_datos`:
+Ahora creamos tres volúmenes lógicos dentro de `vg_datos`. Estos serán los "discos virtuales" que montaremos y usaremos realmente.
 
-**Volumen para datos de empresa (15GB):**
+**Volumen para datos de empresa (15GB)**:
+
 ```bash
 sudo lvcreate -L 15G -n lv_empresa vg_datos
 ```
 
-**Volumen para carpetas de usuarios (10GB):**
+**Explicación del comando**:
+- `-L 15G`: tamaño del volumen (15 gigabytes)
+- `-n lv_empresa`: nombre del volumen lógico
+- `vg_datos`: grupo de volúmenes donde se crea
+
+Confirmación:
+
+```
+  Logical volume "lv_empresa" created.
+```
+
+**Volumen para carpetas de usuarios (10GB)**:
+
 ```bash
 sudo lvcreate -L 10G -n lv_usuarios vg_datos
 ```
 
-**Volumen para datos compartidos (5GB):**
+**Volumen para datos compartidos (5GB)**:
+
 ```bash
 sudo lvcreate -L 5G -n lv_compartido vg_datos
 ```
 
-Verificamos:
+Verificamos todos los volúmenes creados:
+
 ```bash
 sudo lvs
 ```
 
-Resultado:
+Salida:
+
 ```
-  LV           VG        Attr       LSize  
-  ubuntu-lv    ubuntu-vg -wi-ao---- 11.00g
-  lv_compartido vg_datos -wi-a-----  5.00g
-  lv_empresa   vg_datos  -wi-a----- 15.00g
-  lv_usuarios  vg_datos  -wi-a----- 10.00g
+  LV            VG        Attr       LSize  
+  ubuntu-lv     ubuntu-vg -wi-ao---- 11.00g
+  lv_compartido vg_datos  -wi-a-----  5.00g
+  lv_empresa    vg_datos  -wi-a----- 15.00g
+  lv_usuarios   vg_datos  -wi-a----- 10.00g
 ```
 
-Perfecto, tenemos nuestros 3 volúmenes creados.
+Perfecto. Tenemos nuestros tres volúmenes lógicos creados con los tamaños especificados.
 
-Verificamos el espacio restante en el VG:
+Verificamos el espacio restante en el grupo de volúmenes:
+
 ```bash
 sudo vgs
 ```
@@ -779,27 +919,50 @@ sudo vgs
   vg_datos    3   3   0 wz--n- 29.99g 4.99g
 ```
 
-Quedan ~5GB libres en `vg_datos` que podremos usar más adelante.
+Tenemos aproximadamente 5GB libres en `vg_datos` que podremos usar más adelante para ampliar volúmenes existentes o crear nuevos.
 
-#### Paso 4: Crear sistemas de archivos en los LVs
+#### Paso 4: Crear sistemas de archivos
 
-Los LVs están creados, pero son como "discos en blanco", necesitan un sistema de archivos.
+Los volúmenes lógicos están creados, pero son como "discos en blanco" sin formato. Necesitan un sistema de archivos para poder almacenar datos.
 
-En Linux, el sistema de archivos más común es **ext4**. Vamos a formatear nuestros LVs con ext4:
+En Linux, el sistema de archivos más común y recomendado es **ext4**. Es estable, eficiente y ampliamente soportado.
+
+Formateamos cada volumen lógico:
 
 ```bash
 sudo mkfs.ext4 /dev/vg_datos/lv_empresa
+```
+
+Este comando tardará unos segundos y mostrará información sobre el sistema de archivos creado:
+
+```
+mke2fs 1.46.5 (30-Dec-2021)
+Creating filesystem with 3932160 4k blocks and 983040 inodes
+Filesystem UUID: abc123-def456-...
+Superblock backups stored on blocks: ...
+...
+Allocating group tables: done
+Writing inode tables: done
+Creating journal (16384 blocks): done
+Writing superblocks and filesystem accounting information: done
+```
+
+Repetimos para los otros dos volúmenes:
+
+```bash
 sudo mkfs.ext4 /dev/vg_datos/lv_usuarios
 sudo mkfs.ext4 /dev/vg_datos/lv_compartido
 ```
 
-Cada comando tardará unos segundos y mostrará información sobre el sistema de archivos creado.
+Ahora nuestros volúmenes tienen un sistema de archivos y están listos para usarse.
 
 #### Paso 5: Crear puntos de montaje
 
-En Linux, para usar un volumen, debemos **montarlo** en una carpeta. Esa carpeta se llama **punto de montaje**.
+En Linux, para acceder a un volumen debemos **montarlo** en una carpeta del sistema. Esa carpeta se llama **punto de montaje**.
 
-Vamos a crear las carpetas donde montaremos nuestros volúmenes:
+Por convención, los datos de servidores suelen montarse en `/srv/` (de "service" - servicio).
+
+Creamos las carpetas donde montaremos nuestros volúmenes:
 
 ```bash
 sudo mkdir -p /srv/empresa
@@ -807,11 +970,26 @@ sudo mkdir -p /srv/usuarios
 sudo mkdir -p /srv/compartido
 ```
 
-El parámetro `-p` crea las carpetas intermedias si no existen.
+El parámetro `-p` (parent) crea todas las carpetas necesarias en la ruta. Si `/srv` no existiera (aunque normalmente sí existe), también la crearía.
+
+Verificamos que se han creado:
+
+```bash
+ls -l /srv/
+```
+
+Deberíamos ver:
+
+```
+total 12
+drwxr-xr-x 2 root root 4096 ... compartido
+drwxr-xr-x 2 root root 4096 ... empresa
+drwxr-xr-x 2 root root 4096 ... usuarios
+```
 
 #### Paso 6: Montar los volúmenes
 
-Ahora montamos cada LV en su carpeta correspondiente:
+Ahora montamos cada volumen lógico en su carpeta correspondiente:
 
 ```bash
 sudo mount /dev/vg_datos/lv_empresa /srv/empresa
@@ -819,12 +997,18 @@ sudo mount /dev/vg_datos/lv_usuarios /srv/usuarios
 sudo mount /dev/vg_datos/lv_compartido /srv/compartido
 ```
 
-Verificamos que están montados:
+Estos comandos no muestran ninguna salida si todo va bien (en Linux, "ninguna noticia es buena noticia").
+
+Verificamos que los volúmenes están montados correctamente:
+
 ```bash
 df -h
 ```
 
-Deberíamos ver al final de la lista:
+El comando `df` (disk free) muestra el espacio de todos los sistemas de archivos montados. Con la opción `-h` (human-readable) muestra los tamaños en formato legible.
+
+Al final de la lista deberíamos ver:
+
 ```
 Filesystem                         Size  Used Avail Use% Mounted on
 /dev/mapper/vg_datos-lv_empresa     15G   24K   14G   1% /srv/empresa
@@ -832,182 +1016,360 @@ Filesystem                         Size  Used Avail Use% Mounted on
 /dev/mapper/vg_datos-lv_compartido 4.9G   24K  4.7G   1% /srv/compartido
 ```
 
-¡Perfecto! Los volúmenes están montados y listos para usar.
+**Interpretación**:
+
+- Los volúmenes están montados en las rutas correctas
+- El espacio disponible es ligeramente menor que el tamaño asignado (normal, el sistema de archivos necesita espacio para metadatos)
+- Uso actual: casi 0% (solo metadatos del sistema de archivos)
+
+Podemos probar a crear un archivo de prueba:
+
+```bash
+sudo touch /srv/empresa/prueba.txt
+ls -l /srv/empresa/
+```
+
+Deberíamos ver el archivo creado.
 
 #### Paso 7: Montaje automático con /etc/fstab
 
-Si reiniciamos ahora el servidor, los volúmenes NO se montarán automáticamente. Debemos configurar el archivo `/etc/fstab` para que se monten en cada arranque.
+Hay un problema: si reiniciamos el servidor ahora, los volúmenes NO se montarán automáticamente. Después de cada reinicio tendríamos que montarlos manualmente.
+
+Para que se monten automáticamente al iniciar el sistema, debemos configurar el archivo `/etc/fstab` (file systems table - tabla de sistemas de archivos).
+
+Primero, hacemos una copia de seguridad del archivo (buena práctica antes de modificar archivos críticos):
+
+```bash
+sudo cp /etc/fstab /etc/fstab.backup
+```
 
 Editamos el archivo:
+
 ```bash
 sudo nano /etc/fstab
 ```
 
-Añadimos al final estas 3 líneas:
+Veremos líneas similares a estas (puede variar):
+
+```
+# /etc/fstab: static file system information.
+UUID=abc-123... / ext4 defaults 0 1
+UUID=def-456... /boot ext4 defaults 0 2
+/swap.img none swap sw 0 0
+```
+
+Nos desplazamos al final del archivo y añadimos estas tres líneas:
+
 ```
 /dev/vg_datos/lv_empresa    /srv/empresa     ext4  defaults  0  2
 /dev/vg_datos/lv_usuarios   /srv/usuarios    ext4  defaults  0  2
 /dev/vg_datos/lv_compartido /srv/compartido  ext4  defaults  0  2
 ```
 
-Guardamos (`Ctrl+O`, `Enter`, `Ctrl+X`).
+**Explicación de cada campo**:
 
-**Verificar que no hay errores:**
+1. Dispositivo: `/dev/vg_datos/lv_empresa` (ruta al volumen)
+2. Punto de montaje: `/srv/empresa` (dónde se monta)
+3. Tipo de sistema de archivos: `ext4`
+4. Opciones: `defaults` (usa opciones por defecto: lectura/escritura, etc.)
+5. Dump: `0` (no hacer backup automático con dump)
+6. Pass: `2` (orden de comprobación en el arranque. 0=no comprobar, 1=primero el root, 2=después los demás)
 
-Antes de reiniciar, verificamos que el archivo `fstab` no tiene errores:
+Guardamos el archivo (`Ctrl+O`, `Enter`, `Ctrl+X`).
+
+**Verificar que no hay errores** (PASO CRÍTICO):
+
+Antes de reiniciar, SIEMPRE debemos verificar que el archivo `/etc/fstab` no contiene errores. Un error en este archivo puede hacer que el sistema no arranque.
+
 ```bash
 sudo mount -a
 ```
 
-Si no da ningún error, significa que la configuración es correcta.
+Este comando intenta montar todos los sistemas de archivos listados en `/etc/fstab`. Si hay algún error, nos lo mostrará. Si no muestra nada, significa que todo está correcto.
 
-Verificamos de nuevo:
-```bash
-df -h
-```
+Verificamos de nuevo que los volúmenes siguen montados:
 
-Los volúmenes deben seguir montados.
-
-**Reiniciamos para comprobar que funcionan al arrancar:**
-```bash
-sudo reboot
-```
-
-Tras el reinicio, hacemos login y verificamos:
 ```bash
 df -h | grep srv
 ```
 
-Deberíamos ver nuestros 3 volúmenes montados.
+Deberíamos ver nuestros tres volúmenes.
 
-### 3.5. Ampliar un volumen lógico
+**Reiniciar para comprobar que funciona**:
 
-Una de las grandes ventajas de LVM es poder ampliar volúmenes fácilmente. Vamos a ampliar `lv_empresa` en 3GB.
+```bash
+sudo reboot
+```
 
-**Paso 1: Verificar espacio disponible en el VG:**
+El sistema se reiniciará. Esperamos unos 30 segundos y volvemos a hacer login.
+
+Tras el reinicio, verificamos inmediatamente que los volúmenes se han montado automáticamente:
+
+```bash
+df -h | grep srv
+```
+
+Si vemos los tres volúmenes montados, ¡perfecto! El montaje automático funciona correctamente.
+
+### Ampliar un volumen lógico
+
+Una de las grandes ventajas de LVM es la capacidad de ampliar volúmenes fácilmente, incluso con el sistema en funcionamiento. Vamos a demostrarlo ampliando `lv_empresa` en 3GB adicionales.
+
+Este proceso se hace sin detener el servidor, sin desmontar el volumen y sin interrumpir el acceso a los datos. Es una funcionalidad extraordinaria que no existe con particiones tradicionales.
+
+**Paso 1: Verificar espacio disponible en el VG**:
+
+Antes de ampliar, confirmamos que tenemos espacio libre en el grupo de volúmenes:
+
 ```bash
 sudo vgs
 ```
 
-Deberíamos tener ~5GB libres en `vg_datos`.
+```
+  VG        #PV #LV #SN Attr   VSize  VFree 
+  vg_datos    3   3   0 wz--n- 29.99g 4.99g
+```
 
-**Paso 2: Ampliar el LV:**
+Tenemos aproximadamente 5GB libres, suficiente para añadir 3GB a un volumen.
+
+**Paso 2: Ampliar el volumen lógico**:
+
 ```bash
 sudo lvextend -L +3G /dev/vg_datos/lv_empresa
 ```
 
-El `+3G` significa "añadir 3GB al tamaño actual".
+**Explicación**:
+- `lvextend`: comando para extender (ampliar) un volumen lógico
+- `-L +3G`: añadir 3 gigabytes al tamaño actual (el `+` indica que es adicional, no el tamaño total)
+- `/dev/vg_datos/lv_empresa`: ruta al volumen que queremos ampliar
 
-Resultado:
+Confirmación:
+
 ```
-  Size of logical volume vg_datos/lv_empresa changed from 15.00 GiB (3840 extents) to 18.00 GiB (4608 extents).
+  Size of logical volume vg_datos/lv_empresa changed from 15.00 GiB to 18.00 GiB.
   Logical volume vg_datos/lv_empresa successfully resized.
 ```
 
-**Paso 3: Ampliar el sistema de archivos:**
+**Paso 3: Ampliar el sistema de archivos**:
 
-Hemos ampliado el volumen, pero el sistema de archivos todavía "piensa" que tiene 15GB. Debemos ampliarlo también:
+Hemos ampliado el volumen lógico, pero el sistema de archivos ext4 que hay dentro todavía "piensa" que tiene 15GB. Debemos indicarle que ocupe todo el nuevo espacio:
 
 ```bash
 sudo resize2fs /dev/vg_datos/lv_empresa
 ```
 
-Resultado:
+Salida:
+
 ```
+resize2fs 1.46.5 (30-Dec-2021)
 Filesystem at /dev/vg_datos/lv_empresa is mounted on /srv/empresa; on-line resizing required
 old_desc_blocks = 2, new_desc_blocks = 3
-The filesystem on /dev/vg_datos/lv_empresa is now 4718592 blocks long.
+The filesystem on /dev/vg_datos/lv_empresa is now 4718592 (4k) blocks long.
 ```
 
-**Paso 4: Verificar:**
+La línea clave es `on-line resizing required` que confirma que se está redimensionando con el sistema en funcionamiento.
+
+**Paso 4: Verificar el resultado**:
+
 ```bash
 df -h | grep empresa
 ```
 
-Resultado:
 ```
 /dev/mapper/vg_datos-lv_empresa  18G  24K  17G   1% /srv/empresa
 ```
 
-¡Perfecto! El volumen ahora tiene 18GB.
+¡Perfecto! El volumen ahora tiene 18GB en lugar de 15GB.
 
-**IMPORTANTE**: Esto lo hemos hecho con el sistema en funcionamiento, sin reiniciar, sin desmontar nada. Esta es la potencia de LVM.
+**Reflexión sobre lo que hemos hecho**:
+
+Acabamos de ampliar un volumen de 15GB a 18GB:
+- Sin detener el servidor
+- Sin desmontar el volumen
+- Sin interrumpir el acceso a los datos
+- En menos de un minuto
+- Sin riesgo de pérdida de datos
+
+Con particiones tradicionales, esto habría requerido:
+1. Hacer backup completo de los datos
+2. Apagar el servidor
+3. Particionar de nuevo el disco
+4. Formatear
+5. Restaurar los datos
+6. Reiniciar y cruzar los dedos
+
+Esta es la potencia de LVM.
+
+### Comandos útiles de LVM para el día a día
+
+**Ver información resumida**:
+```bash
+sudo pvs    # Resumen de volúmenes físicos
+sudo vgs    # Resumen de grupos de volúmenes
+sudo lvs    # Resumen de volúmenes lógicos
+```
+
+**Ver información detallada**:
+```bash
+sudo pvdisplay                    # Detalle de todos los PVs
+sudo vgdisplay vg_datos          # Detalle de un VG específico
+sudo lvdisplay /dev/vg_datos/lv_empresa  # Detalle de un LV específico
+```
+
+**Ampliar un volumen** (ya lo vimos):
+```bash
+sudo lvextend -L +2G /dev/vg_datos/lv_usuarios
+sudo resize2fs /dev/vg_datos/lv_usuarios
+```
+
+**Añadir un disco nuevo a un VG existente**:
+```bash
+sudo pvcreate /dev/sde          # Preparar el disco nuevo
+sudo vgextend vg_datos /dev/sde # Añadirlo al grupo
+```
+
+**Ver estado del montaje**:
+```bash
+df -h               # Ver todos los sistemas de archivos montados
+mount | grep srv    # Ver solo nuestros volúmenes
+```
 
 ---
 
 ## 4. Instalación y configuración básica de Samba
 
-### 4.1. ¿Qué es Samba?
+### Qué es Samba y para qué sirve
 
-**Samba** es un software que permite que sistemas Linux compartan carpetas e impresoras con sistemas Windows.
+**Samba** es una suite de software que permite que sistemas Linux/Unix compartan carpetas, archivos e impresoras con sistemas Windows de forma nativa y transparente.
 
-Samba implementa el protocolo **SMB/CIFS** (el mismo que usa Windows para compartir recursos). Esto significa que desde un cliente Windows, accederemos a carpetas de Linux exactamente igual que si fueran carpetas compartidas de otro Windows.
+Samba implementa el protocolo **SMB/CIFS** (Server Message Block / Common Internet File System), que es exactamente el mismo protocolo que Windows usa para compartir recursos en red. Esto significa que desde un cliente Windows, acceder a una carpeta compartida de Linux con Samba es idéntico a acceder a una carpeta compartida de otro Windows. El usuario no nota ninguna diferencia.
 
-### 4.2. Instalar Samba
+**¿Por qué necesitamos Samba?**
 
-Instalamos Samba con `apt`:
+Windows y Linux hablan "idiomas" diferentes para compartir archivos. Windows usa SMB/CIFS. Linux históricamente usaba NFS (Network File System). Sin Samba, los clientes Windows no podrían acceder a carpetas compartidas en servidores Linux.
+
+Samba actúa como un "traductor" que hace que el servidor Linux hable SMB perfectamente, permitiendo la integración con redes Windows.
+
+### Instalar Samba
+
+La instalación de Samba en Ubuntu Server es muy sencilla gracias al gestor de paquetes `apt`.
+
+Primero actualizamos la lista de paquetes disponibles:
 
 ```bash
 sudo apt update
-sudo apt install -y samba
 ```
 
-El `-y` responde automáticamente "yes" a la pregunta de confirmación.
+Instalamos Samba y sus herramientas:
 
-La instalación tardará unos minutos.
+```bash
+sudo apt install -y samba samba-common-bin
+```
 
-Una vez instalado, verificamos que el servicio está activo:
+**Explicación de los paquetes**:
+- `samba`: el servidor Samba propiamente dicho
+- `samba-common-bin`: herramientas de línea de comandos para gestionar Samba
+- El parámetro `-y` responde automáticamente "yes" a la confirmación
+
+La instalación tardará un par de minutos. Descargará los paquetes, los instalará y configurará los servicios automáticamente.
+
+Una vez instalado, verificamos que el servicio de Samba está activo y funcionando:
+
 ```bash
 sudo systemctl status smbd
 ```
 
-Deberíamos ver:
+Deberíamos ver algo como:
+
 ```
 ● smbd.service - Samba SMB Daemon
      Loaded: loaded (/lib/systemd/system/smbd.service; enabled; vendor preset: enabled)
      Active: active (running) since ...
+     ...
 ```
 
-La línea `Active: active (running)` confirma que Samba está funcionando.
+**Puntos clave a verificar**:
+- `Loaded: ...enabled...`: el servicio está habilitado para iniciarse automáticamente al arrancar
+- `Active: active (running)`: el servicio está ejecutándose ahora mismo
 
-Si no estuviera activo, lo iniciamos:
+Si por alguna razón el servicio no estuviera activo, lo iniciamos y habilitamos:
+
 ```bash
 sudo systemctl start smbd
 sudo systemctl enable smbd
 ```
 
-### 4.3. Crear una carpeta compartida simple
+Verificamos también el estado del servicio de nombres NetBIOS (necesario para la resolución de nombres en redes Windows):
 
-Antes de complicarnos con Active Directory, vamos a crear una carpeta compartida simple para entender cómo funciona Samba.
+```bash
+sudo systemctl status nmbd
+```
 
-#### Paso 1: Crear una carpeta de prueba
+Debe mostrar también `active (running)`.
+
+### Configuración del firewall
+
+Ubuntu Server por defecto no tiene firewall activado, pero si lo tuviéramos, necesitaríamos abrir los puertos de Samba:
+
+```bash
+sudo ufw allow samba
+```
+
+En nuestro caso, como estamos en un entorno de laboratorio y probablemente no tenemos el firewall activado, este paso es opcional. Podemos verificar el estado del firewall con:
+
+```bash
+sudo ufw status
+```
+
+Si muestra `Status: inactive`, no necesitamos hacer nada más.
+
+### Crear una carpeta compartida simple
+
+Antes de complicarnos con Active Directory y configuraciones avanzadas, vamos a crear una carpeta compartida simple para entender cómo funciona Samba y verificar que todo está correctamente instalado.
+
+#### Crear la carpeta y asignar permisos
+
+Vamos a crear una carpeta de prueba en uno de nuestros volúmenes LVM:
 
 ```bash
 sudo mkdir -p /srv/compartido/prueba
 ```
 
-Ponemos permisos para que cualquiera pueda escribir (de momento):
+De momento, vamos a permitir que cualquiera pueda escribir en esta carpeta (solo para pruebas, en producción jamás haríamos esto):
+
 ```bash
 sudo chmod 777 /srv/compartido/prueba
 ```
 
-#### Paso 2: Configurar Samba
+**Explicación del permiso 777**:
+- Primer 7: permisos del propietario (lectura + escritura + ejecución)
+- Segundo 7: permisos del grupo (lectura + escritura + ejecución)
+- Tercer 7: permisos de otros (lectura + escritura + ejecución)
 
-El archivo de configuración de Samba es `/etc/samba/smb.conf`.
+Esto es **muy inseguro** y solo lo hacemos para las pruebas iniciales. Más adelante configuraremos permisos adecuados.
 
-Hacemos una copia de seguridad:
+#### Configurar Samba
+
+El archivo de configuración principal de Samba es `/etc/samba/smb.conf`. Este archivo controla todos los aspectos del servidor: recursos compartidos, permisos, autenticación, etc.
+
+Antes de modificarlo, hacemos una copia de seguridad del archivo original:
+
 ```bash
-sudo cp /etc/samba/smb.conf /etc/samba/smb.conf.backup
+sudo cp /etc/samba/smb.conf /etc/samba/smb.conf.original
 ```
 
-Editamos el archivo:
+Ahora editamos el archivo:
+
 ```bash
 sudo nano /etc/samba/smb.conf
 ```
 
-Nos desplazamos al final del archivo (con las flechas o `Ctrl+V` para avanzar páginas).
+El archivo es bastante largo y contiene muchas opciones comentadas (líneas que empiezan con `;` o `#`). No necesitamos entender todo ahora.
 
-Añadimos esta configuración:
+Nos desplazamos al final del archivo (podemos usar `Ctrl+V` varias veces para avanzar páginas rápidamente en nano).
+
+Al final del archivo, añadimos la configuración de nuestro recurso compartido:
+
 ```ini
 [Prueba]
    comment = Carpeta de prueba
@@ -1015,138 +1377,299 @@ Añadimos esta configuración:
    browseable = yes
    read only = no
    guest ok = yes
+   create mask = 0777
+   directory mask = 0777
 ```
 
-**Explicación:**
-- `[Prueba]`: nombre del recurso compartido (se verá así en Windows)
-- `comment`: descripción
-- `path`: ruta real en Linux
-- `browseable`: si aparece al navegar por la red
-- `read only = no`: se puede escribir
-- `guest ok = yes`: se puede acceder sin autenticación (solo para pruebas)
+**Explicación de cada parámetro**:
 
-Guardamos (`Ctrl+O`, `Enter`, `Ctrl+X`).
+- `[Prueba]`: nombre del recurso compartido (es lo que verán los clientes Windows al conectarse)
+- `comment`: descripción del recurso (aparece en algunas herramientas de Windows)
+- `path`: ruta real en el sistema Linux donde están los archivos
+- `browseable = yes`: el recurso aparecerá cuando se navegue por la red (lo veremos sin tener que escribir su nombre)
+- `read only = no`: permite escritura (si fuera `yes`, solo lectura)
+- `guest ok = yes`: permite acceso sin autenticación (cualquiera puede entrar sin usuario/contraseña)
+- `create mask = 0777`: permisos que tendrán los archivos nuevos que se creen
+- `directory mask = 0777`: permisos que tendrán las carpetas nuevas que se creen
 
-#### Paso 3: Verificar la configuración
+**IMPORTANTE**: La configuración con `guest ok = yes` es insegura y solo para pruebas. Más adelante la cambiaremos.
 
-Antes de reiniciar Samba, verificamos que no hay errores:
+Guardamos el archivo (`Ctrl+O`, `Enter`, `Ctrl+X`).
+
+#### Verificar la configuración
+
+Antes de reiniciar Samba, verificamos que no hay errores de sintaxis en el archivo de configuración:
+
 ```bash
 testparm
 ```
 
-Este comando revisa el archivo de configuración. Si hay errores, los mostrará.
+Este comando es muy útil. Lee el archivo `smb.conf`, detecta errores de sintaxis y muestra la configuración real que se aplicará (ignora líneas comentadas y valores por defecto).
 
-Si todo está bien, veremos al final:
+Si hay errores, los mostrará en rojo. Si todo está bien, veremos algo como:
+
 ```
+Load smb config files from /etc/samba/smb.conf
 Loaded services file OK.
+Server role: ROLE_STANDALONE
+
+Press enter to see a dump of your service definitions
+
+# Global parameters
+[global]
+   ...
+
+[Prueba]
+   comment = Carpeta de prueba
+   create mask = 0777
+   directory mask = 0777
+   guest ok = Yes
+   path = /srv/compartido/prueba
+   read only = No
 ```
 
-#### Paso 4: Reiniciar Samba
+La línea `Loaded services file OK.` confirma que no hay errores de sintaxis.
+
+Pulsamos `Enter` para ver la configuración completa o `Ctrl+C` para salir.
+
+#### Reiniciar Samba
+
+Para que los cambios tengan efecto, reiniciamos el servicio de Samba:
 
 ```bash
 sudo systemctl restart smbd
 ```
 
-Verificamos que sigue activo:
+Verificamos que sigue activo después del reinicio:
+
 ```bash
 sudo systemctl status smbd
 ```
 
-#### Paso 5: Probar desde Windows
+Debe mostrar `active (running)`.
 
-Desde un cliente Windows conectado a la misma red que el servidor Linux:
+#### Probar desde Windows
 
-1. Abrimos el Explorador de archivos
-2. En la barra de direcciones escribimos: `\\192.168.10.2` (la IP de nuestro servidor Linux)
-3. Deberíamos ver la carpeta compartida **Prueba**
-4. Entramos y probamos a crear un archivo o carpeta
+Ahora viene el momento de la verdad: probar que podemos acceder desde un cliente Windows.
 
-Si funciona, ¡enhorabuena! Samba está operativo.
+Desde un cliente Windows conectado a la misma red que el servidor Linux (en nuestro caso, la red de departamentos `192.168.10.0/24`):
+
+1. Abrimos el **Explorador de archivos**
+2. En la barra de direcciones (donde aparece la ruta) escribimos: `\\192.168.10.2` (la IP de nuestro servidor Linux)
+3. Pulsamos `Enter`
+
+Deberíamos ver una ventana con el recurso compartido **Prueba**.
+
+4. Hacemos doble clic en **Prueba** para entrar
+5. Intentamos crear un archivo o carpeta dentro
+
+Si podemos crear archivos y carpetas, ¡enhorabuena! Samba está funcionando correctamente.
+
+**Solución de problemas comunes**:
+
+**No aparece el recurso compartido**:
+- Verificar que el firewall del Windows Server no está bloqueando la conexión
+- Verificar que la IP del servidor Linux es correcta y hay conectividad: `ping 192.168.10.2` desde Windows
+- Verificar que el servicio smbd está activo: `sudo systemctl status smbd`
+
+**Aparece pero no puedo acceder**:
+- Verificar permisos de la carpeta: `ls -ld /srv/compartido/prueba`
+- Verificar configuración de Samba: `testparm -s | grep -A 10 "\[Prueba\]"`
+
+**Puedo acceder pero no crear archivos**:
+- Verificar que `read only = no` en la configuración
+- Verificar permisos de la carpeta: debe tener al menos `chmod 775` o `777`
+
+### Usuarios de Samba
+
+Aunque hemos configurado acceso anónimo (`guest ok = yes`), en producción siempre necesitaremos autenticación con usuarios. Samba mantiene su propia base de datos de usuarios y contraseñas, separada de los usuarios del sistema Linux.
+
+Para crear un usuario de Samba, primero debe existir como usuario del sistema Linux. Luego le asignamos una contraseña específica para Samba.
+
+**Crear un usuario de prueba**:
+
+```bash
+sudo useradd -M -s /usr/sbin/nologin samba_test
+```
+
+**Explicación**:
+- `useradd`: comando para crear usuarios
+- `-M`: no crear carpeta personal (no la necesita)
+- `-s /usr/sbin/nologin`: no permitir login interactivo (este usuario solo existe para Samba)
+- `samba_test`: nombre del usuario
+
+Ahora le asignamos una contraseña para Samba:
+
+```bash
+sudo smbpasswd -a samba_test
+```
+
+Nos pedirá la contraseña dos veces. Elegimos una sencilla de recordar.
+
+Confirmación:
+
+```
+Added user samba_test.
+```
+
+Este usuario ahora puede autenticarse en recursos compartidos que requieran usuario/contraseña.
+
+Para listar los usuarios de Samba:
+
+```bash
+sudo pdbedit -L
+```
+
+Para eliminar un usuario de Samba (si lo necesitamos más adelante):
+
+```bash
+sudo smbpasswd -x nombre_usuario
+```
 
 ---
 
 ## 5. Integración con Active Directory
 
-Ahora viene la parte más interesante: vamos a unir nuestro servidor Linux al dominio Active Directory de Windows Server que creamos anteriormente.
+Ahora llega la parte más interesante y compleja de este tema: vamos a unir nuestro servidor Linux al dominio Active Directory de Windows Server que creamos en temas anteriores.
 
-De esta forma, los usuarios del dominio Windows podrán autenticarse en el servidor Linux y acceder a recursos compartidos con sus credenciales del dominio.
+Una vez completada esta integración, conseguiremos que:
 
-### 5.1. Requisitos previos
+- Los usuarios del dominio Windows puedan autenticarse en el servidor Linux con sus credenciales del AD
+- Los recursos compartidos en Linux respeten los permisos y grupos del Active Directory
+- Todo funcione de forma transparente: los usuarios no notarán diferencia entre recursos Windows y Linux
 
-Antes de empezar, verificamos:
+Esta configuración es habitual en empresas con infraestructuras híbridas y representa una habilidad muy valorada profesionalmente.
 
-**1. Conectividad con el Windows Server:**
+### Requisitos previos
+
+Antes de comenzar el proceso de integración, debemos asegurarnos de que se cumplen varios requisitos técnicos fundamentales.
+
+#### 1. Conectividad con el Windows Server
+
+Primero verificamos que existe comunicación de red con el controlador de dominio Windows:
+
 ```bash
 ping -c 4 192.168.10.1
 ```
 
-**2. Resolución DNS del dominio:**
+Deberíamos recibir respuestas confirmando la conectividad.
 
-Nuestro servidor Linux debe poder resolver el nombre del dominio Windows. Para ello, debe usar el Windows Server como DNS.
+#### 2. Resolución DNS del dominio
 
-Editamos la configuración de Netplan para asegurarnos de que usa el Windows Server como DNS:
+Este es uno de los puntos más críticos. El servidor Linux debe poder resolver el nombre del dominio Active Directory. Para ello, **debe usar el Windows Server como servidor DNS**.
+
+Verificamos que nuestra configuración DNS es correcta:
 
 ```bash
-sudo nano /etc/netplan/00-installer-config.yaml
+cat /etc/netplan/00-installer-config.yaml | grep -A 3 nameservers
 ```
 
-Verificamos que en `enp0s8` (red departamentos) los `nameservers` incluyen la IP del Windows Server (`192.168.10.1`).
+Deberíamos ver que incluye la IP del Windows Server (`192.168.10.1`) como nameserver.
 
-Si hicimos correctamente la configuración anterior, debería estar bien.
+Probamos la resolución del dominio:
 
-Aplicamos la configuración (por si acaso):
 ```bash
-sudo netplan apply
+nslookup DOMXXX.local
 ```
 
-**3. Sincronización de hora:**
+(Sustituimos DOMXXX por el nombre real de vuestro dominio)
 
-Para que funcione la autenticación Kerberos (que usa Active Directory), los relojes del servidor Linux y del Windows Server deben estar sincronizados.
+Si funciona, debería mostrar la IP del Windows Server. Si da error "server can't find...", hay un problema de DNS que debemos resolver antes de continuar.
 
-Instalamos el cliente NTP:
+Si no teníamos `nslookup` instalado:
+
+```bash
+sudo apt install -y dnsutils
+```
+
+También podemos probar con:
+
+```bash
+host DOMXXX.local
+```
+
+o
+
+```bash
+dig DOMXXX.local
+```
+
+#### 3. Sincronización de hora
+
+La autenticación Kerberos (que usa Active Directory) es extremadamente sensible a diferencias de hora. Si el reloj del servidor Linux y del Windows Server difieren en más de 5 minutos, la autenticación fallará.
+
+Instalamos el cliente NTP para sincronización de hora:
+
 ```bash
 sudo apt install -y chrony
 ```
 
-Verificamos que está sincronizado:
+Verificamos que el servicio está activo:
+
+```bash
+sudo systemctl status chronyd
+```
+
+Verificamos la sincronización:
+
 ```bash
 timedatectl
 ```
 
-Deberíamos ver `System clock synchronized: yes`.
+Deberíamos ver:
 
-**4. Instalar paquetes necesarios:**
+```
+      Local time: ...
+  Universal time: ...
+        RTC time: ...
+       Time zone: ...
+     NTP enabled: yes
+NTP synchronized: yes
+```
 
-Necesitamos varios paquetes para unir Linux a Active Directory:
+La línea clave es `NTP synchronized: yes`. Si muestra `no`, esperamos un minuto y volvemos a verificar.
+
+Opcionalmente, podemos configurar el servidor NTP para que use el Windows Server como fuente de hora, pero con chrony configurado por defecto suele ser suficiente.
+
+#### 4. Instalar paquetes necesarios
+
+Para unir Linux a Active Directory necesitamos varios paquetes que gestionan la autenticación, la comunicación con el AD y la integración con Samba:
 
 ```bash
 sudo apt install -y realmd sssd sssd-tools libnss-sss libpam-sss adcli samba-common-bin oddjob oddjob-mkhomedir packagekit
 ```
 
-Estos paquetes:
-- `realmd`: herramienta para unir al dominio
-- `sssd`: demonio de autenticación
-- `adcli`: herramientas para Active Directory
-- `samba-common-bin`: herramientas de Samba
-- `oddjob-mkhomedir`: crea automáticamente carpetas personales
+**Explicación de los paquetes principales**:
 
-### 5.2. Unir el servidor al dominio
+- `realmd`: herramienta de alto nivel para descubrir y unirse a dominios
+- `sssd`: System Security Services Daemon, gestiona la autenticación contra el AD
+- `adcli`: herramientas de línea de comandos para Active Directory
+- `samba-common-bin`: herramientas de Samba necesarias
+- `oddjob-mkhomedir`: crea automáticamente carpetas personales cuando los usuarios del AD inician sesión por primera vez
 
-**Paso 1: Descubrir el dominio:**
+La instalación tardará varios minutos.
 
-Primero verificamos que podemos "ver" el dominio:
+### Unir el servidor al dominio
+
+Con todos los requisitos cumplidos, procedemos a unir el servidor Linux al dominio Active Directory.
+
+#### Descubrir el dominio
+
+Primero verificamos que podemos "descubrir" el dominio (es decir, que el servidor puede ver el Active Directory y obtener información sobre él):
+
 ```bash
 sudo realm discover DOMXXX.local
 ```
 
-(Sustituye `DOMXXX` por el nombre de tu dominio)
+(Sustituimos `DOMXXX` por el nombre de vuestro dominio)
 
-Si todo va bien, deberíamos ver información del dominio:
+Si todo funciona correctamente, veremos información detallada del dominio:
+
 ```
 DOMXXX.local
   type: kerberos
   realm-name: DOMXXX.LOCAL
-  domain-name: DOMXXX.local
+  domain-name: domxxx.local
   configured: no
   server-software: active-directory
   client-software: sssd
@@ -1158,24 +1681,53 @@ DOMXXX.local
   required-package: samba-common-bin
 ```
 
-**Paso 2: Unir al dominio:**
+**Puntos clave a verificar**:
 
-Ahora unimos el servidor al dominio. Necesitamos credenciales de un usuario administrador del dominio:
+- `type: kerberos`: confirma que es un dominio Kerberos (Active Directory)
+- `configured: no`: todavía no estamos unidos al dominio
+- `server-software: active-directory`: confirma que es un AD de Windows
+- `client-software: sssd`: usaremos SSSD para la autenticación
+
+Si este comando falla, el problema suele ser DNS. Volvemos a verificar la resolución del dominio.
+
+#### Unir al dominio
+
+Ahora ejecutamos el comando para unir el servidor al dominio. Necesitaremos credenciales de un usuario administrador del dominio Windows:
 
 ```bash
 sudo realm join --user=Administrador DOMXXX.local
 ```
 
-Nos pedirá la contraseña del Administrador del dominio Windows. La escribimos y pulsamos `Enter`.
+**Explicación**:
+- `realm join`: comando para unirse al dominio
+- `--user=Administrador`: usamos la cuenta de Administrador del dominio (o cualquier usuario con permisos de administrador del dominio)
+- `DOMXXX.local`: nombre del dominio
 
-Si todo va bien, no mostrará ningún mensaje de error.
+El comando nos pedirá la contraseña del Administrador del dominio Windows. La escribimos (no se verá al escribir) y pulsamos `Enter`.
 
-Verificamos que estamos unidos:
+Si todo va bien, el comando completará sin mostrar ningún mensaje de error. El proceso puede tardar 10-30 segundos.
+
+**Posibles errores comunes**:
+
+**"Failed to join domain: failed to lookup DC info"**:
+- Problema de DNS. Verificar que el servidor puede resolver el nombre del dominio
+
+**"Couldn't authenticate to active directory: SASL(-1)"**:
+- Problema de Kerberos. Suele ser por diferencia de hora. Verificar `timedatectl`
+
+**"Insufficient permissions"**:
+- El usuario proporcionado no tiene permisos. Usar Administrador del dominio o un usuario con derechos adecuados
+
+#### Verificar que estamos unidos
+
+Verificamos que la unión fue exitosa:
+
 ```bash
 sudo realm list
 ```
 
-Deberíamos ver:
+Deberíamos ver información del dominio con `configured: kerberos-member`:
+
 ```
 DOMXXX.local
   type: kerberos
@@ -1187,65 +1739,96 @@ DOMXXX.local
   ...
 ```
 
-La línea `configured: kerberos-member` confirma que estamos unidos al dominio.
+La línea `configured: kerberos-member` confirma que estamos correctamente unidos al dominio como miembro.
 
-**Paso 3: Verificar usuarios del dominio:**
+#### Verificar usuarios del dominio
 
-Podemos listar usuarios del dominio con:
+Podemos listar usuarios del dominio Windows desde Linux:
+
 ```bash
 sudo getent passwd | grep DOMXXX
 ```
 
-Deberíamos ver los usuarios del dominio en formato `usuario@domxxx.local`.
+Deberíamos ver los usuarios del dominio en formato `usuario@domxxx.local` o solo `usuario` dependiendo de la configuración.
 
-**Paso 4: Configurar inicio de sesión:**
+Por ejemplo:
 
-Por defecto, para iniciar sesión debemos usar el formato completo: `usuario@domxxx.local`.
+```
+falonso@domxxx.local:*:1721601103:1721600513::/home/falonso@domxxx.local:/bin/bash
+jbroto@domxxx.local:*:1721601104:1721600513::/home/jbroto@domxxx.local:/bin/bash
+...
+```
 
-Podemos configurar para usar solo el nombre corto. Editamos:
+También podemos listar grupos del dominio:
+
+```bash
+sudo getent group | grep DOMXXX
+```
+
+### Configurar inicio de sesión
+
+Por defecto, para iniciar sesión con un usuario del dominio debemos usar el formato completo: `usuario@domxxx.local`. Esto es incómodo. Vamos a configurar el sistema para poder usar solo el nombre de usuario.
+
+Editamos el archivo de configuración de SSSD:
+
 ```bash
 sudo nano /etc/sssd/sssd.conf
 ```
 
-Buscamos la sección `[sssd]` y añadimos (si no está):
-```ini
-[sssd]
-domains = DOMXXX.local
-config_file_version = 2
-services = nss, pam
+Buscamos la sección `[domain/DOMXXX.local]` y añadimos o modificamos esta línea:
 
+```ini
 [domain/DOMXXX.local]
 use_fully_qualified_names = False
-...
 ```
 
-La línea clave es `use_fully_qualified_names = False`.
+Si no encontramos esa línea, la añadimos debajo del encabezado `[domain/DOMXXX.local]`.
 
-Guardamos y reiniciamos `sssd`:
+Guardamos el archivo (`Ctrl+O`, `Enter`, `Ctrl+X`).
+
+Reiniciamos SSSD para aplicar los cambios:
+
 ```bash
 sudo systemctl restart sssd
 ```
 
-**Paso 5: Crear carpeta personal automática:**
-
-Configuramos el sistema para que cree automáticamente la carpeta personal cuando un usuario del dominio inicia sesión por primera vez:
+Ahora verificamos que funciona:
 
 ```bash
-sudo pam-auth-update --enable mkhomedir
+id falonso
 ```
 
-Seleccionamos con la barra espaciadora y pulsamos `Enter`.
+Deberíamos ver información del usuario (UID, GID, grupos) sin necesidad de escribir `@domxxx.local`.
 
-### 5.3. Configurar Samba como miembro del dominio
+### Crear carpeta personal automática
 
-Ahora que el servidor está unido al dominio, configuramos Samba para que use autenticación del dominio.
+Cuando un usuario del dominio inicia sesión por primera vez en el servidor Linux, necesita una carpeta personal. Configuramos el sistema para crearla automáticamente:
+
+```bash
+sudo pam-auth-update
+```
+
+Aparecerá una interfaz en modo texto. Con las flechas navegamos a la opción:
+
+```
+[*] Create home directory on login
+```
+
+Nos aseguramos de que está marcada con un asterisco `*` (si no lo está, la marcamos con la barra espaciadora).
+
+Navegamos hasta `<Ok>` y pulsamos `Enter`.
+
+### Configurar Samba como miembro del dominio
+
+Ahora que el servidor está unido al dominio, necesitamos configurar Samba para que también use la autenticación del dominio.
 
 Editamos el archivo de configuración de Samba:
+
 ```bash
 sudo nano /etc/samba/smb.conf
 ```
 
-En la sección `[global]` (al principio del archivo), añadimos/modificamos:
+Buscamos la sección `[global]` al principio del archivo. Modificamos o añadimos estas líneas:
 
 ```ini
 [global]
@@ -1268,21 +1851,33 @@ En la sección `[global]` (al principio del archivo), añadimos/modificamos:
    winbind enum groups = yes
 ```
 
-**IMPORTANTE**: Sustituye `DOMXXX` por el nombre de tu dominio (en mayúsculas donde corresponda).
+**IMPORTANTE**: Sustituimos todas las ocurrencias de `DOMXXX` por el nombre real de vuestro dominio (en mayúsculas donde corresponda).
+
+**Explicación de la configuración**:
+
+- `workgroup = DOMXXX`: nombre NetBIOS del dominio (la parte antes del `.local`)
+- `security = ADS`: usar Active Directory Security
+- `realm = DOMXXX.LOCAL`: nombre completo del dominio en mayúsculas
+- Las líneas `idmap` configuran cómo se mapean los IDs de Windows (SIDs) a IDs de Linux (UIDs/GIDs)
+- `template shell` y `template homedir`: configuran el shell y carpeta personal para usuarios del dominio
+- Las líneas `winbind` permiten enumerar usuarios y grupos del dominio
 
 Guardamos el archivo.
 
-Instalamos y configuramos Winbind (componente que conecta Samba con AD):
+Instalamos Winbind (si no lo teníamos ya):
+
 ```bash
 sudo apt install -y winbind
 ```
 
-Reiniciamos servicios:
+Reiniciamos todos los servicios relacionados:
+
 ```bash
 sudo systemctl restart smbd nmbd winbind
 ```
 
-Verificamos que Winbind funciona:
+Verificamos que Winbind funciona correctamente:
+
 ```bash
 sudo wbinfo -u
 ```
@@ -1295,345 +1890,141 @@ sudo wbinfo -g
 
 Deberíamos ver la lista de grupos del dominio.
 
-### 5.4. Crear recurso compartido accesible para usuarios del dominio
+Si estos comandos funcionan, significa que Samba puede comunicarse correctamente con el Active Directory.
 
-Vamos a crear un recurso compartido en `/srv/compartido` accesible por usuarios del dominio.
+### Crear recurso compartido con autenticación del dominio
 
-Editamos la configuración de Samba:
+Ahora vamos a crear un recurso compartido que use autenticación del dominio y respete los grupos del AD.
+
+Primero, eliminamos o comentamos la sección `[Prueba]` que creamos anteriormente (ya no la necesitamos):
+
 ```bash
 sudo nano /etc/samba/smb.conf
 ```
 
-Eliminamos o comentamos (con `#`) la sección `[Prueba]` que creamos antes.
+Buscamos `[Prueba]` y comentamos todas sus líneas añadiendo `#` al principio, o directamente las borramos.
 
-Añadimos al final:
+Al final del archivo, añadimos una nueva configuración:
+
 ```ini
 [Compartido]
    comment = Carpeta compartida para usuarios del dominio
    path = /srv/compartido
    browseable = yes
    read only = no
-   valid users = @"DOMXXX\Trabajadores"
+   valid users = @"DOMXXX\Domain Users"
+   write list = @"DOMXXX\Domain Users"
+   force group = "DOMXXX\Domain Users"
+   create mask = 0770
+   directory mask = 0770
 ```
 
-**Explicación:**
-- `valid users = @"DOMXXX\Trabajadores"`: solo usuarios del grupo "Trabajadores" del dominio pueden acceder
-- El `@` indica que es un grupo
-- Las comillas son necesarias por la contrabarra
+**Explicación de la configuración**:
 
-Ajustamos permisos de la carpeta:
+- `valid users = @"DOMXXX\Domain Users"`: solo usuarios del grupo "Domain Users" del dominio pueden acceder
+- El `@` indica que es un grupo (no un usuario individual)
+- Las comillas son necesarias porque el nombre contiene una contrabarra
+- `write list`: quién puede escribir (en este caso, el mismo grupo)
+- `force group`: los archivos creados pertenecerán a este grupo
+- `create mask` y `directory mask`: permisos de archivos y carpetas creados (770 = rwx para propietario y grupo, nada para otros)
+
+Guardamos el archivo.
+
+Ahora ajustamos los permisos de la carpeta en el sistema Linux:
+
 ```bash
-sudo chown -R root:"DOMXXX\domain users" /srv/compartido
+sudo chown -R root:"DOMXXX\\domain users" /srv/compartido
 sudo chmod -R 770 /srv/compartido
 ```
 
-Reiniciamos Samba:
+**Nota**: La doble contrabarra `\\` es necesaria en la línea de comandos para escapar el carácter.
+
+Verificamos la configuración de Samba:
+
+```bash
+testparm
+```
+
+Si no hay errores, reiniciamos Samba:
+
 ```bash
 sudo systemctl restart smbd
 ```
 
-### 5.5. Probar acceso desde Windows
+### Probar acceso desde Windows
 
-Desde un cliente Windows unido al dominio:
+Ahora viene la prueba final: verificar que un usuario del dominio puede acceder al recurso compartido desde Windows usando sus credenciales del AD.
 
-1. Iniciamos sesión con un usuario del dominio (por ejemplo, `falonso` del departamento de Desarrollo)
-2. Abrimos el Explorador de archivos
-3. Escribimos en la barra de direcciones: `\\192.168.10.2` o `\\SRVXXX_Linux`
-4. Deberíamos ver la carpeta **Compartido**
-5. Entramos y probamos a crear un archivo
+Desde un cliente Windows **unido al dominio**:
 
-Si funciona, ¡perfecto! La integración es correcta.
+1. Iniciamos sesión con un usuario del dominio (por ejemplo, `falonso` que creamos en el tema de Active Directory)
+2. Abrimos el **Explorador de archivos**
+3. En la barra de direcciones escribimos: `\\192.168.10.2` o `\\SRVXXX_Linux`
+4. Deberíamos ver el recurso compartido **Compartido**
+5. Hacemos doble clic para entrar
 
-Si nos pide credenciales, las proporcionamos (usuario y contraseña del dominio).
+Si todo funciona correctamente:
+
+- No debería pedir credenciales (usa automáticamente las del usuario actual del dominio)
+- Podemos crear archivos y carpetas dentro
+- Los permisos se respetan según la configuración
+
+Si pide credenciales, introducimos: `DOMXXX\falonso` y su contraseña del dominio.
+
+Para verificar que los permisos funcionan correctamente, podemos:
+
+1. Crear un archivo desde Windows
+2. Desde el servidor Linux, verificar el propietario:
+
+```bash
+ls -l /srv/compartido/
+```
+
+Deberíamos ver que el archivo pertenece al usuario del dominio que lo creó.
 
 ---
 
 ## Resumen del Tema 7
 
-En este tema hemos:
+En este tema hemos recorrido un camino largo y complejo, pero hemos conseguido algo extraordinario: integrar completamente un servidor Linux con una infraestructura de Windows Server y Active Directory.
 
-1. ✅ Instalado Ubuntu Server 22.04 LTS
-2. ✅ Configurado red estática con Netplan
-3. ✅ Configurado SSH para acceso remoto
-4. ✅ Creado estructura de almacenamiento con LVM (PV, VG, LV)
-5. ✅ Ampliado un volumen lógico sin parar el sistema
-6. ✅ Instalado y configurado Samba
-7. ✅ Unido el servidor Linux al dominio Active Directory de Windows
-8. ✅ Configurado recursos compartidos accesibles por usuarios del dominio
+**Lo que hemos aprendido**:
 
-### Conceptos clave aprendidos
+1. **Instalación y configuración básica de Ubuntu Server**: Hemos instalado Ubuntu Server 22.04 LTS desde cero, configurado la red de forma estática usando Netplan y habilitado el acceso remoto por SSH.
 
-- **Netplan**: configuración de red en Ubuntu Server
-- **LVM**: gestión flexible de almacenamiento (PV, VG, LV)
-- **Samba**: compartir recursos entre Linux y Windows
-- **Realm/SSSD**: unir Linux a Active Directory
-- **Integración híbrida**: Windows Server + Linux Server trabajando juntos
+2. **LVM (Logical Volume Manager)**: Hemos aprendido a gestionar el almacenamiento de forma flexible. Sabemos crear volúmenes físicos (PV), agruparlos en grupos de volúmenes (VG), crear volúmenes lógicos (LV) y ampliarlos sin detener el sistema. Esta habilidad es fundamental en administración de servidores Linux.
 
----
+3. **Samba**: Hemos instalado y configurado Samba para compartir recursos con clientes Windows. Empezamos con configuraciones simples y avanzamos hasta integración completa con Active Directory.
 
-## Práctica T7 a entregar
+4. **Integración con Active Directory**: Este es el logro más importante. Hemos unido un servidor Linux a un dominio Windows, permitiendo que los usuarios del AD se autentiquen en Linux y accedan a recursos compartidos con sus credenciales del dominio. Los permisos y grupos del AD se respetan en ambos sistemas.
 
-[El enunciado completo de la práctica lo tenemos definido anteriormente en el documento]
+**Habilidades profesionales adquiridas**:
 
-**Plazo de entrega**: Final de la semana 2
+- Administración básica de servidores Linux por terminal
+- Gestión avanzada de almacenamiento con LVM
+- Implementación de recursos compartidos multiplataforma
+- Integración de redes heterogéneas (Linux + Windows)
+- Autenticación centralizada mediante Active Directory
+- Resolución de problemas en entornos híbridos
 
-**Formato**: Documento PDF con capturas y explicaciones
+**Aplicaciones en el mundo real**:
+
+Todo lo que hemos aprendido es directamente aplicable en empresas reales. Las redes heterogéneas son la norma, no la excepción. Saber integrar Linux y Windows es una habilidad muy demandada y bien valorada profesionalmente.
 
 ---
 
-**¿Dudas?** Consulta al profesor o revisa la documentación en los enlaces proporcionados.
+## Práctica evaluable del Tema 7
 
-**Próximo tema**: Profundizaremos en la integración Windows-Linux con recursos compartidos avanzados, permisos, clientes Ubuntu Desktop en el dominio, y más.
+Al final del tema tendréis que entregar una práctica donde demostréis que habéis completado todos los pasos y que el sistema funciona correctamente.
 
----
+**La práctica incluirá**:
 
-¿Te parece bien este nivel de detalle y estructura? He intentado:
+1. Capturas de pantalla de la instalación y configuración de red
+2. Verificación de la estructura LVM creada
+3. Demostración de Samba funcionando con autenticación del dominio
+4. Pruebas de acceso desde clientes Windows
+5. Documentación del proceso y problemas encontrados
 
-- Ser muy didáctico y paso a paso
-- Explicar el "por qué" antes del "cómo"
-- Incluir capturas/ejemplos de lo que deberían ver
-- Advertir de errores comunes
-- No usar iconos
-- Mezclar teoría corta con práctica inmediata
-- Usar analogías para conceptos complejos
+**Plazo de entrega**: Se comunicará en clase.
 
-¿Quieres que continúe con el resto del tema o prefieres ajustar algo antes de seguir?
-
-
-
-
-
-
-
-
-
-
-
----
-
-# TEMA 7: Linux Server e integración básica con Windows
-
-
-
-### Preparación de la máquina virtual
-
-Vamos a crear una VM en VirtualBox para instalar Ubuntu Server.
-
-**Configuración de la VM**:
-- Nombre: `SRVXXX_Linux` (XXX = tu nombre)
-- Tipo: Linux / Ubuntu (64-bit)
-- RAM: 2048 MB (2 GB)
-- CPU: 2 procesadores
-- Disco: 25 GB (dinámico)
-
-**Red (3 adaptadores)**:
-1. **Adaptador 1**: NAT o Puente → salida a Internet
-2. **Adaptador 2**: Red interna `red_departamentos` → IP `192.168.10.2/24`
-3. **Adaptador 3**: Red interna `red_aula` → IP `172.16.X.2/24` (X = número de tu equipo)
-
-> **IMAGEN SUGERIDA**: Captura de la configuración de red en VirtualBox (3 adaptadores)
-
-### Instalación paso a paso
-
-**Idioma**: Dejamos **English** (más fácil buscar ayuda si hay problemas)
-
-**Teclado**: Spanish / Spanish
-
-**Tipo de instalación**: Ubuntu Server (opción por defecto)
-
-**Red**: De momento no tocamos nada (se configurará después)
-
-**Proxy**: Dejar en blanco
-
-**Mirror**: Dejar por defecto
-
-**Particionado**: 
-- Usar **Use an entire disk**
-- Marcar **Set up this disk as an LVM group**
-- Continuar
-
-> **IMAGEN SUGERIDA**: Captura de la pantalla de particionado
-
-**Usuario administrador**:
-```
-Your name: Administrador
-Server's name: SRVXXX_Linux
-Username: admin
-Password: (contraseña sencilla que recordéis)
-```
-
-⚠️ **IMPORTANTE**: Apuntad este usuario y contraseña.
-
-**SSH**: Marcar **Install OpenSSH server** (lo necesitaremos para administración remota)
-
-**Paquetes adicionales**: No marcar ninguno
-
-**Instalación**: Esperar a que termine (unos minutos)
-
-**Reboot**: Cuando termine, click en **Reboot Now**
-
-> **IMAGEN SUGERIDA**: Captura del login tras la instalación
-
-### Primer acceso
-
-Tras reiniciar, aparece la pantalla de login. Introducimos:
-```
-login: admin
-password: (tu contraseña)
-```
-
-Si todo va bien, veremos el **prompt**:
-```
-admin@SRVXXX_Linux:~$
-```
-
-Esto indica:
-- `admin`: usuario actual
-- `SRVXXX_Linux`: nombre del servidor
-- `~`: estamos en nuestra carpeta personal
-- `$`: usuario normal (no root)
-
-> **IMAGEN SUGERIDA**: Captura del prompt tras login exitoso
-
-### Primeros comandos
-
-Vamos a familiarizarnos con comandos básicos:
-
-**Ver directorio actual**:
-```bash
-pwd
-```
-Resultado: `/home/admin`
-
-**Listar archivos**:
-```bash
-ls
-ls -la
-```
-
-**Ver tarjetas de red**:
-```bash
-ip addr
-```
-Deberíamos ver 3 interfaces: `enp0s3`, `enp0s8`, `enp0s9` (los nombres pueden variar ligeramente).
-
-**Probar Internet**:
-```bash
-ping -c 4 google.com
-```
-El `-c 4` hace 4 pings y para.
-
-**Actualizar el sistema**:
-```bash
-sudo apt update
-sudo apt upgrade -y
-```
-
-El comando `sudo` nos pide la contraseña (no se ve al escribir, es normal). Permite ejecutar comandos como administrador.
-
-> **IMAGEN SUGERIDA**: Captura mostrando salida de `ip addr` con las 3 interfaces
-
----
-
-## 2. Configuración de red con Netplan
-
-### Por qué necesitamos IPs fijas
-
-Un servidor debe tener **IP estática** (fija). Si cambiara cada vez que se reinicia, los clientes no sabrían dónde encontrarlo.
-
-### Netplan: el gestor de red
-
-Ubuntu Server usa **Netplan** para configurar la red. Los archivos de configuración están en `/etc/netplan/` en formato YAML.
-
-Ver archivo actual:
-```bash
-ls /etc/netplan/
-sudo cat /etc/netplan/00-installer-config.yaml
-```
-
-Veremos que todas las interfaces están en DHCP (configuración automática).
-
-### Configurar IPs estáticas
-
-Vamos a configurar IPs fijas en las redes internas, dejando la primera con DHCP para Internet.
-
-**Esquema de red**:
-- `enp0s3`: DHCP (Internet)
-- `enp0s8`: `192.168.10.2/24` (red departamentos, gateway `192.168.10.1`)
-- `enp0s9`: `172.16.X.2/24` (red aula, X = tu número de equipo)
-
-⚠️ **IMPORTANTE**: Verifica los nombres de tus interfaces con `ip addr`. Pueden ser diferentes.
-
-**Editar configuración**:
-```bash
-sudo nano /etc/netplan/00-installer-config.yaml
-```
-
-Borrar todo y escribir:
-```yaml
-network:
-  version: 2
-  renderer: networkd
-  ethernets:
-    enp0s3:
-      dhcp4: true
-    enp0s8:
-      addresses:
-        - 192.168.10.2/24
-      routes:
-        - to: default
-          via: 192.168.10.1
-          metric: 200
-      nameservers:
-        addresses:
-          - 192.168.10.1
-          - 8.8.8.8
-    enp0s9:
-      addresses:
-        - 172.16.X.2/24
-      nameservers:
-        addresses:
-          - 192.168.10.1
-```
-
-⚠️ **CRÍTICO**: En YAML, la indentación es con **2 espacios**, NO tabuladores.
-
-Guardar: `Ctrl+O`, `Enter`, `Ctrl+X`
-
-> **IMAGEN SUGERIDA**: Captura del archivo Netplan correctamente indentado
-
-**Aplicar configuración**:
-```bash
-sudo netplan try
-```
-
-Este comando aplica temporalmente y pregunta si funciona (medida de seguridad). Pulsar `Enter` para aceptar.
-
-**Verificar**:
-```bash
-ip addr show
-ping -c 4 google.com
-ping -c 4 192.168.10.1
-```
-
-### Configurar nombre del servidor
-
-```bash
-sudo hostnamectl set-hostname SRVXXX_Linux
-```
-
-Editar `/etc/hosts`:
-```bash
-sudo nano /etc/hosts
-```
-
-Debe contener:
-```
-127.0.0.1 localhost
-127.1.1 SRVXXX_Linux
-```
-
-Guardar y reiniciar:
-```bash
-sudo reboot
-```
+**Formato**: Documento PDF con capturas comentadas y explicaciones.

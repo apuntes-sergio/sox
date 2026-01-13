@@ -114,5 +114,22 @@ nav:
     - 06_12_actualizacion_despliegue.md
 #    - 06_13_integracion_ubuntu_en_dominio.md
 
-    
+  # - UD07 Linux Server e integración básica con Windows:
+  #   - 07_01_introduccion.md
+  #   - 07_02_instalacion_ubuntu_server.md
+  #   - 07_03_configuracion_red_netplan.md
+  #   - 07_04_gestion_almacenamiento_lvm.md
+  #   - 07_05_instalacion_configuracion_samba.md
+  #   - 07_06_integracion_active_directory.md
+  #   - 07_06_integracino_active_directory.md
+  #   - 07_06bis_ac_camba.md
+  
+  # - Extra: 
+  #   - 06_13_integracion_ubuntu_en_dominio.md
+  #   - 07_gemini.md
+  #   - 08_gemini.md
+  #   - 09_gemini.md
+  #   - 10_gemini.md
+  #   - c07_claude.md
+  #   - c08_claude.md    
     
