@@ -116,10 +116,10 @@ nav:
 
   - UD07 Instalación de sistemas operativos libres:
     - 07_01_introduccion.md
-    - 07_02_Ubuntu Desktop.md
-    - 07_03_Ubuntu Desktop Red.md
-    - 07_04_Ubuntu Desktop varios.md
-    - 07_05_Ubuntu Desktop AD.md
+    - 07_02_ubuntudesktop.md
+    - 07_03_ubuntudesktop_red.md
+    - 07_04_ubuntudesktop_varios.md
+    - 07_05_ubuntudesktop_ad.md
 
   - UD08 Linux Server e integración básica con Windows:
     - 08_01_instalacion_ubuntu_server.md
