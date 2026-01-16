@@ -3,7 +3,7 @@ title: Gestión de almacenamiento con LVM
 description:  Redes híbridas. Linux Server e integración básica con Windows. 
 ---
 
-## 3. Gestión avanzada de almacenamiento con LVM
+## Gestión avanzada de almacenamiento con LVM
 
 ### Qué es LVM y por qué usarlo
 

@@ -3,7 +3,7 @@ title: Instalación de Ubuntu Server
 description:  Gestión del dominio en Windows Server. Integración de Ubuntu 24.04 LTS en Dominio Windows Server
 ---
 
-## 1. Instalación de Ubuntu Server
+## Instalación de Ubuntu Server
 
 ### Preparación de la máquina virtual
 

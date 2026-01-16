@@ -3,7 +3,7 @@ title: Configuración de red estática con Netplan
 description:  Redes híbridas. Linux Server e integración básica con Windows. 
 ---
 
-## 2. Configuración de red estática con Netplan
+## Configuración de red estática con Netplan
 
 ### Por qué configuración estática
 
@@ -56,9 +56,10 @@ Vamos a modificar este archivo para configurar una IP estática en nuestra inter
 Según el diseño de nuestra red ISCASOX, la configuración quedará así:
 
 **enp0s3** (única interfaz - red departamentos):
-- IP: `192.168.10.2/24`
-- Gateway: `192.168.10.1` (Windows Server)
-- DNS: `192.168.10.1`, `8.8.8.8`
+
+- IP: `192.168.100.50/24`
+- Gateway: `192.168.100.1` (Windows Server)
+- DNS: `192.168.100.1`, `8.8.8.8`
 
 El Windows Server actuará como puerta de enlace para dar salida a Internet a nuestro servidor Linux.
 
@@ -74,7 +75,7 @@ Para editar archivos en Linux desde la terminal usamos editores de texto. Los m�
 Usaremos **nano** porque es más fácil de usar:
 
 ```bash
-sudo nano /etc/netplan/00-installer-config.yaml
+sudo nano /etc/netplan/99-installer-config.yaml
 ```
 
 Nos pedirá la contraseña de sudo si han pasado más de 15 minutos desde la última vez que lo usamos.
@@ -128,6 +129,12 @@ Para guardar los cambios en nano:
 2. Nos preguntará el nombre del archivo. Como no lo cambiamos, simplemente pulsamos `Enter`
 3. Para salir del editor: `Ctrl + X`
 
+Una vez guardado la configuración es adecuado restringir el acceso a dicho fichero, por lo que reduciremos los permisos para evitar problemas futuros:
+
+```bash
+sudo chmod 600 /etc/netplan/99-installer-config.yaml 
+```
+
 ### Aplicar la configuración
 
 Antes de aplicar la configuración definitivamente, Netplan nos permite probarla de forma segura:
@@ -150,6 +157,12 @@ Configuration accepted.
 ```
 
 Pulsamos Enter para aceptar definitivamente la nueva configuración.
+
+También se podría haber aplicado directamente la configuración con un 
+
+```bash
+sudo netplan apply
+```
 
 **Si hay errores de sintaxis**, nos los mostrará. Los errores más comunes son:
 
