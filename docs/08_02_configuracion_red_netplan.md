@@ -47,6 +47,19 @@ network:
 
 Esto significa que la interfaz está configurada para obtener IP automáticamente mediante DHCP.
 
+!!!warning "Cuidado si hay más de un fichero en `/etc/netplan/`"
+
+    Cuidado, porque si hay más de un fichero en la carpeta `/etc/netplan/` prevalece el que comienza por un número superior, y en todo caso, se mezclan todas las configuraciones. 
+
+    Por ello, si hay más de un fichero, debemos identificar el fichero que no queremos y cambiar su nombre para que no acabe en `.yaml`.
+
+    Por ejemplo, si tenemos un fichero como `50-cloud-init.yaml` lo podemos renombrar así:
+
+    ```bash
+    mv /etc/netplan/50-cloud-init.yaml /etc/netplan/50-cloud-init.yaml.bak
+    ```
+
+
 ### Configurar IP estática
 
 Vamos a modificar este archivo para configurar una IP estática en nuestra interfaz de red.
@@ -57,13 +70,14 @@ Según el diseño de nuestra red ISCASOX, la configuración quedará así:
 
 **enp0s3** (única interfaz - red departamentos):
 
-- IP: `192.168.100.50/24`
+- IP: `192.168.100.10/24`
 - Gateway: `192.168.100.1` (Windows Server)
 - DNS: `192.168.100.1`, `8.8.8.8`
 
 El Windows Server actuará como puerta de enlace para dar salida a Internet a nuestro servidor Linux.
 
-**IMPORTANTE**: El nombre de la interfaz puede variar en vuestro sistema. Usad el comando `ip addr` para verificar el nombre real y ajustad la configuración en consecuencia.
+!!!note "IMPORTANTE"
+    El nombre de la interfaz puede variar en vuestro sistema. Usad el comando `ip addr` para verificar el nombre real y ajustad la configuración en consecuencia.
 
 ### Editar el archivo de configuración
 
@@ -90,30 +104,33 @@ network:
   renderer: networkd
   ethernets:
     enp0s3:
-      addresses:
-        - 192.168.100.5/24
-      routes:
-        - to: default
-      nameservers:
-        search: [DOMSERGIO.local]
       dhcp4: false
       dhcp6: false
-      link-local: []
+      addresses:
+        - 192.168.100.10/24
+      routes:
+        - to: default
+          via: 192.168.100.1
+      nameservers:
+        addresses:
+          - 192.168.100.1
+        search:
+          - domsergio.local
 ```
 
-**IMPORTANTE - Aspectos críticos de YAML**:
+!!!tip "IMPORTANTE - Aspectos críticos de YAML"
 
-En YAML, la **indentación es absolutamente crítica**. El formato usa espacios para indicar jerarquía.
+    En YAML, la **indentación es absolutamente crítica**. El formato usa espacios para indicar jerarquía.
 
-Debe indentarse con **espacios**, NUNCA con tabuladores. Si usáis tabuladores, dará error.
+    Debe indentarse con **espacios**, NUNCA con tabuladores. Si usáis tabuladores, dará error.
 
-Cada nivel de indentación son exactamente **2 espacios**.
+    Cada nivel de indentación son exactamente **2 espacios**.
 
-Los dos puntos (`:`) después de cada clave son obligatorios.
+    Los dos puntos (`:`) después de cada clave son obligatorios.
 
-Las listas se indican con guiones (`-`).
+    Las listas se indican con guiones (`-`).
 
-Verificad cuidadosamente que el nombre de vuestra interfaz coincide con el que mostró `ip addr`. Si en vuestro sistema la interfaz se llama `ens33`, `eth0`, etc., debéis usar ese nombre.
+    Verificad cuidadosamente que el nombre de vuestra interfaz coincide con el que mostró `ip addr`. Si en vuestro sistema la interfaz se llama `ens33`, `eth0`, etc., debéis usar ese nombre.
 
 **Explicación de la configuración**:
 
@@ -147,14 +164,10 @@ Este comando es muy inteligente. Aplica la configuración temporalmente y nos pr
 
 Si todo va bien, veremos:
 
-```
-Do you want to keep these settings?
-
-Press ENTER before the timeout to accept the new configuration
-
-Changes will revert in 120 seconds
-Configuration accepted.
-```
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/server/netplan_try.png){ width="80%" }
+  <figcaption>Verificación de la configuración Netplan</figcaption>
+</figure>
 
 Pulsamos Enter para aceptar definitivamente la nueva configuración.
 
@@ -183,10 +196,11 @@ ip addr show
 
 Deberíamos ver nuestra interfaz con la dirección IP configurada:
 
-```
-2: enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP>
-    inet 192.168.10.2/24 brd 192.168.10.255 scope global enp0s3
-```
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/server/ip_addr.png){ width="80%" }
+  <figcaption>Verificación de la configuración de red</figcaption>
+</figure>
+
 
 Verificamos que podemos comunicarnos con el Windows Server:
 
@@ -256,3 +270,96 @@ El sistema se reiniciará. Esperamos unos 30 segundos y volvemos a hacer login. 
 admin@SRVXXX_Linux:~$
 ```
 
+## Acceso al servidor mediante `ssh`
+
+Trabajar con la interfaz del servidor no es muy amigable y además como norma general en condiciones normales de cualquier empresa, no vamos a estar trabajando frente al servidor que se encontrará en un CPD (Centro de Proceso de Datos). Por eso, lo lógico es conectarnos a los servidores GNU/Linux mediante `ssh`.
+
+Vamos a emular este entorno en nuestra máquina de forma que:
+
+- Configuraremos nuestra máquina virtual para poder acceder a ella desde nuestro equipo host.
+- Trabajaremos desde la terminal de nuestro host, que nos permitirá trabajar mejor y entre otras cosas podremos **copiar y pegar**.
+
+Así pues sigamos los siguientes pasos.
+
+1. Añadamos una nueva tarjeta de red a nuestro equipo virtual
+2. Configuremos una IP para esta nueva tarjeta
+3. Accedamos usando `ssh`
+
+### 1. Configuración de nueva tarjeta de red.
+
+Vamos a optar por una configuración de red **solo anfitrión** para poder acceder a nuestro servidor únicamente desde nuestro equipo host y no interferir con el resto de equipos de nuestra LAN del aula.
+
+Para ello, en Oracle VirtualBox vamos a **Archivo > Herramientas > Red** y en la primera pestaña de **Redes solo-anfitrión** pulsamos sobre el botón **Crear** y automáticamente se habrá creado en nuestro equipo una interfaz virtual para comunicarnos directamente con nuestras máquinas virtuales.
+
+Cono normal general, veremos que la red creada es una **192.168.56.1/24**
+
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/server/red_solo-anfitrion.png){ width="80%" }
+  <figcaption>Redes solo-anfitrión en VirtualBox</figcaption>
+</figure>
+
+Apagamos nuestro equipo y añadimos una nueva tarjeta de red, habilitamos una segunda tarjeta de red y seleccionamos la red **solo-anfitrión** que acabamos de crear.
+
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/server/config_red_solo-anfitrion.png){ width="90%" }
+  <figcaption>Redes solo-anfitrión en VirtualBox</figcaption>
+</figure>
+
+### 2. Configuración de nueva dirección de red.
+
+Ahora iniciamos de nuevo el equipo y comprobamos las nuevas direcciones de red.
+
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/server/enp0s8_1.png){ width="70%" }
+  <figcaption>Configuración red solo anfitrión para conexión por ssh</figcaption>
+</figure>
+
+En la imagen podemos ver que tenemos una nueva tarjeta de red `enp0s8` que no esta activa. Vamos a editar de nuevo nuestro netplan y simplemente le asignaremos una dirección de red teniendo en cuenta la red que tenía el interfaz **solo-anfitrión** que acabamos de crear : `192.168.56.0/24`
+
+Así pues, añadimos nueva configuración a nuestro `netplan`
+
+```yaml
+    enp0s8:
+      dhcp4: false
+      addresses:
+        - 192.168.56.2/24
+```
+
+probamos y aplicamos cambios y verificamos la nueva IP de nuestro equipo
+
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/server/enp0s8_2.png){ width="80%" }
+  <figcaption>Configuración red solo anfitrión para conexión por ssh</figcaption>
+</figure>
+
+Ya tenemos el equipo preparado para acceder desde nuestro host.
+
+### 3. Acceso por `ssh`
+
+Ahora nos vamos a nuestro equipo host, abrimos un terminal y probamos las comunicaciones entre el Ubuntu Server y nuestro equipo de clase, haciendo respectivamente `ping` entre ellos:
+
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/server/ping_host.png){ width="95%" }
+  <figcaption>Comprobar comunicaciones entre host y máquina virtual</figcaption>
+</figure>
+
+Y ahora solamente nos queda comunicarnos por `ssh` desde nuestro host mediante el siguiente comando:
+
+```bash
+ssh sergio@192.168.56.2
+```
+
+Donde:
+
+  - `ssh` es el comando conectarnos
+  - `sergio` es el nombre de tu usuario en tu Ubuntu Server
+  - `192.168.56.2` es la IP de tu Ubuntu Server
+
+Ejecutamos el comando, nos pregunta si nos queremos conectar (y nos advierte de que vamos a dejar rastro) y contestamos `yes`, y en nuestra terminal estamos trabajando en el equipo servidor.
+
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/server/ssh_passwd.png){ width="85%" }
+  <figcaption>Conexión ssh</figcaption>
+</figure>
+
+A partir de este momento, no tocamos el servidor, y trabajamos desde el terminal de nuestro equipo host.

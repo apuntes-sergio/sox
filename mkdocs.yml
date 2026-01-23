@@ -124,8 +124,9 @@ nav:
   - UD08 Linux Server e integración básica con Windows:
     - 08_01_instalacion_ubuntu_server.md
     - 08_02_configuracion_red_netplan.md
-    - 08_03_gestion_almacenamiento_lvm.md
-    - 08_04_instalacion_configuracion_samba.md
-    - 08_05_integracion_active_directory.md
-    - 08_06_cron-rsync.md
-    - 08_07_mantenimiento_logs.md
+    - 08_03_gestion_almacenamiento_linux.md
+    - 08_04_gestion_almacenamiento_lvm.md
+    - 08_05_instalacion_configuracion_samba.md
+    - 08_06_integracion_active_directory.md
+    - 08_07_cron-rsync.md
+    - 08_08_mantenimiento_logs.md

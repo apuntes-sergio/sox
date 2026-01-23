@@ -9,6 +9,11 @@ description:  Redes híbridas. Linux Server e integración básica con Windows.
 
 **LVM** (Logical Volume Manager) es un sistema de gestión de almacenamiento que añade una capa de abstracción entre los discos físicos y el sistema de archivos. Esta abstracción nos proporciona una flexibilidad extraordinaria que no existe con las particiones tradicionales.
 
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/lvm/lvm-LogialVolumeManager.png){ width="60%" }
+</figure>
+
+
 #### Comparación: Particiones tradicionales vs LVM
 
 **Con particiones tradicionales**:
@@ -26,15 +31,11 @@ Tampoco podemos combinar varios discos físicos para formar una única partició
 
 **Con LVM**:
 
-Podemos **ampliar** volúmenes fácilmente, incluso con el sistema en funcionamiento y sin parar servicios. Los usuarios ni se enterarán.
-
-Podemos **reducir** volúmenes si necesitamos recuperar espacio para asignarlo a otro volumen.
-
-Podemos **combinar** varios discos físicos en un único espacio de almacenamiento lógico.
-
-Podemos crear **snapshots** (copias instantáneas) de volúmenes, ideales para backups o pruebas.
-
-Podemos **mover** datos entre discos sin detener el sistema ni afectar a las aplicaciones.
+- Podemos **ampliar** volúmenes fácilmente, incluso con el sistema en funcionamiento y sin parar servicios. Los usuarios ni se enterarán.
+- Podemos **reducir** volúmenes si necesitamos recuperar espacio para asignarlo a otro volumen.
+- Podemos **combinar** varios discos físicos en un único espacio de almacenamiento lógico.
+- Podemos crear **snapshots** (copias instantáneas) de volúmenes, ideales para backups o pruebas.
+- Podemos **mover** datos entre discos sin detener el sistema ni afectar a las aplicaciones.
 
 **Analogía práctica**: 
 
@@ -48,13 +49,19 @@ En Windows Server existe algo similar llamado **Storage Spaces** o **Espacios de
 
 LVM funciona con tres niveles jerárquicos que debemos entender claramente:
 
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/lvm/lvm-diagram-linux-training-academy.webp){ width="90%" }
+  <figcaption>Niveles jerárquicos de LVM</figcaption>
+</figure>
+
+
 **1. PV (Physical Volume - Volumen Físico)**:
 
 Es la base de todo. Un PV es un disco duro físico (o partición) que hemos "preparado" para que LVM pueda trabajar con él. Básicamente le decimos a LVM: "este disco está disponible para que lo gestiones".
 
-Comandos principales:
-- `pvcreate`: convierte un disco en PV
-- `pvs` o `pvdisplay`: muestra información de los PVs
+!!! note "Comandos principales:"
+    - `pvcreate`: convierte un disco en PV
+    - `pvs` o `pvdisplay`: muestra información de los PVs
 
 **2. VG (Volume Group - Grupo de Volúmenes)**:
 
@@ -62,9 +69,9 @@ Es un "contenedor" que agrupa uno o varios PVs. Pensad en el VG como una "bolsa 
 
 Por ejemplo, si tenemos tres discos de 10GB cada uno, los agrupamos en un VG y tenemos 30GB de espacio total para trabajar.
 
-Comandos principales:
-- `vgcreate`: crea un nuevo grupo de volúmenes
-- `vgs` o `vgdisplay`: muestra información de los VGs
+!!! note "Comandos principales:"
+    - `vgcreate`: crea un nuevo grupo de volúmenes
+    - `vgs` o `vgdisplay`: muestra información de los VGs
 
 **3. LV (Logical Volume - Volumen Lógico)**:
 
@@ -75,26 +82,36 @@ Por ejemplo, de nuestros 30GB totales del VG, podemos crear:
 - Un LV de 10GB para carpetas de usuarios
 - Un LV de 5GB para backups
 
-Comandos principales:
-- `lvcreate`: crea un nuevo volumen lógico
-- `lvs` o `lvdisplay`: muestra información de los LVs
+!!! note "Comandos principales:"
+    - `lvcreate`: crea un nuevo volumen lógico
+    - `lvs` o `lvdisplay`: muestra información de los LVs
 
 **Diagrama conceptual**:
 
+Em el siguiente esquema podemos ver como unimos 3 discos de 10GB en un Grupo de Volúmenes (VG) de 60GB y posteriormente lo distribuimos en 3 volúmenes lógicos de diferentes capacidades que asignamos a diferentes ubicaciones
+
 ```
 Discos físicos:  [Disco 10GB] [Disco 10GB] [Disco 10GB]
-                    ↓            ↓            ↓
+                    ↓           ↓             ↓
                     └───────── PVs ───────────┘
-                              ↓
-                    [VG: vg_datos - 30GB]
-                              ↓
-              ┌───────────────┴───────────────┐
-              ↓               ↓               ↓
-      [LV: lv_empresa]  [LV: lv_usuarios]  [LV: lv_backup]
-           15GB              10GB              5GB
-              ↓               ↓               ↓
-        /srv/empresa    /srv/usuarios    /srv/backup
+                                ↓
+                      [VG: vg_datos - 30GB]
+                                ↓
+                ┌───────────────┴───────────────┐
+                ↓               ↓               ↓
+        [LV: lv_empresa]  [LV: lv_usuarios]  [LV: lv_backup]
+            15GB              10GB              5GB
+                ↓               ↓               ↓
+          /srv/empresa    /srv/usuarios    /srv/backup
 ```
+
+y teniendo en cuenta los comandos asociados tenemos el siguiente esquema:
+
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/lvm/lvm-esquema-comandos.png){ width="90%" }
+  <figcaption>Esquema conceptual: Comandos</figcaption>
+</figure>
+
 
 ### Añadir discos a la máquina virtual
 
