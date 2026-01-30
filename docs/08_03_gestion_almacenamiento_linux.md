@@ -46,7 +46,7 @@ En este esquema, `/srv/empresa` y `/srv/backups` podrían estar físicamente en 
 Otro ejemplo:
 
 <figure markdown="span" align="center">
-  ![](./imgs/ubuntu/lvm/directorios-dispositivos.png){ width="90%" }
+  ![](./imgs/ubuntu/discos/directorios-dispositivos.png){ width="90%" }
   <figcaption>Esquema de sistema con 3 díscos extra montados</figcaption>
 </figure>
 
@@ -117,7 +117,7 @@ lsblk
 Este comando muestra un árbol con todos los dispositivos de almacenamiento. Una salida típica podría ser:
 
 <figure markdown="span" align="center">
-  ![](./imgs/ubuntu/lvm/lsblk_1.png){ width="90%" }
+  ![](./imgs/ubuntu/discos/lsblk_1.png){ width="90%" }
   <figcaption>Ver los discos disponibles</figcaption>
 </figure>
 
@@ -181,7 +181,7 @@ lsblk
 Deberíamos ver algo similar a:
 
 <figure markdown="span" align="center">
-  ![](./imgs/ubuntu/lvm/lsblk_2.png){ width="90%" }
+  ![](./imgs/ubuntu/discos/lsblk_2.png){ width="90%" }
   <figcaption>Nuevo disco `sdb2` instalado</figcaption>
 </figure>
 
@@ -213,7 +213,7 @@ Este comando inicia un modo interactivo. Veremos un prompt `Command (m for help)
 La herramienta guardará los cambios y saldrá.
 
 <figure markdown="span" align="center">
-  ![](./imgs/ubuntu/lvm/fdisk_sdb.png){ width="90%" }
+  ![](./imgs/ubuntu/discos/fdisk_sdb.png){ width="90%" }
   <figcaption>Particionando nuevo disco</figcaption>
 </figure>
 
@@ -227,7 +227,7 @@ Ahora veremos:
 
 
 <figure markdown="span" align="center">
-  ![](./imgs/ubuntu/lvm/lsblk_3.png){ width="90%" }
+  ![](./imgs/ubuntu/discos/lsblk_3.png){ width="90%" }
   <figcaption>Nuevo disco sdb particionado</figcaption>
 </figure>
 
@@ -250,7 +250,7 @@ sudo mkfs.ext4 /dev/sdb1
 Este proceso formatea la partición y tarda unos segundos. Veremos una salida similar a:
 
 <figure markdown="span" align="center">
-  ![](./imgs/ubuntu/lvm/mkfs_ntfs.png){ width="90%" }
+  ![](./imgs/ubuntu/discos/mkfs_ntfs.png){ width="90%" }
   <figcaption>Formateando la nueva partición</figcaption>
 </figure>
 
@@ -287,7 +287,7 @@ ls -l /srv/
 ```
 
 <figure markdown="span" align="center">
-  ![](./imgs/ubuntu/lvm/mkdir_srv_datos.png){ width="90%" }
+  ![](./imgs/ubuntu/discos/mkdir_srv_datos.png){ width="90%" }
   <figcaption>Preparando carpeta para montar unidad</figcaption>
 </figure>
 
@@ -314,7 +314,7 @@ El comando `df` (disk free) muestra todos los sistemas de archivos montados y su
 Al final de la lista deberíamos ver:
 
 <figure markdown="span" align="center">
-  ![](./imgs/ubuntu/lvm/mount_sdb1.png){ width="90%" }
+  ![](./imgs/ubuntu/discos/mount_sdb1.png){ width="90%" }
   <figcaption>Unidad montada en la carpeta</figcaption>
 </figure>
 
@@ -346,7 +346,7 @@ ls -l /srv/datos/
 ```
 
 <figure markdown="span" align="center">
-  ![](./imgs/ubuntu/lvm/ls_srv_datos_1.png){ width="90%" }
+  ![](./imgs/ubuntu/discos/ls_srv_datos_1.png){ width="90%" }
   <figcaption>Contenido de la carpeta</figcaption>
 </figure>
 
@@ -370,7 +370,7 @@ cat /srv/datos/documentos/info.txt
 ```
 
 <figure markdown="span" align="center">
-  ![](./imgs/ubuntu/lvm/ls_srv_datos_2.png){ width="90%" }
+  ![](./imgs/ubuntu/discos/ls_srv_datos_2.png){ width="90%" }
   <figcaption>Contenido de la carpeta</figcaption>
 </figure>
 

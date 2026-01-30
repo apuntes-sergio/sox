@@ -3,9 +3,7 @@ title: Gestión de almacenamiento con LVM
 description:  Redes híbridas. Linux Server e integración básica con Windows. 
 ---
 
-## Gestión avanzada de almacenamiento con LVM
-
-### Qué es LVM y por qué usarlo
+## Qué es LVM y por qué usarlo
 
 **LVM** (Logical Volume Manager) es un sistema de gestión de almacenamiento que añade una capa de abstracción entre los discos físicos y el sistema de archivos. Esta abstracción nos proporciona una flexibilidad extraordinaria que no existe con las particiones tradicionales.
 
@@ -14,7 +12,7 @@ description:  Redes híbridas. Linux Server e integración básica con Windows.
 </figure>
 
 
-#### Comparación: Particiones tradicionales vs LVM
+### Comparación: Particiones tradicionales vs LVM
 
 **Con particiones tradicionales**:
 
@@ -45,7 +43,7 @@ LVM es como una oficina moderna con paneles modulares. Puedes mover los "tabique
 
 En Windows Server existe algo similar llamado **Storage Spaces** o **Espacios de almacenamiento**, aunque LVM es más maduro, estable y potente al tener décadas de desarrollo.
 
-### Conceptos fundamentales de LVM
+## Conceptos fundamentales de LVM
 
 LVM funciona con tres niveles jerárquicos que debemos entender claramente:
 
@@ -113,7 +111,7 @@ y teniendo en cuenta los comandos asociados tenemos el siguiente esquema:
 </figure>
 
 
-### Añadir discos a la máquina virtual
+## Añadir discos a la máquina virtual
 
 Antes de poder trabajar con LVM, necesitamos añadir discos adicionales a nuestra máquina virtual. Vamos a añadir tres discos de 10GB cada uno.
 
@@ -165,35 +163,33 @@ lsblk
 
 Este comando lista todos los dispositivos de bloque (discos) disponibles en el sistema. Deberíamos ver algo similar a:
 
-```
-NAME                      MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
-sda                         8:0    0   25G  0 disk 
-├─sda1                      8:1    0    1M  0 part 
-├─sda2                      8:2    0    2G  0 part /boot
-└─sda3                      8:3    0   23G  0 part 
-  └─ubuntu--vg-ubuntu--lv 253:0    0   11G  0 lvm  /
-sdb                         8:16   0   10G  0 disk 
-sdc                         8:32   0   10G  0 disk 
-sdd                         8:48   0   10G  0 disk 
-```
+
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/lvm/lsblk_1.png){ width="90%" }
+  <figcaption>Vista de 3 nuevos discos</figcaption>
+</figure>
+
 
 **Interpretación de la salida**:
 
 - `sda`: nuestro disco principal (25GB) donde ya está instalado Ubuntu. Vemos sus particiones (`sda1`, `sda2`, `sda3`)
 - `sdb`, `sdc`, `sdd`: los tres discos nuevos de 10GB que acabamos de añadir. Aparecen sin particiones ni formato, completamente vírgenes.
+- `sr0`: es el disco magnético: Disquete.
 
 **Nota importante**: Los nombres de los discos (`sda`, `sdb`, etc.) pueden variar ligeramente según la configuración. En algunos sistemas pueden aparecer como `vda`, `vdb`, etc. Lo importante es identificar visualmente los tres discos de 10GB que acabamos de añadir.
 
-### Crear la estructura LVM paso a paso
+## Crear la estructura LVM paso a paso
 
 Ahora vamos a crear nuestra estructura LVM completa, nivel por nivel, de forma muy detallada.
 
-#### Paso 1: Crear Physical Volumes (PVs)
+### Paso 1: Crear Physical Volumes (PVs)
 
 El primer paso es convertir nuestros tres discos físicos en volúmenes físicos que LVM pueda gestionar:
 
 ```bash
-sudo pvcreate /dev/sdb /dev/sdc /dev/sdd
+sudo pvcreate /dev/sdb 
+sudo pvcreate /dev/sdc 
+sudo pvcreate /dev/sdd 
 ```
 
 Deberíamos ver una confirmación para cada disco:
@@ -212,13 +208,11 @@ sudo pvs
 
 La salida mostrará:
 
-```
-  PV         VG        Fmt  Attr PSize  PFree 
-  /dev/sda3  ubuntu-vg lvm2 a--  23.00g    0 
-  /dev/sdb             lvm2 ---  10.00g 10.00g
-  /dev/sdc             lvm2 ---  10.00g 10.00g
-  /dev/sdd             lvm2 ---  10.00g 10.00g
-```
+
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/lvm/lsblk_2.png){ width="90%" }
+  <figcaption>Vista de 3 nuevos discos como PV</figcaption>
+</figure>
 
 **Interpretación**:
 
@@ -226,7 +220,7 @@ La salida mostrará:
 - `/dev/sdb`, `/dev/sdc`, `/dev/sdd`: nuestros tres PVs nuevos, todavía sin asignar a ningún VG (columna VG vacía)
 - La columna `PFree` muestra que los 10GB de cada disco están completamente disponibles
 
-#### Paso 2: Crear Volume Group (VG)
+### Paso 2: Crear Volume Group (VG)
 
 Ahora agrupamos nuestros tres PVs en un único grupo llamado `vg_datos`:
 
@@ -248,11 +242,12 @@ sudo vgs
 
 Salida:
 
-```
-  VG        #PV #LV #SN Attr   VSize  VFree 
-  ubuntu-vg   1   1   0 wz--n- 23.00g     0 
-  vg_datos    3   0   0 wz--n- 29.99g 29.99g
-```
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/lvm/lsblk_3.png){ width="90%" }
+  <figcaption>Vista de 3 nuevos discos como un único VG</figcaption>
+</figure>
+
+
 
 **Interpretación**:
 
@@ -270,7 +265,7 @@ sudo vgdisplay vg_datos
 
 Esto muestra información completa sobre el grupo, incluyendo el tamaño exacto de las unidades de asignación (PE - Physical Extents), cuántas hay libres, etc.
 
-#### Paso 3: Crear Logical Volumes (LVs)
+### Paso 3: Crear Logical Volumes (LVs)
 
 Ahora creamos tres volúmenes lógicos dentro de `vg_datos`. Estos serán los "discos virtuales" que montaremos y usaremos realmente.
 
@@ -281,6 +276,7 @@ sudo lvcreate -L 15G -n lv_empresa vg_datos
 ```
 
 **Explicación del comando**:
+
 - `-L 15G`: tamaño del volumen (15 gigabytes)
 - `-n lv_empresa`: nombre del volumen lógico
 - `vg_datos`: grupo de volúmenes donde se crea
@@ -290,6 +286,12 @@ Confirmación:
 ```
   Logical volume "lv_empresa" created.
 ```
+
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/lvm/lvcreate_1.png){ width="90%" }
+  <figcaption>Creación de un volumen lógico de 15 GB</figcaption>
+</figure>
+
 
 **Volumen para carpetas de usuarios (10GB)**:
 
@@ -311,15 +313,23 @@ sudo lvs
 
 Salida:
 
-```
-  LV            VG        Attr       LSize  
-  ubuntu-lv     ubuntu-vg -wi-ao---- 11.00g
-  lv_compartido vg_datos  -wi-a-----  5.00g
-  lv_empresa    vg_datos  -wi-a----- 15.00g
-  lv_usuarios   vg_datos  -wi-a----- 10.00g
-```
 
-Perfecto. Tenemos nuestros tres volúmenes lógicos creados con los tamaños especificados.
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/lvm/lvs_1.png){ width="90%" }
+  <figcaption>Creación de un volumen lógico de 15 GB + 10 GB + 4.5GB</figcaption>
+</figure>
+
+!!! note "Interpretación de error al crear el último Volumen Lógico"
+    Si observamos el mensaje que nos da el sistema:
+
+    `Volume group "vb_datos" has insufficient free space (1277 extends): **1280 required**`
+
+    Nos indica que para crear un **Volumen Lógico** de 5GB nos hacen falta `1280 extends`, pero nos faltan 3 que se han perdido al crear partiiciones y guardar información de los todo el sistema LVM, por lo que el último volumen lo hemos creado de un tamaño más pequeño.
+
+    Un **Extend** es la unidad mínima de espacio direccionable que se asigna a un volumen lógico para permitir que su tamaño crezca de forma flexible
+
+
+Ahora ya tenemos nuestros tres volúmenes lógicos creados con los tamaños especificados.
 
 Verificamos el espacio restante en el grupo de volúmenes:
 
@@ -327,15 +337,14 @@ Verificamos el espacio restante en el grupo de volúmenes:
 sudo vgs
 ```
 
-```
-  VG        #PV #LV #SN Attr   VSize  VFree 
-  ubuntu-vg   1   1   0 wz--n- 23.00g     0 
-  vg_datos    3   3   0 wz--n- 29.99g 4.99g
-```
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/lvm/vgs_1.png){ width="90%" }
+  <figcaption>Espacio utilizado en los dos VG (Volumen Group)</figcaption>
+</figure>
 
-Tenemos aproximadamente 5GB libres en `vg_datos` que podremos usar más adelante para ampliar volúmenes existentes o crear nuevos.
+Tenemos aproximadamente 500MB libres en `vg_datos` que podremos usar más adelante para ampliar volúmenes existentes o crear nuevos.
 
-#### Paso 4: Crear sistemas de archivos
+### Paso 4: Crear sistemas de archivos
 
 Los volúmenes lógicos están creados, pero son como "discos en blanco" sin formato. Necesitan un sistema de archivos para poder almacenar datos.
 
@@ -368,9 +377,14 @@ sudo mkfs.ext4 /dev/vg_datos/lv_usuarios
 sudo mkfs.ext4 /dev/vg_datos/lv_compartido
 ```
 
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/lvm/mkfs_1.png){ width="90%" }
+  <figcaption>Formateando los Volúmenes Lógicos creados</figcaption>
+</figure>
+
 Ahora nuestros volúmenes tienen un sistema de archivos y están listos para usarse.
 
-#### Paso 5: Crear puntos de montaje
+### Paso 5: Crear puntos de montaje
 
 En Linux, para acceder a un volumen debemos **montarlo** en una carpeta del sistema. Esa carpeta se llama **punto de montaje**.
 
@@ -401,7 +415,7 @@ drwxr-xr-x 2 root root 4096 ... empresa
 drwxr-xr-x 2 root root 4096 ... usuarios
 ```
 
-#### Paso 6: Montar los volúmenes
+### Paso 6: Montar los volúmenes
 
 Ahora montamos cada volumen lógico en su carpeta correspondiente:
 
@@ -423,12 +437,10 @@ El comando `df` (disk free) muestra el espacio de todos los sistemas de archivos
 
 Al final de la lista deberíamos ver:
 
-```
-Filesystem                         Size  Used Avail Use% Mounted on
-/dev/mapper/vg_datos-lv_empresa     15G   24K   14G   1% /srv/empresa
-/dev/mapper/vg_datos-lv_usuarios   9.8G   24K  9.3G   1% /srv/usuarios
-/dev/mapper/vg_datos-lv_compartido 4.9G   24K  4.7G   1% /srv/compartido
-```
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/lvm/Lv_montados_1.png){ width="90%" }
+  <figcaption>Volúmenes lógicos montados</figcaption>
+</figure>
 
 **Interpretación**:
 
@@ -445,7 +457,7 @@ ls -l /srv/empresa/
 
 Deberíamos ver el archivo creado.
 
-#### Paso 7: Montaje automático con /etc/fstab
+### Paso 7: Montaje automático con /etc/fstab
 
 Hay un problema: si reiniciamos el servidor ahora, los volúmenes NO se montarán automáticamente. Después de cada reinicio tendríamos que montarlos manualmente.
 
@@ -525,7 +537,7 @@ df -h | grep srv
 
 Si vemos los tres volúmenes montados, ¡perfecto! El montaje automático funciona correctamente.
 
-### Ampliar un volumen lógico
+## Ampliar un volumen lógico
 
 Una de las grandes ventajas de LVM es la capacidad de ampliar volúmenes fácilmente, incluso con el sistema en funcionamiento. Vamos a demostrarlo ampliando `lv_empresa` en 3GB adicionales.
 
@@ -541,18 +553,19 @@ sudo vgs
 
 ```
   VG        #PV #LV #SN Attr   VSize  VFree 
-  vg_datos    3   3   0 wz--n- 29.99g 4.99g
+  vg_datos    3   3   0 wz--n- 29.99g 500M
 ```
 
-Tenemos aproximadamente 5GB libres, suficiente para añadir 3GB a un volumen.
+Tenemos aproximadamente 500MB libres, suficiente para añadir 400MB a un volumen.
 
 **Paso 2: Ampliar el volumen lógico**:
 
 ```bash
-sudo lvextend -L +3G /dev/vg_datos/lv_empresa
+sudo lvextend -L +400M /dev/vg_datos/lv_empresa
 ```
 
 **Explicación**:
+
 - `lvextend`: comando para extender (ampliar) un volumen lógico
 - `-L +3G`: añadir 3 gigabytes al tamaño actual (el `+` indica que es adicional, no el tamaño total)
 - `/dev/vg_datos/lv_empresa`: ruta al volumen que queremos ampliar
@@ -593,11 +606,17 @@ df -h | grep empresa
 /dev/mapper/vg_datos-lv_empresa  18G  24K  17G   1% /srv/empresa
 ```
 
-¡Perfecto! El volumen ahora tiene 18GB en lugar de 15GB.
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/lvm/lgextend_1.png){ width="90%" }
+  <figcaption>Resultado del cambio de tamaño del volumen</figcaption>
+</figure>
+
+¡Perfecto! El volumen ahora tiene 15.4GB en lugar de 15GB.
 
 **Reflexión sobre lo que hemos hecho**:
 
-Acabamos de ampliar un volumen de 15GB a 18GB:
+Acabamos de ampliar un volumen de 15GB a 15.4GB:
+
 - Sin detener el servidor
 - Sin desmontar el volumen
 - Sin interrumpir el acceso a los datos
@@ -605,6 +624,7 @@ Acabamos de ampliar un volumen de 15GB a 18GB:
 - Sin riesgo de pérdida de datos
 
 Con particiones tradicionales, esto habría requerido:
+
 1. Hacer backup completo de los datos
 2. Apagar el servidor
 3. Particionar de nuevo el disco
@@ -614,7 +634,73 @@ Con particiones tradicionales, esto habría requerido:
 
 Esta es la potencia de LVM.
 
-### Comandos útiles de LVM para el día a día
+## Ampliar con un nuevo disco 
+
+Podemos pensar que hemos llegado al final, pero todavía podemos ampliar más nuestro almacenamiento a**ñadiendo nuevos discos** que vamos convertir en **Physical Volumes** (`pvcreate`) que servirá para ampliar o extender cualquiera de los **Logical Volumes** (`vgextend`) y a su vez para poder hacer más grandes nuestras **Logical Volumes** (`lvextend`) tal y como hemos hecho en el paso anterior.
+
+Así pues, vamos a parar de nuevo nuestro servidor (ahora si), para añadir un nuevo disco, por ejemplo de 15GB.
+
+Iniciemos de nuevo el servidor y comprobemos que el nuevo disco esta ahí:
+
+```bash
+lsblk
+```
+
+debe aparecer un nuevo disco `/dev/sde`.
+
+Ahora creemos de nuevo ese disco en un **Physical Volume** usando `pvcreate`
+
+```bash
+sudo pvcreate /dev/sde
+```
+
+El siguiente paso será añadir mediante el comando `vgextend` este nuevo **Physical Volume** al **Volume Group** exitente `vb_datos`, ejecutando el siguiente comando:
+
+```bash
+sudo vgextend vg_datos /dev/sde
+```
+
+y ahora podremos ver que tenemos un nuevo **Physical Volume** en nuestro **Volume Group** mediante el comando `pvs`
+
+Ejecutamos ahora el comando para ver el estado de nuestros **Volume Group**
+
+```bash
+sudo vgs
+```
+
+y nos saldrá que ahora tenemos 15GB mas de espacio disponible en `vg_datos`.
+
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/lvm/nuevo_disco.png){ width="90%" }
+  <figcaption>Resultado del cambio de tamaño del volumen</figcaption>
+</figure>
+
+
+y con esto, podemos volver a ampliar de nuevo uno de nuestros **Logical Volume**, por ejemplo `lv_empresa` con 10GB más:
+
+```bash
+sudo lvextend -L +10G /dev/vg_datos/lv_empresa
+sudo resize2fs /dev/vg_datos/lv_empresa
+```
+
+el segundo comando, `resize2fs` permite ampliar el tamaño de la partición al tamaño nuevo de la **Logical Volume**
+
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/lvm/lgextend_2.png){ width="90%" }
+  <figcaption>Resultado del cambio de tamaño del volumen lógico</figcaption>
+</figure>
+
+y así podemos seguir ampliando mientras tengamos capacidad física en nuestro servidor para seguir creciendo.
+
+Por último, por curiosidad, si ejecutamos `lsblk` podremos observar que por ejemplo el **Logical Volume** `lv_empresa` realmente se encuentra repartido por 3 discos duros; `sdb`, `sdc` y `sde`.
+
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/lvm/lsblk_4.png){ width="90%" }
+  <figcaption>Ubicación física de /srv/empresa</figcaption>
+</figure>
+
+
+## Comandos útiles de LVM para el día a día
 
 **Ver información resumida**:
 ```bash
@@ -630,7 +716,12 @@ sudo vgdisplay vg_datos          # Detalle de un VG específico
 sudo lvdisplay /dev/vg_datos/lv_empresa  # Detalle de un LV específico
 ```
 
-**Ampliar un volumen** (ya lo vimos):
+**Ampliar un grupo** :
+```bash
+sudo vgextend vg_datos /dev/sde
+```
+
+**Ampliar un volumen o un grupo** :
 ```bash
 sudo lvextend -L +2G /dev/vg_datos/lv_usuarios
 sudo resize2fs /dev/vg_datos/lv_usuarios
