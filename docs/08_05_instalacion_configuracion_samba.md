@@ -20,7 +20,7 @@ Algunos de los usos comunes de `Samba` en *GNU/Linux* son:
 - **Compartir archivos**: Samba permite compartir archivos y directorios entre sistemas operativos diferentes, lo que facilita la transferencia de archivos entre ellos.
 - **Compartir impresoras**: Samba también puede utilizarse para compartir impresoras en una red local.
 - **Autenticación de usuarios**: Samba puede utilizarse para autenticar usuarios en una red local.
-- **Controlador de dominio**: Samba puede actuar como un controlador de dominio en una red local1.
+- **Controlador de dominio**: Samba puede actuar como un controlador de dominio en una red local.
 
 
 ## Instalar Samba
@@ -193,7 +193,7 @@ Si hay errores, los mostrará en rojo. Si todo está bien, veremos algo como:
 
 <figure markdown="span" align="center">
   ![Image title](./imgs/ubuntu/samba/smb_conf_revision.png){ width="80%"}
-  <figcaption>Verificacino configuracion smb.conf</figcaption>
+  <figcaption>Verificando configuración smb.conf</figcaption>
 </figure>
 
 La línea `Loaded services file OK.` confirma que no hay errores de sintaxis.
@@ -232,48 +232,33 @@ Desde un equipo Windows conectado a la misma red que el servidor Linux (en nuest
   <figcaption>Petición de credenciales para entrar en recurso samba</figcaption>
 </figure>
 
-!!!note "Peticion de credenciales"
 
-    Si no se tratara de un equipo en un dóminio, puesto que hemos puesto `guest ok = yes` deberíamos ver una ventana con el recurso compartido **Prueba** y simplemente:
+Si no se tratara de un equipo en un dóminio, puesto que hemos puesto `guest ok = yes` deberíamos ver una ventana con el recurso compartido **Prueba** y simplemente:
 
-    - Hacemos doble clic en **Prueba** para entrar
-    - Intentamos crear un archivo o carpeta dentro
+- Hacemos doble clic en **Prueba** para entrar
+- Intentamos crear un archivo o carpeta dentro
 
-    Si podemos crear archivos y carpetas, ¡enhorabuena! Samba está funcionando correctamente.
+Si podemos crear archivos y carpetas, ¡enhorabuena! Samba está funcionando correctamente.
 
-    Sin embargo a nosotros no nos pasa esto puesto que estmos **dentro de un dominio**
+Sin embargo a nosotros no nos pasa esto puesto que estamos **dentro de un dominio** y **NO NOS DEJARÁ ENTRAR EN EL RECURSO COMPARTIDO**.
 
-!!!tip "Solución de problemas comunes"
+Para poder entrar en el sistema, necesitamos crear un usuario en samba y acceder como este usuario y no como un usuario del dominio, que de momento, es desconocido para nuestro servidor linux. Así que vamos a crear **usuarios para samba**
 
-    **No aparece el recurso compartido**:
-
-    - Verificar que el firewall del Windows Server no está bloqueando la conexión
-    - Verificar que la IP del servidor Linux es correcta y hay conectividad: `ping 192.168.10.2` desde Windows
-    - Verificar que el servicio smbd está activo: `sudo systemctl status smbd`
-
-    **Aparece pero no puedo acceder**:
-
-    - Verificar permisos de la carpeta: `ls -ld /srv/compartido/prueba`
-    - Verificar configuración de Samba: `testparm -s | grep -A 10 "\[Prueba\]"`
-
-    **Puedo acceder pero no crear archivos**:
-
-    - Verificar que `read only = no` en la configuración
-    - Verificar permisos de la carpeta: debe tener al menos `chmod 775` o `777`
 
 ## Usuarios de Samba
 
 Como hemos visto anteriormente, puesto que estamos en un dominio con las seguridades activadas siempre necesitaremos autenticación con usuarios. Samba mantiene su propia base de datos de usuarios y contraseñas, separada de los usuarios del sistema Linux.
 
-Para crear un usuario de Samba, primero debe existir como usuario del sistema Linux. Luego le asignamos una contraseña específica para Samba.
+**Para crear un usuario de Samba, primero debe existir como usuario del sistema Linux**. Luego le asignamos una contraseña específica para Samba.
 
-**Crear un usuario de prueba**:
+Ejemplo: Vamos a **crear un usuario de prueba** que inicialmente no existe en el servidor: `samba_test`:
 
 ```bash
 sudo useradd -M -s /usr/sbin/nologin samba_test
 ```
 
 **Explicación**:
+
 - `useradd`: comando para crear usuarios
 - `-M`: no crear carpeta personal (no la necesita)
 - `-s /usr/sbin/nologin`: no permitir login interactivo (este usuario solo existe para Samba)
@@ -285,8 +270,6 @@ Ahora le asignamos una contraseña para Samba:
 sudo smbpasswd -a samba_test
 ```
 
-Nos pedirá la contraseña dos veces. Elegimos una sencilla de recordar.
-
 Confirmación:
 
 ```
@@ -294,6 +277,17 @@ Added user samba_test.
 ```
 
 Este usuario ahora puede autenticarse en recursos compartidos que requieran usuario/contraseña.
+
+!!! tip "Creación de usuarios samba"
+
+    Es importante diferenciar los dos casos posibles: 
+
+    - Si queremos crear un usuario samba que **NO** existe en el sistema, primero lo creamos en el sistema (`useradd`), y luego lo añadimos a los usuarios samba (`smbpasswd`).
+    - Si queremos crear un usuario samba que **SI** existe en el sistema, simplemente lo añadimos a los usuarios samba (`smbpasswd`).
+
+Ahora que tenemos un usuario en samba, **probamos de nuevo** conectarnos desde nuestro equipo Windows 11 y cuando nos pida las credenciales, introducimos los datos del usuario `samba_test` que acabamos de crear. 
+
+Ahora ya debemos pode acceder a los recursos compartidos:
 
 <figure markdown="span" align="center">
   ![Image title](./imgs/ubuntu/samba/acceso_samba.png){ width="80%"}
@@ -313,6 +307,8 @@ sudo smbpasswd -x nombre_usuario
 ```
 
 ## Ampliación de la información
+
+A continuación se detalla de forma mas detallada la configuración de los recursos compartido `samba`
 
 ### El fichero `/etc/samba/smb.conf`
 
@@ -334,10 +330,6 @@ cp /etc/samba/smb.conf /etc/samba/smb_copia.conf
 #### Sección `[global]`
 
 La sección `[global]` define los parámetros de SAMBA del nivel global, así como los valores por defecto para el resto de parámetros en otras secciones si no se especifican en las mismas.
-
-<div align="center">
-    <img src="../img/samba/samba-03.png" alt="Samba" width="50%" />
-</div>
 
 #### Configuración del tipo de servidor : `server role`
 
@@ -509,7 +501,7 @@ smbpasswd -d nombre_usuario     # Para deshabilitar un usuario
 smbpasswd -e nombre_usuario     # Para habilitar un usuario deshabilitado
 smbpasswd -s nombre_usuario     # Para pregunta por el password del usuario
 smbpasswd -n nombre_usuario     # Para resetear o variar el password
-smbpasswd -x nombre_usuario     # Para borrar un usuario ejecutamos:
+smbpasswd -x nombre_usuario     # Para borrar un usuario
 ```
 
 ### Asignar permisos a usuarios
@@ -525,7 +517,7 @@ read only = no
 valid users = juan
 ```
 
-Recureda que para que funcionen todo:
+Recuerda que para que funcionen todo:
 
   - El usuario debe esta creado para samba y tener una contraseña
   - La carpeta debe existir y tener permisos de acceso adecuados
