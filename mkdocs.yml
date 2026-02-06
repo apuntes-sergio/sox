@@ -130,3 +130,6 @@ nav:
     - 08_06_integracion_active_directory.md
     - 08_07_cron-rsync.md
     - 08_08_mantenimiento_logs.md
+
+  - UD09 Script de administración en Linux:
+    - 09_01_introduccion_scripts.md
