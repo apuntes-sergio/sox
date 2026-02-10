@@ -133,3 +133,8 @@ nav:
 
   - UD09 Script de administración en Linux:
     - 09_01_introduccion_scripts.md
+    - 09_02_condicionales.md
+    - 09_03_bucles.md
+    - 09_04_backups_tar.md
+    - 09_05_rsync_cron.md
+    - 09_06_logs_grep.md

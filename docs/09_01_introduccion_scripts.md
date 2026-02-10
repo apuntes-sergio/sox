@@ -338,6 +338,7 @@ Salida:
 **Objetivo:** Crear un script que pida información y la muestre.
 
 **Instrucciones:**
+
 1. Crear archivo `presentacion.sh`
 2. Pedir nombre, edad y ciudad con `read`
 3. Mostrar un mensaje con toda la información
@@ -369,24 +370,25 @@ chmod +x presentacion.sh
 **Objetivo:** Crear un script que use parámetros en lugar de `read`.
 
 **Instrucciones:**
+
 1. Crear archivo `info_usuario.sh`
 2. Recibir nombre y ciudad como parámetros
 3. Mostrar la información
 
-**Solución:**
-```bash
-#!/bin/bash
-# Script: info_usuario.sh
-# Uso: ./info_usuario.sh NOMBRE CIUDAD
+??? example "Inténtalo tu antes de mirar la solución"
+    ```bash
+    #!/bin/bash
+    # Script: info_usuario.sh
+    # Uso: ./info_usuario.sh NOMBRE CIUDAD
 
-nombre=$1
-ciudad=$2
+    nombre=$1
+    ciudad=$2
 
-echo "Usuario: $nombre"
-echo "Ciudad: $ciudad"
-echo "Directorio actual: $(pwd)"
-echo "Fecha: $(date +%d/%m/%Y)"
-```
+    echo "Usuario: $nombre"
+    echo "Ciudad: $ciudad"
+    echo "Directorio actual: $(pwd)"
+    echo "Fecha: $(date +%d/%m/%Y)"
+    ```
 
 **Ejecutar:**
 ```bash
@@ -401,6 +403,7 @@ chmod +x info_usuario.sh
 **Objetivo:** Crear un script que sume 4 números pasados como parámetros.
 
 **Requisitos:**
+
 1. El script debe llamarse `sumar.sh`
 2. Debe recibir dos números como parámetros: `./sumar.sh 5 8 20 1`
 3. Debe mostrar el resultado: `5 + 8 + 20 + 1 = 34`
@@ -410,7 +413,7 @@ Estructura esperada:
 ```bash
 #!/bin/bash
 # Script: sumar.sh
-# Uso: ./sumar.sh NUM1 NUM2
+# Uso: ./sumar.sh NUM1 NUM2 NUM3 NUM4
 
 # TODO: Capturar parámetros en variables
 # TODO: Calcular la suma
@@ -441,13 +444,15 @@ read -p "Pregunta: " variable      # Con mensaje
 ```
 
 Parámetros
-```bash
-$0    # Nombre del script
-$1    # Primer parámetro
-$2    # Segundo parámetro
-$#    # Número de parámetros
-$@    # Todos los parámetros
-```
+
+| Parámetro | Significado |
+| --- | --- |
+| `$0` | # Nombre del script |
+| `$1` | # Primer parámetro |
+| `$2` | # Segundo parámetro |
+| `$#` | # Número de parámetros |
+| `$@` | # Todos los parámetros |
+
 
 Operaciones
 ```bash
@@ -460,7 +465,7 @@ div=$((num1 / num2))
 Comandos útiles en scripts
 ```bash
 $(date)                 # Fecha y hora actual
-$(date +%Y%m%d)        # Fecha formato YYYYMMDD
+$(date +%Y%m%d)         # Fecha formato YYYYMMDD
 $(pwd)                  # Directorio actual
 $USER                   # Usuario actual
 ```
