@@ -348,159 +348,160 @@ fi
 
 ## Ejercicios Prácticos
 
-### Ejercicio 1: Clasificador de Notas
+!!! example "Ejercicio 1: Clasificador de Notas"
 
-**Objetivo:** Crear un script que clasifique notas.
+    **Objetivo:** Crear un script que clasifique notas.
 
-**Instrucciones:**
-1. Crear archivo `notas.sh`
-2. Pedir una nota (0-10)
-3. Mostrar la calificación según la nota
+    **Instrucciones:**
+    1. Crear archivo `notas.sh`
+    2. Pedir una nota (0-10)
+    3. Mostrar la calificación según la nota
 
-??? example "Inténtalo tu antes de mirar la solución"
-    ```bash
-    #!/bin/bash
+    ??? example "Inténtalo tu antes de mirar la solución"
+        ```bash
+        #!/bin/bash
 
-    read -p "Introduce tu nota (0-10): " nota
+        read -p "Introduce tu nota (0-10): " nota
 
-    if [ $nota -ge 9 ]; then
-        echo "Calificación: Sobresaliente"
-    elif [ $nota -ge 7 ]; then
-        echo "Calificación: Notable"
-    elif [ $nota -ge 5 ]; then
-        echo "Calificación: Aprobado"
-    else
-        echo "Calificación: Suspenso"
-    fi
-    ```
+        if [ $nota -ge 9 ]; then
+            echo "Calificación: Sobresaliente"
+        elif [ $nota -ge 7 ]; then
+            echo "Calificación: Notable"
+        elif [ $nota -ge 5 ]; then
+            echo "Calificación: Aprobado"
+        else
+            echo "Calificación: Suspenso"
+        fi
+        ```
 
-    **Probar:**
-    ```bash
-    chmod +x notas.sh
-    ./notas.sh
-    ```
+        **Probar:**
+        ```bash
+        chmod +x notas.sh
+        ./notas.sh
+        ```
 
 
-### Ejercicio 2: Verificador de Archivos
+!!! example "Ejercicio 2: Verificador de Archivos"
 
-**Objetivo:** Crear un script que verifique si existe un archivo y muestre información.
+    **Objetivo:** Crear un script que verifique si existe un archivo y muestre información.
 
-**Instrucciones:**
-1. Crear archivo `verificar.sh`
-2. Recibir nombre de archivo como parámetro
-3. Verificar si existe
-4. Si existe, mostrar si es archivo o directorio
-5. Mostrar permisos
+    **Instrucciones:**
+    1. Crear archivo `verificar.sh`
+    2. Recibir nombre de archivo como parámetro
+    3. Verificar si existe
+    4. Si existe, mostrar si es archivo o directorio
+    5. Mostrar permisos
 
-??? example "Inténtalo tu antes de mirar la solución"
-    ```bash
-    #!/bin/bash
-    # Uso: ./verificar.sh ARCHIVO
+    ??? example "Inténtalo tu antes de mirar la solución"
+        ```bash
+        #!/bin/bash
+        # Uso: ./verificar.sh ARCHIVO
 
-    archivo=$1
+        archivo=$1
 
-    # Verificar que se pasó un parámetro
-    if [ $# -eq 0 ]; then
-        echo "Uso: $0 ARCHIVO"
-        exit 1
-    fi
+        # Verificar que se pasó un parámetro
+        if [ $# -eq 0 ]; then
+            echo "Uso: $0 ARCHIVO"
+            exit 1
+        fi
 
-    # Verificar si existe
-    if [ ! -e "$archivo" ]; then
-        echo "ERROR: $archivo no existe"
-        exit 1
-    fi
+        # Verificar si existe
+        if [ ! -e "$archivo" ]; then
+            echo "ERROR: $archivo no existe"
+            exit 1
+        fi
 
-    echo "===================================="
-    echo "Información de: $archivo"
-    echo "===================================="
+        echo "===================================="
+        echo "Información de: $archivo"
+        echo "===================================="
 
-    # Tipo
-    if [ -f "$archivo" ]; then
-        echo "Tipo: Archivo regular"
-    elif [ -d "$archivo" ]; then
-        echo "Tipo: Directorio"
-    fi
+        # Tipo
+        if [ -f "$archivo" ]; then
+            echo "Tipo: Archivo regular"
+        elif [ -d "$archivo" ]; then
+            echo "Tipo: Directorio"
+        fi
 
-    # Permisos
-    echo -n "Lectura: "
-    if [ -r "$archivo" ]; then
-        echo "SÍ"
-    else
-        echo "NO"
-    fi
+        # Permisos
+        echo -n "Lectura: "
+        if [ -r "$archivo" ]; then
+            echo "SÍ"
+        else
+            echo "NO"
+        fi
 
-    echo -n "Escritura: "
-    if [ -w "$archivo" ]; then
-        echo "SÍ"
-    else
-        echo "NO"
-    fi
+        echo -n "Escritura: "
+        if [ -w "$archivo" ]; then
+            echo "SÍ"
+        else
+            echo "NO"
+        fi
 
-    echo -n "Ejecución: "
-    if [ -x "$archivo" ]; then
-        echo "SÍ"
-    else
-        echo "NO"
-    fi
+        echo -n "Ejecución: "
+        if [ -x "$archivo" ]; then
+            echo "SÍ"
+        else
+            echo "NO"
+        fi
 
-    echo "===================================="
-    ```
+        echo "===================================="
+        ```
 
-    **Probar:**
-    ```bash
-    chmod +x verificar.sh
-    ./verificar.sh /etc/passwd
-    ./verificar.sh /home
-    ./verificar.sh archivo_inexistente
-    ```
+        **Probar:**
+        ```bash
+        chmod +x verificar.sh
+        ./verificar.sh /etc/passwd
+        ./verificar.sh /home
+        ./verificar.sh archivo_inexistente
+        ```
 
 ---
 
-### Ejercicio 3: Creador de Directorio Seguro (PARA ENTREGAR)
+!!! example "Ejercicio 3: Creador de Directorio Seguro"
 
-**Objetivo:** Crear un script que cree un directorio solo si no existe.
+    **Objetivo:** Crear un script que cree un directorio solo si no existe.
 
-**Requisitos:**
-1. El script debe llamarse `crear_dir.sh`
-2. Debe recibir el nombre del directorio como parámetro
-3. Debe verificar si el directorio ya existe
-4. Si NO existe, crearlo y mostrar mensaje de éxito
-5. Si YA existe, mostrar mensaje de error y NO crear nada
+    **Requisitos:**
 
-**Estructura esperada:**
-```bash
-#!/bin/bash
-# Script: crear_dir.sh
-# Uso: ./crear_dir.sh NOMBRE_DIRECTORIO
+    1. El script debe llamarse `crear_dir.sh`
+    2. Debe recibir el nombre del directorio como parámetro
+    3. Debe verificar si el directorio ya existe
+    4. Si NO existe, crearlo y mostrar mensaje de éxito
+    5. Si YA existe, mostrar mensaje de error y NO crear nada
 
-# TODO: Verificar que se pasó un parámetro
-# TODO: Capturar el parámetro en una variable
-# TODO: Verificar si el directorio existe
-# TODO: Si NO existe, crearlo
-# TODO: Si SÍ existe, mostrar error
-```
+    **Estructura esperada:**
+    ```bash
+    #!/bin/bash
+    # Script: crear_dir.sh
+    # Uso: ./crear_dir.sh NOMBRE_DIRECTORIO
 
-**Ejemplo de ejecución:**
-```bash
-./crear_dir.sh mi_carpeta
-```
+    # TODO: Verificar que se pasó un parámetro
+    # TODO: Capturar el parámetro en una variable
+    # TODO: Verificar si el directorio existe
+    # TODO: Si NO existe, crearlo
+    # TODO: Si SÍ existe, mostrar error
+    ```
 
-**Salida esperada (si no existe):**
-```
-✓ Directorio 'mi_carpeta' creado exitosamente
-```
+    **Ejemplo de ejecución:**
+    ```bash
+    ./crear_dir.sh mi_carpeta
+    ```
 
-**Salida esperada (si ya existe):**
-```
-✗ ERROR: El directorio 'mi_carpeta' ya existe
-```
+    **Salida esperada (si no existe):**
+    ```
+    ✓ Directorio 'mi_carpeta' creado exitosamente
+    ```
 
-**Pistas:**
-- Usa `$#` para verificar número de parámetros
-- Usa `-d` para verificar si existe el directorio
-- Usa `mkdir` para crear el directorio
-- Usa `!` para invertir la condición
+    **Salida esperada (si ya existe):**
+    ```
+    ✗ ERROR: El directorio 'mi_carpeta' ya existe
+    ```
+
+    **Pistas:**
+    - Usa `$#` para verificar número de parámetros
+    - Usa `-d` para verificar si existe el directorio
+    - Usa `mkdir` para crear el directorio
+    - Usa `!` para invertir la condición
 
 ---
 
