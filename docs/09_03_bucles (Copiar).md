@@ -185,88 +185,6 @@ Esta es una de las funcionalidades más útiles en administración de sistemas.
     - Luego añadimos `.bak` → `documento.bak`
 
 
-## Leer Archivos Línea por Línea
-
-En muchas ocasiones necesitamos procesar archivos de texto que contienen listas: usuarios, servidores, tareas, etc. El bucle `for` puede leer cada línea de un archivo y procesarla automáticamente.
-
-Supongamos que tenemos un archivo `usuarios.txt` con este contenido:
-
-```
-sergio
-ana
-juan
-maria
-```
-
-Podemos procesar cada línea así:
-
-```bash
-#!/bin/bash
-
-for usuario in $(cat usuarios.txt)
-do
-    echo "Procesando usuario: $usuario"
-    # Aquí podríamos crear el usuario, verificar si existe, etc.
-done
-```
-
-!!! example "Ejemplo: Crear usuarios desde un archivo"
-
-    Archivo `usuarios.txt`:
-    ```
-    alumno1
-    alumno2
-    alumno3
-    ```
-
-    Script:
-    ```bash
-    #!/bin/bash
-
-    echo "Creando usuarios desde archivo..."
-
-    for usuario in $(cat usuarios.txt)
-    do
-        sudo useradd -m "$usuario"
-        echo "✓ Usuario creado: $usuario"
-    done
-
-    echo "Proceso completado"
-    ```
-
-!!! example "Ejemplo: Hacer ping a múltiples servidores"
-
-    Archivo `servidores.txt`:
-    ```
-    192.168.1.1
-    192.168.1.10
-    192.168.1.20
-    8.8.8.8
-    ```
-
-    Script:
-    ```bash
-    #!/bin/bash
-
-    echo "Verificando conectividad..."
-
-    for servidor in $(cat servidores.txt)
-    do
-        if ping -c 1 "$servidor" &> /dev/null; then
-            echo "✓ $servidor - Accesible"
-        else
-            echo "✗ $servidor - No accesible"
-        fi
-    done
-    ```
-
-!!! warning "Limitación importante"
-
-    Este método funciona bien para archivos simples de una palabra por línea. Si las líneas contienen espacios (ej: "Juan Pérez"), no funcionará correctamente porque el espacio se interpreta como separador.
-    
-    Para casos más complejos (líneas con espacios, caracteres especiales), se usa `while read`, que veremos en cursos más avanzados.
-
-
 ## Combinar Bucles con Condicionales
 
 !!! example "Ejemplo: Procesar solo archivos que existen"
@@ -766,3 +684,6 @@ done
         fi
     done
     ```
+
+
+

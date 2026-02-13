@@ -3,42 +3,20 @@ title: Logs y Control con Redirección
 description: Registrar operaciones, redirigir salida y buscar información con grep
 ---
 
-## 🎯 Objetivos de la Sesión
+Los logs son registros de lo que hace el sistema o tus scripts. Son fundamentales para saber qué pasó, detectar errores, ver el historial de operaciones y depurar problemas. Sin logs, es imposible saber si un backup funcionó, cuándo se ejecutó por última vez, o qué error causó un fallo.
 
-Al finalizar esta sesión serás capaz de:
-- Redirigir salida de comandos a archivos
-- Registrar operaciones de scripts en logs
-- Distinguir entre salida normal y errores
-- Buscar información en logs con grep
-- Filtrar y analizar resultados
-- Crear scripts con logging profesional
+En esta sesión aprenderemos a redirigir la salida de comandos a archivos, crear logs profesionales con fecha y hora, y buscar información en logs usando `grep`.
 
----
+## Redirección Básica
 
-## 📝 ¿Por qué son Importantes los Logs?
+Hay dos operadores principales para redirigir salida a archivos:
 
-Los logs son **registros** de lo que hace el sistema o tus scripts. Son fundamentales para:
-
-- **Saber qué pasó**: ¿Se ejecutó el backup?
-- **Detectar errores**: ¿Qué falló y por qué?
-- **Ver el historial**: ¿Cuándo se hizo el último backup?
-- **Depurar problemas**: Buscar la causa de un fallo
-- **Auditoría**: Saber quién hizo qué y cuándo
-
-**Sin logs = volar a ciegas**
-
----
-
-## ➡️ Redirección Básica
-
-### Sobrescribir archivo (>)
+**Sobrescribir archivo (>):**
 
 ```bash
 # Borra el contenido anterior y escribe nuevo
 echo "Hola" > archivo.txt
 ```
-
-**Resultado:** `archivo.txt` contiene solo "Hola"
 
 ```bash
 echo "Hola" > archivo.txt
@@ -47,7 +25,7 @@ echo "Adiós" > archivo.txt
 # archivo.txt ahora solo contiene "Adiós"
 ```
 
-### Añadir al final (>>)
+**Añadir al final (>>):**
 
 ```bash
 # NO borra el contenido, añade al final
@@ -59,58 +37,53 @@ echo "Adiós" >> archivo.txt
 # Adiós
 ```
 
-### ⚠️ Diferencia clave
+!!! warning "Diferencia clave"
+    | Operador | Acción | Uso |
+    |----------|--------|-----|
+    | `>` | Sobrescribe | Crear archivo nuevo |
+    | `>>` | Añade al final | Añadir a archivo existente (logs) |
 
-| Operador | Acción | Uso |
-|----------|--------|-----|
-| `>` | Sobrescribe | Crear archivo nuevo |
-| `>>` | Añade al final | Añadir a archivo existente (logs) |
+    **Para logs siempre usa `>>`**
 
-**Para logs siempre usa `>>`**
+## Redirigir Salida de Comandos
 
----
+Cualquier comando puede redirigir su salida a un archivo:
 
-## 📋 Redirigir Salida de Comandos
+!!! example "Guardar listado de archivos"
+    ```bash
+    # Guardar listado en archivo
+    ls -la > listado.txt
 
-### Guardar listado de archivos
+    # Ver el archivo
+    cat listado.txt
+    ```
 
-```bash
-# Guardar listado en archivo
-ls -la > listado.txt
+!!! example "Guardar información del sistema"
+    ```bash
+    # Guardar info de disco
+    df -h > espacio_disco.txt
 
-# Ver el archivo
-cat listado.txt
-```
+    # Guardar procesos
+    ps aux > procesos.txt
 
-### Guardar salida de comandos útiles
+    # Guardar fecha de ejecución
+    date >> registro.txt
+    ```
 
-```bash
-# Guardar info de disco
-df -h > espacio_disco.txt
-
-# Guardar procesos
-ps aux > procesos.txt
-
-# Guardar fecha de ejecución
-date >> registro.txt
-```
-
----
-
-## 🔴 Redirigir Errores
+## Redirigir Errores
 
 Hay dos tipos de salida:
 - **Salida estándar (stdout)**: Output normal
 - **Salida de error (stderr)**: Mensajes de error
 
-### Redirigir solo errores (2>)
+**Redirigir solo errores (2>):**
 
 ```bash
 # Solo errores van al archivo
 comando 2> errores.txt
 ```
 
-### Redirigir salida Y errores juntos
+**Redirigir salida Y errores juntos:**
 
 ```bash
 # Método 1: A archivos separados
@@ -123,17 +96,15 @@ comando > todo.txt 2>&1
 comando &> todo.txt
 ```
 
-**Explicación de `2>&1`:**
-- `2` = stderr (errores)
-- `>&1` = redirigir al mismo sitio que stdout (salida normal)
+!!! note "Explicación de 2>&1"
+    - `2` = stderr (errores)
+    - `>&1` = redirigir al mismo sitio que stdout (salida normal)
 
----
-
-## 📅 Logs con Fecha y Hora
+## Logs con Fecha y Hora
 
 Los logs **siempre** deben tener fecha y hora para saber cuándo pasó algo.
 
-### Formato de fecha para logs
+**Formato de fecha para logs:**
 
 ```bash
 # Formato: YYYY-MM-DD HH:MM:SS
@@ -141,112 +112,110 @@ date '+%Y-%m-%d %H:%M:%S'
 # Salida: 2026-02-13 14:30:15
 ```
 
-### Registrar con fecha
+!!! example "Registrar con fecha"
 
-```bash
-#!/bin/bash
+    ```bash
+    #!/bin/bash
 
-LOG="registro.log"
+    LOG="registro.log"
 
-echo "$(date '+%Y-%m-%d %H:%M:%S') - Script iniciado" >> "$LOG"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - Script iniciado" >> "$LOG"
 
-# Hacer operaciones...
+    # Hacer operaciones...
 
-echo "$(date '+%Y-%m-%d %H:%M:%S') - Script finalizado" >> "$LOG"
-```
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - Script finalizado" >> "$LOG"
+    ```
 
-**Resultado en registro.log:**
-```
-2026-02-13 14:30:15 - Script iniciado
-2026-02-13 14:30:18 - Script finalizado
-```
+    **Resultado en registro.log:**
+    ```
+    2026-02-13 14:30:15 - Script iniciado
+    2026-02-13 14:30:18 - Script finalizado
+    ```
 
----
+## Script con Logging Profesional
 
-## 📊 Script con Logging Profesional
+!!! example "Versión básica"
 
-### Versión básica
+    ```bash
+    #!/bin/bash
+    # Script con logging básico
 
-```bash
-#!/bin/bash
-# Script con logging básico
+    LOG="operacion.log"
 
-LOG="operacion.log"
+    # Registrar inicio
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - Iniciando operación" >> "$LOG"
 
-# Registrar inicio
-echo "$(date '+%Y-%m-%d %H:%M:%S') - Iniciando operación" >> "$LOG"
+    # Hacer backup
+    tar -czf backup.tar.gz /home/usuario/Documentos 2>> "$LOG"
 
-# Hacer backup
-tar -czf backup.tar.gz /home/usuario/Documentos 2>> "$LOG"
+    # Registrar resultado
+    if [ $? -eq 0 ]; then
+        echo "$(date '+%Y-%m-%d %H:%M:%S') - Backup OK" >> "$LOG"
+    else
+        echo "$(date '+%Y-%m-%d %H:%M:%S') - Backup FALLÓ" >> "$LOG"
+    fi
 
-# Registrar resultado
-if [ $? -eq 0 ]; then
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - Backup OK" >> "$LOG"
-else
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - Backup FALLÓ" >> "$LOG"
-fi
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - Operación finalizada" >> "$LOG"
+    ```
 
-echo "$(date '+%Y-%m-%d %H:%M:%S') - Operación finalizada" >> "$LOG"
-```
+!!! example "Versión con función de log"
 
-### Versión con función de log
+    ```bash
+    #!/bin/bash
+    # Script con función de logging
 
-```bash
-#!/bin/bash
-# Script con función de logging
+    LOG="/var/log/mi_script.log"
 
-LOG="/var/log/mi_script.log"
+    # Función para registrar
+    log() {
+        echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG"
+    }
 
-# Función para registrar
-log() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG"
-}
+    # Usar la función
+    log "Script iniciado"
 
-# Usar la función
-log "Script iniciado"
+    # Hacer operaciones
+    tar -czf backup.tar.gz /home/usuario/Documentos 2>> "$LOG"
 
-# Hacer operaciones
-tar -czf backup.tar.gz /home/usuario/Documentos 2>> "$LOG"
+    if [ $? -eq 0 ]; then
+        log "Backup creado exitosamente"
+    else
+        log "ERROR: Backup falló"
+    fi
 
-if [ $? -eq 0 ]; then
-    log "Backup creado exitosamente"
-else
-    log "ERROR: Backup falló"
-fi
+    log "Script finalizado"
+    ```
 
-log "Script finalizado"
-```
+## grep - Buscar en Archivos
 
----
+`grep` busca texto en archivos o en la salida de comandos. Es fundamental para analizar logs.
 
-## 🔍 grep - Buscar en Archivos
-
-`grep` busca texto en archivos o en la salida de comandos.
-
-### Sintaxis básica
+**Sintaxis básica:**
 
 ```bash
 grep "texto_a_buscar" archivo
 ```
 
-### Ejemplos básicos
+!!! example "Ejemplos básicos"
 
-```bash
-# Buscar "error" en un log
-grep "error" backup.log
+    ```bash
+    # Buscar "error" en un log
+    grep "error" backup.log
 
-# Buscar "OK" en un log
-grep "OK" backup.log
-```
+    # Buscar "OK" en un log
+    grep "OK" backup.log
+    ```
 
-### Ignorar mayúsculas/minúsculas (-i)
+### Opciones Útiles de grep
+
+**Ignorar mayúsculas/minúsculas (-i):**
 
 ```bash
 # Busca error, Error, ERROR, eRRor, etc.
 grep -i "error" backup.log
 ```
 
-### Mostrar número de línea (-n)
+**Mostrar número de línea (-n):**
 
 ```bash
 # Muestra en qué línea está cada coincidencia
@@ -257,7 +226,7 @@ grep -n "error" backup.log
 # 48:2026-02-13 15:45:10 - ERROR: Sin espacio
 ```
 
-### Contar coincidencias (-c)
+**Contar coincidencias (-c):**
 
 ```bash
 # Cuenta cuántas veces aparece
@@ -266,7 +235,7 @@ grep -c "error" backup.log
 # Salida: 5
 ```
 
-### Buscar en múltiples archivos
+**Buscar en múltiples archivos:**
 
 ```bash
 # Buscar en todos los .log
@@ -276,43 +245,39 @@ grep "error" *.log
 grep -r "error" /var/log/
 ```
 
----
+## Combinar Comandos con grep
 
-## 🔗 Combinar Comandos con grep
+El pipe `|` envía la salida de un comando a otro, permitiendo filtrar resultados.
 
-### Usando pipes (|)
+!!! example "Usar pipes con grep"
 
-El pipe `|` envía la salida de un comando a otro.
+    ```bash
+    # Ver solo líneas con ERROR
+    cat backup.log | grep "ERROR"
 
-```bash
-# Ver solo líneas con ERROR
-cat backup.log | grep "ERROR"
+    # Ver procesos de un usuario
+    ps aux | grep usuario
 
-# Ver procesos de un usuario
-ps aux | grep usuario
+    # Ver conexiones de red de un puerto
+    ss -tulpn | grep :445
+    ```
 
-# Ver conexiones de red de un puerto
-ss -tulpn | grep :445
-```
+!!! example "Ejemplos prácticos de filtrado"
 
-### Ejemplos prácticos
+    ```bash
+    # Ver errores de hoy
+    grep "2026-02-13" backup.log | grep -i "error"
 
-```bash
-# Ver errores de hoy
-grep "2026-02-13" backup.log | grep -i "error"
+    # Contar backups exitosos
+    grep "Backup OK" backup.log | wc -l
 
-# Contar backups exitosos
-grep "Backup OK" backup.log | wc -l
+    # Ver últimos errores
+    grep -i "error" backup.log | tail -n 5
+    ```
 
-# Ver últimos errores
-grep -i "error" backup.log | tail -n 5
-```
+## Analizar Logs
 
----
-
-## 📊 Analizar Logs
-
-### Ver últimas líneas de un log
+**Ver últimas líneas de un log:**
 
 ```bash
 # Últimas 10 líneas
@@ -325,7 +290,7 @@ tail -n 20 backup.log
 tail -f backup.log
 ```
 
-### Ver primeras líneas
+**Ver primeras líneas:**
 
 ```bash
 # Primeras 10 líneas
@@ -335,513 +300,427 @@ head backup.log
 head -n 5 backup.log
 ```
 
-### Filtrar y analizar
+!!! example "Filtrar y analizar"
 
-```bash
-# Ver solo backups del día 13
-grep "2026-02-13" backup.log
+    ```bash
+    # Ver solo backups del día 13
+    grep "2026-02-13" backup.log
 
-# Ver errores del último mes de febrero
-grep "2026-02" backup.log | grep -i "error"
+    # Ver errores del último mes de febrero
+    grep "2026-02" backup.log | grep -i "error"
 
-# Contar operaciones por día
-grep "2026-02-13" backup.log | wc -l
-```
+    # Contar operaciones por día
+    grep "2026-02-13" backup.log | wc -l
+    ```
 
----
+## Ejemplos Completos
 
-## 💻 Ejemplos Prácticos Completos
+!!! example "Ejemplo 1: Backup con Log Detallado"
 
-### Ejemplo 1: Script de Backup con Log Detallado
+    ```bash
+    #!/bin/bash
+    # Backup con logging completo
 
-```bash
-#!/bin/bash
-# Backup con logging completo
+    ORIGEN="/home/$USER/Documentos"
+    DESTINO="/backups"
+    FECHA=$(date +%Y%m%d_%H%M%S)
+    NOMBRE="backup_$FECHA.tar.gz"
+    LOG="/var/log/backup.log"
 
-ORIGEN="/home/$USER/Documentos"
-DESTINO="/backups"
-FECHA=$(date +%Y%m%d_%H%M%S)
-NOMBRE="backup_$FECHA.tar.gz"
-LOG="/var/log/backup.log"
+    # Función de log
+    log() {
+        echo "$(date '+%Y-%m-%d %H:%M:%S') [$1] $2" >> "$LOG"
+    }
 
-# Función de log
-log() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') [$1] $2" >> "$LOG"
-}
+    # Inicio
+    log "INFO" "=========================================="
+    log "INFO" "Iniciando backup"
 
-# Inicio
-log "INFO" "=========================================="
-log "INFO" "Iniciando backup"
+    # Verificar origen
+    if [ ! -d "$ORIGEN" ]; then
+        log "ERROR" "Origen $ORIGEN no existe"
+        exit 1
+    fi
 
-# Verificar origen
-if [ ! -d "$ORIGEN" ]; then
-    log "ERROR" "Origen $ORIGEN no existe"
-    exit 1
-fi
+    log "INFO" "Origen verificado: $ORIGEN"
 
-log "INFO" "Origen verificado: $ORIGEN"
+    # Verificar espacio
+    espacio=$(df -BG "$DESTINO" | tail -n 1 | awk '{print $4}' | sed 's/G//')
+    log "INFO" "Espacio disponible: ${espacio}GB"
 
-# Verificar espacio
-espacio=$(df -BG "$DESTINO" | tail -n 1 | awk '{print $4}' | sed 's/G//')
-log "INFO" "Espacio disponible: ${espacio}GB"
+    if [ $espacio -lt 5 ]; then
+        log "ERROR" "Espacio insuficiente: ${espacio}GB"
+        exit 1
+    fi
 
-if [ $espacio -lt 5 ]; then
-    log "ERROR" "Espacio insuficiente: ${espacio}GB"
-    exit 1
-fi
+    # Crear backup
+    log "INFO" "Creando backup: $NOMBRE"
+    tar -czf "$DESTINO/$NOMBRE" "$ORIGEN" 2>> "$LOG"
 
-# Crear backup
-log "INFO" "Creando backup: $NOMBRE"
-tar -czf "$DESTINO/$NOMBRE" "$ORIGEN" 2>> "$LOG"
+    # Verificar resultado
+    if [ $? -eq 0 ]; then
+        tamano=$(du -h "$DESTINO/$NOMBRE" | cut -f1)
+        log "INFO" "Backup creado exitosamente: $tamano"
+    else
+        log "ERROR" "Fallo al crear backup"
+        exit 1
+    fi
 
-# Verificar resultado
-if [ $? -eq 0 ]; then
-    tamano=$(du -h "$DESTINO/$NOMBRE" | cut -f1)
-    log "INFO" "Backup creado exitosamente: $tamano"
-else
-    log "ERROR" "Fallo al crear backup"
-    exit 1
-fi
+    # Limpiar antiguos
+    log "INFO" "Limpiando backups antiguos..."
+    eliminados=$(find "$DESTINO" -name "backup_*.tar.gz" -mtime +7 | wc -l)
+    find "$DESTINO" -name "backup_*.tar.gz" -mtime +7 -delete
+    log "INFO" "Eliminados $eliminados backups antiguos"
 
-# Limpiar antiguos
-log "INFO" "Limpiando backups antiguos..."
-eliminados=$(find "$DESTINO" -name "backup_*.tar.gz" -mtime +7 | wc -l)
-find "$DESTINO" -name "backup_*.tar.gz" -mtime +7 -delete
-log "INFO" "Eliminados $eliminados backups antiguos"
-
-# Resumen
-total=$(ls -1 "$DESTINO"/backup_*.tar.gz 2>/dev/null | wc -l)
-log "INFO" "Backups actuales: $total"
-log "INFO" "Backup completado exitosamente"
-log "INFO" "=========================================="
-```
+    # Resumen
+    total=$(ls -1 "$DESTINO"/backup_*.tar.gz 2>/dev/null | wc -l)
+    log "INFO" "Backups actuales: $total"
+    log "INFO" "Backup completado exitosamente"
+    log "INFO" "=========================================="
+    ```
 
 ---
 
-### Ejemplo 2: Monitor con Alertas
+!!! example "Ejemplo 2: Monitor con Alertas"
 
-```bash
-#!/bin/bash
-# Monitor de sistema con logging
+    ```bash
+    #!/bin/bash
+    # Monitor de sistema con logging
 
-LOG="/var/log/monitor.log"
+    LOG="/var/log/monitor.log"
 
-log() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') [$1] $2" >> "$LOG"
-}
+    log() {
+        echo "$(date '+%Y-%m-%d %H:%M:%S') [$1] $2" >> "$LOG"
+    }
 
-# Verificar espacio en disco
-uso=$(df -h / | tail -n 1 | awk '{print $5}' | sed 's/%//')
+    # Verificar espacio en disco
+    uso=$(df -h / | tail -n 1 | awk '{print $5}' | sed 's/%//')
 
-if [ $uso -gt 80 ]; then
-    log "ALERTA" "Disco al ${uso}% - Poco espacio"
-elif [ $uso -gt 60 ]; then
-    log "WARNING" "Disco al ${uso}% - Vigilar espacio"
-else
-    log "INFO" "Disco al ${uso}% - OK"
-fi
+    if [ $uso -gt 80 ]; then
+        log "ALERTA" "Disco al ${uso}% - Poco espacio"
+    elif [ $uso -gt 60 ]; then
+        log "WARNING" "Disco al ${uso}% - Vigilar espacio"
+    else
+        log "INFO" "Disco al ${uso}% - OK"
+    fi
 
-# Verificar memoria
-mem_uso=$(free | grep Mem | awk '{printf "%.0f", $3/$2 * 100}')
+    # Verificar memoria
+    mem_uso=$(free | grep Mem | awk '{printf "%.0f", $3/$2 * 100}')
 
-if [ $mem_uso -gt 90 ]; then
-    log "ALERTA" "Memoria al ${mem_uso}% - Crítico"
-elif [ $mem_uso -gt 70 ]; then
-    log "WARNING" "Memoria al ${mem_uso}% - Alto"
-else
-    log "INFO" "Memoria al ${mem_uso}% - OK"
-fi
-```
-
----
-
-### Ejemplo 3: Análisis de Logs
-
-```bash
-#!/bin/bash
-# Script para analizar logs de backup
-
-LOG="/var/log/backup.log"
-
-echo "=========================================="
-echo "   ANÁLISIS DE LOGS DE BACKUP"
-echo "=========================================="
-echo
-
-# Total de backups
-total=$(grep -c "Backup creado" "$LOG")
-echo "Total de backups realizados: $total"
-
-# Backups exitosos
-exitosos=$(grep -c "exitosamente" "$LOG")
-echo "Backups exitosos: $exitosos"
-
-# Errores
-errores=$(grep -c "ERROR" "$LOG")
-echo "Errores totales: $errores"
-
-echo
-echo "--- Últimos 5 errores ---"
-grep "ERROR" "$LOG" | tail -n 5
-
-echo
-echo "--- Backups de hoy ---"
-fecha_hoy=$(date +%Y-%m-%d)
-grep "$fecha_hoy" "$LOG" | grep "Backup creado"
-
-echo
-echo "=========================================="
-```
+    if [ $mem_uso -gt 90 ]; then
+        log "ALERTA" "Memoria al ${mem_uso}% - Crítico"
+    elif [ $mem_uso -gt 70 ]; then
+        log "WARNING" "Memoria al ${mem_uso}% - Alto"
+    else
+        log "INFO" "Memoria al ${mem_uso}% - OK"
+    fi
+    ```
 
 ---
 
-## 💻 Ejercicios Prácticos
+!!! example "Ejemplo 3: Análisis de Logs"
 
-### Ejercicio 1: Logging Básico (EN CLASE - GUIADO)
+    ```bash
+    #!/bin/bash
+    # Script para analizar logs de backup
 
-**Objetivo:** Crear un script que registre sus operaciones en un log.
+    LOG="/var/log/backup.log"
 
-**Instrucciones:**
-1. Crear `operaciones.sh`
-2. Crear 3 archivos de prueba
-3. Registrar cada operación en `operaciones.log` con fecha
+    echo "=========================================="
+    echo "   ANÁLISIS DE LOGS DE BACKUP"
+    echo "=========================================="
+    echo
 
-**Solución:**
-```bash
-#!/bin/bash
+    # Total de backups
+    total=$(grep -c "Backup creado" "$LOG")
+    echo "Total de backups realizados: $total"
 
-LOG="operaciones.log"
+    # Backups exitosos
+    exitosos=$(grep -c "exitosamente" "$LOG")
+    echo "Backups exitosos: $exitosos"
 
-# Registrar inicio
-echo "$(date '+%Y-%m-%d %H:%M:%S') - Inicio de operaciones" >> "$LOG"
+    # Errores
+    errores=$(grep -c "ERROR" "$LOG")
+    echo "Errores totales: $errores"
 
-# Crear archivos
-for i in {1..3}
-do
-    touch "archivo$i.txt"
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - Creado archivo$i.txt" >> "$LOG"
-done
+    echo
+    echo "--- Últimos 5 errores ---"
+    grep "ERROR" "$LOG" | tail -n 5
 
-# Registrar fin
-echo "$(date '+%Y-%m-%d %H:%M:%S') - Operaciones completadas" >> "$LOG"
+    echo
+    echo "--- Backups de hoy ---"
+    fecha_hoy=$(date +%Y-%m-%d)
+    grep "$fecha_hoy" "$LOG" | grep "Backup creado"
 
-echo "✓ Operaciones registradas en $LOG"
-cat "$LOG"
-```
+    echo
+    echo "=========================================="
+    ```
 
-**Probar:**
-```bash
-chmod +x operaciones.sh
-./operaciones.sh
-cat operaciones.log
-```
+## Ejercicios Prácticos
 
----
+!!! question "Ejercicio 1: Logging Básico"
 
-### Ejercicio 2: Buscar en Logs (EN CLASE - GUIADO)
+    **Objetivo:** Crear un script que registre sus operaciones en un log.
 
-**Objetivo:** Analizar un log existente con grep.
+    **Instrucciones:**
+    1. Crear `operaciones.sh`
+    2. Crear 3 archivos de prueba
+    3. Registrar cada operación en `operaciones.log` con fecha
 
-**Instrucciones:**
-1. Usar el log del ejercicio anterior
-2. Buscar todas las líneas con "Creado"
-3. Contar cuántos archivos se crearon
+    ??? success "Solución"
+        ```bash
+        #!/bin/bash
 
-**Solución:**
-```bash
-#!/bin/bash
-# analizar_log.sh
+        LOG="operaciones.log"
 
-LOG="operaciones.log"
+        # Registrar inicio
+        echo "$(date '+%Y-%m-%d %H:%M:%S') - Inicio de operaciones" >> "$LOG"
 
-echo "=========================================="
-echo "   ANÁLISIS DEL LOG"
-echo "=========================================="
+        # Crear archivos
+        for i in {1..3}
+        do
+            touch "archivo$i.txt"
+            echo "$(date '+%Y-%m-%d %H:%M:%S') - Creado archivo$i.txt" >> "$LOG"
+        done
 
-# Buscar operaciones de creación
-echo "Archivos creados:"
-grep "Creado" "$LOG"
+        # Registrar fin
+        echo "$(date '+%Y-%m-%d %H:%M:%S') - Operaciones completadas" >> "$LOG"
 
-echo
-echo "Total de archivos creados:"
-grep -c "Creado" "$LOG"
+        echo "✓ Operaciones registradas en $LOG"
+        cat "$LOG"
+        ```
 
-echo
-echo "Fecha del primer archivo:"
-grep "Creado" "$LOG" | head -n 1 | cut -d' ' -f1,2
-
-echo
-echo "Fecha del último archivo:"
-grep "Creado" "$LOG" | tail -n 1 | cut -d' ' -f1,2
-
-echo "=========================================="
-```
+    **Probar:**
+    ```bash
+    chmod +x operaciones.sh
+    ./operaciones.sh
+    cat operaciones.log
+    ```
 
 ---
 
-### Ejercicio 3: Sistema de Backup con Logging Completo (PARA ENTREGAR)
+!!! question "Ejercicio 2: Buscar en Logs"
 
-**Objetivo:** Crear un sistema de backup con logging profesional.
+    **Objetivo:** Analizar un log existente con grep.
 
-**Requisitos:**
-1. Script llamado `backup_logging.sh`
-2. Hacer backup de `~/Documentos`
-3. Log en `~/logs/backup.log` con:
-   - Fecha y hora de cada operación
-   - Nivel de mensaje: [INFO], [ERROR], [WARNING]
-   - Verificación de espacio
-   - Tamaño del backup
-   - Número de backups eliminados
-   - Resumen final
-4. Función `log()` para registrar mensajes
+    **Instrucciones:**
+    1. Usar el log del ejercicio anterior
+    2. Buscar todas las líneas con "Creado"
+    3. Contar cuántos archivos se crearon
 
-**Estructura esperada:**
-```bash
-#!/bin/bash
-# Sistema de backup con logging profesional
+    ??? success "Solución"
+        ```bash
+        #!/bin/bash
+        # analizar_log.sh
 
-ORIGEN="$HOME/Documentos"
-DESTINO="$HOME/backups"
-FECHA=$(date +%Y%m%d_%H%M%S)
-LOG="$HOME/logs/backup.log"
+        LOG="operaciones.log"
 
-# TODO: Crear función log()
-# TODO: Registrar inicio
-# TODO: Verificar origen existe
-# TODO: Verificar espacio (mínimo 2GB)
-# TODO: Crear backup
-# TODO: Verificar resultado
-# TODO: Registrar tamaño
-# TODO: Limpiar backups antiguos (>5 días)
-# TODO: Registrar resumen
-```
+        echo "=========================================="
+        echo "   ANÁLISIS DEL LOG"
+        echo "=========================================="
 
-**Ejemplo de log esperado:**
-```
-2026-02-13 14:30:15 [INFO] ==========================================
-2026-02-13 14:30:15 [INFO] Iniciando backup
-2026-02-13 14:30:15 [INFO] Origen verificado: /home/usuario/Documentos
-2026-02-13 14:30:15 [INFO] Espacio disponible: 15GB
-2026-02-13 14:30:15 [INFO] Creando backup: backup_20260213_143015.tar.gz
-2026-02-13 14:30:18 [INFO] Backup creado exitosamente: 2.3M
-2026-02-13 14:30:18 [INFO] Limpiando backups antiguos...
-2026-02-13 14:30:18 [INFO] Eliminados 2 backups antiguos
-2026-02-13 14:30:18 [INFO] Backups actuales: 4
-2026-02-13 14:30:18 [INFO] Backup completado exitosamente
-2026-02-13 14:30:18 [INFO] ==========================================
-```
+        # Buscar operaciones de creación
+        echo "Archivos creados:"
+        grep "Creado" "$LOG"
 
-**Crear también un script de análisis:**
-```bash
-#!/bin/bash
-# analizar_backups.sh
+        echo
+        echo "Total de archivos creados:"
+        grep -c "Creado" "$LOG"
 
-LOG="$HOME/logs/backup.log"
+        echo
+        echo "Fecha del primer archivo:"
+        grep "Creado" "$LOG" | head -n 1 | cut -d' ' -f1,2
 
-echo "Total de backups: $(grep -c "Backup creado" "$LOG")"
-echo "Errores: $(grep -c "\[ERROR\]" "$LOG")"
-echo ""
-echo "Últimos 5 backups:"
-grep "Backup creado exitosamente" "$LOG" | tail -n 5
-```
+        echo
+        echo "Fecha del último archivo:"
+        grep "Creado" "$LOG" | tail -n 1 | cut -d' ' -f1,2
+
+        echo "=========================================="
+        ```
 
 ---
 
-## 📝 Resumen de Comandos
+!!! question "Ejercicio 3: Sistema de Backup con Logging Completo (PARA ENTREGAR)"
 
-### Redirección
-```bash
-comando > archivo          # Sobrescribir
-comando >> archivo         # Añadir al final
-comando 2> errores         # Solo errores
-comando &> todo            # Salida + errores
-comando >> log 2>&1        # Todo al mismo archivo
-```
+    **Objetivo:** Crear un sistema de backup con logging profesional.
 
-### grep
-```bash
-grep "texto" archivo       # Buscar
-grep -i "texto" archivo    # Ignorar mayúsculas
-grep -n "texto" archivo    # Con número de línea
-grep -c "texto" archivo    # Contar coincidencias
-grep -r "texto" dir/       # Buscar recursivo
-grep -v "texto" archivo    # Invertir (no contiene)
-```
+    **Requisitos:**
+    1. Script llamado `backup_logging.sh`
+    2. Hacer backup de `~/Documentos`
+    3. Log en `~/logs/backup.log` con:
+       - Fecha y hora de cada operación
+       - Nivel de mensaje: [INFO], [ERROR], [WARNING]
+       - Verificación de espacio
+       - Tamaño del backup
+       - Número de backups eliminados
+       - Resumen final
+    4. Función `log()` para registrar mensajes
 
-### Analizar logs
-```bash
-tail archivo               # Últimas líneas
-tail -f archivo           # Seguir en tiempo real
-head archivo              # Primeras líneas
-cat archivo | grep txt    # Filtrar contenido
-```
+    **Estructura esperada:**
+    ```bash
+    #!/bin/bash
+    # Sistema de backup con logging profesional
 
-### Fecha para logs
-```bash
-date '+%Y-%m-%d %H:%M:%S'  # 2026-02-13 14:30:15
-```
+    ORIGEN="$HOME/Documentos"
+    DESTINO="$HOME/backups"
+    FECHA=$(date +%Y%m%d_%H%M%S)
+    LOG="$HOME/logs/backup.log"
 
----
+    # Crear función log()
+    # Registrar inicio
+    # Verificar origen existe
+    # Verificar espacio (mínimo 2GB)
+    # Crear backup
+    # Verificar resultado
+    # Registrar tamaño
+    # Limpiar backups antiguos (>5 días)
+    # Registrar resumen
+    ```
 
-## 🏠 Tarea para Casa
+    **Ejemplo de log esperado:**
+    ```
+    2026-02-13 14:30:15 [INFO] ==========================================
+    2026-02-13 14:30:15 [INFO] Iniciando backup
+    2026-02-13 14:30:15 [INFO] Origen verificado: /home/usuario/Documentos
+    2026-02-13 14:30:15 [INFO] Espacio disponible: 15GB
+    2026-02-13 14:30:15 [INFO] Creando backup: backup_20260213_143015.tar.gz
+    2026-02-13 14:30:18 [INFO] Backup creado exitosamente: 2.3M
+    2026-02-13 14:30:18 [INFO] Limpiando backups antiguos...
+    2026-02-13 14:30:18 [INFO] Eliminados 2 backups antiguos
+    2026-02-13 14:30:18 [INFO] Backups actuales: 4
+    2026-02-13 14:30:18 [INFO] Backup completado exitosamente
+    2026-02-13 14:30:18 [INFO] ==========================================
+    ```
 
-### Tarea 1: Monitor de Servicios
+    **Crear también un script de análisis:**
+    ```bash
+    #!/bin/bash
+    # analizar_backups.sh
 
-Crear un script `monitor_servicios.sh` que:
-1. Verifique si están activos: `ssh`, `cron`
-2. Registre el estado en `~/logs/servicios.log`
-3. Use niveles: [OK], [ERROR]
-4. Incluya fecha y hora
+    LOG="$HOME/logs/backup.log"
 
-```bash
-#!/bin/bash
-LOG="$HOME/logs/servicios.log"
+    echo "Total de backups: $(grep -c "Backup creado" "$LOG")"
+    echo "Errores: $(grep -c "\[ERROR\]" "$LOG")"
+    echo ""
+    echo "Últimos 5 backups:"
+    grep "Backup creado exitosamente" "$LOG" | tail -n 5
+    ```
 
-log() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') [$1] $2" >> "$LOG"
-}
+## Resumen de Comandos
 
-if systemctl is-active --quiet ssh; then
-    log "OK" "SSH activo"
-else
-    log "ERROR" "SSH inactivo"
-fi
+!!! example "Redirección"
+    ```bash
+    comando > archivo          # Sobrescribir
+    comando >> archivo         # Añadir al final
+    comando 2> errores         # Solo errores
+    comando &> todo            # Salida + errores
+    comando >> log 2>&1        # Todo al mismo archivo
+    ```
 
-# Repetir para cron...
-```
+!!! example "grep"
+    ```bash
+    grep "texto" archivo       # Buscar
+    grep -i "texto" archivo    # Ignorar mayúsculas
+    grep -n "texto" archivo    # Con número de línea
+    grep -c "texto" archivo    # Contar coincidencias
+    grep -r "texto" dir/       # Buscar recursivo
+    grep -v "texto" archivo    # Invertir (no contiene)
+    ```
 
-### Tarea 2: Analizador de Logs Avanzado
+!!! example "Analizar logs"
+    ```bash
+    tail archivo               # Últimas líneas
+    tail -f archivo           # Seguir en tiempo real
+    head archivo              # Primeras líneas
+    cat archivo | grep txt    # Filtrar contenido
+    ```
 
-Crear un script `analisis_completo.sh` que analice `backup.log` y muestre:
-1. Total de backups
-2. Backups exitosos vs fallidos
-3. Día con más backups
-4. Tamaño total de backups
-5. Promedio de tamaño por backup
+!!! example "Fecha para logs"
+    ```bash
+    date '+%Y-%m-%d %H:%M:%S'  # 2026-02-13 14:30:15
+    ```
 
----
+## Tareas Extra
 
-## ✅ Checklist de la Sesión
+!!! question "Tarea 1: Monitor de Servicios"
 
-- [ ] Redirigir salida con `>`
-- [ ] Añadir a archivo con `>>`
-- [ ] Redirigir errores con `2>`
-- [ ] Redirigir todo con `&>`
-- [ ] Registrar con fecha y hora
-- [ ] Crear función de logging
-- [ ] Usar niveles de log (INFO, ERROR, WARNING)
-- [ ] Buscar con `grep`
-- [ ] Usar `grep -i`, `-n`, `-c`
-- [ ] Combinar comandos con `|`
-- [ ] Analizar logs con `tail` y `head`
+    Crear un script `monitor_servicios.sh` que:
+    1. Verifique si están activos: `ssh`, `cron`
+    2. Registre el estado en `~/logs/servicios.log`
+    3. Use niveles: [OK], [ERROR]
+    4. Incluya fecha y hora
 
----
+    ??? tip "Pista"
+        ```bash
+        #!/bin/bash
+        LOG="$HOME/logs/servicios.log"
 
-## 💡 Buenas Prácticas de Logging
+        log() {
+            echo "$(date '+%Y-%m-%d %H:%M:%S') [$1] $2" >> "$LOG"
+        }
 
-### 1. Siempre incluir fecha y hora
-```bash
-echo "$(date '+%Y-%m-%d %H:%M:%S') - mensaje" >> log
-```
+        if systemctl is-active --quiet ssh; then
+            log "OK" "SSH activo"
+        else
+            log "ERROR" "SSH inactivo"
+        fi
 
-### 2. Usar niveles de severidad
-```bash
-[INFO] - Información normal
-[WARNING] - Advertencia
-[ERROR] - Error grave
-[ALERTA] - Situación crítica
-```
+        # Repetir para cron...
+        ```
 
-### 3. Crear función de log reutilizable
-```bash
-log() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') [$1] $2" >> "$LOG"
-}
-```
+!!! question "Tarea 2: Analizador de Logs Avanzado"
 
-### 4. Separar logs por tipo
-```bash
-LOG_BACKUP="/var/log/backup.log"
-LOG_SISTEMA="/var/log/sistema.log"
-LOG_ERRORES="/var/log/errores.log"
-```
+    Crear un script `analisis_completo.sh` que analice `backup.log` y muestre:
+    1. Total de backups
+    2. Backups exitosos vs fallidos
+    3. Día con más backups
+    4. Tamaño total de backups
+    5. Promedio de tamaño por backup
 
-### 5. Rotar logs grandes
-```bash
-# Si el log pasa de 10MB, rotarlo
-if [ $(stat -f%z "$LOG" 2>/dev/null || stat -c%s "$LOG") -gt 10485760 ]; then
-    mv "$LOG" "$LOG.old"
-fi
-```
+## Buenas Prácticas de Logging
 
-### 6. Registrar inicio y fin
-```bash
-log "INFO" "=========================================="
-log "INFO" "Script iniciado"
-# ... operaciones
-log "INFO" "Script finalizado"
-log "INFO" "=========================================="
-```
+!!! tip "1. Siempre incluir fecha y hora"
+    ```bash
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - mensaje" >> log
+    ```
 
-### 7. Registrar todo lo importante
-- Inicio/fin de operaciones
-- Verificaciones previas
-- Resultados de comandos críticos
-- Errores con contexto
-- Estadísticas finales
+!!! tip "2. Usar niveles de severidad"
+    ```bash
+    [INFO] - Información normal
+    [WARNING] - Advertencia
+    [ERROR] - Error grave
+    [ALERTA] - Situación crítica
+    ```
 
----
+!!! tip "3. Crear función de log reutilizable"
+    ```bash
+    log() {
+        echo "$(date '+%Y-%m-%d %H:%M:%S') [$1] $2" >> "$LOG"
+    }
+    ```
 
-## 🎯 Preparación para el Proyecto Final
+!!! tip "4. Separar logs por tipo"
+    ```bash
+    LOG_BACKUP="/var/log/backup.log"
+    LOG_SISTEMA="/var/log/sistema.log"
+    LOG_ERRORES="/var/log/errores.log"
+    ```
 
-Con esta sesión completamos todas las herramientas necesarias para el proyecto final:
+!!! tip "5. Registrar inicio y fin"
+    ```bash
+    log "INFO" "=========================================="
+    log "INFO" "Script iniciado"
+    # ... operaciones
+    log "INFO" "Script finalizado"
+    log "INFO" "=========================================="
+    ```
 
-✅ Variables y parámetros  
-✅ Condicionales  
-✅ Bucles  
-✅ tar  
-✅ rsync  
-✅ cron  
-✅ **Logging profesional**  
+!!! tip "6. Registrar todo lo importante"
+    - Inicio/fin de operaciones
+    - Verificaciones previas
+    - Resultados de comandos críticos
+    - Errores con contexto
+    - Estadísticas finales
 
-**Próximas sesiones:**
-- Sesión 7-8: Proyecto integrador (sistema de backup automatizado)
-- Sesión 9: Examen
-
-**El proyecto combinará TODO lo aprendido en un sistema completo de backup con:**
-- Scripts con logging
-- Backup con tar
-- Sincronización con rsync
-- Automatización con cron
-- Análisis de logs
-
----
-
-## 🔍 Comandos Útiles Adicionales
-
-### Filtrar logs por fecha
-```bash
-# Ver logs de hoy
-grep "$(date +%Y-%m-%d)" backup.log
-
-# Ver logs de febrero
-grep "2026-02" backup.log
-```
-
-### Estadísticas de logs
-```bash
-# Operaciones por hora
-grep "14:" backup.log | wc -l
-
-# Días diferentes en el log
-cut -d' ' -f1 backup.log | sort -u | wc -l
-```
-
-### Buscar patrones específicos
-```bash
-# IPs en logs
-grep -oE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' access.log
-
-# Tamaños en logs
-grep -oE '[0-9]+M|[0-9]+G' backup.log
-```
+!!! tip "7. Facilitar el análisis posterior"
+    Usa formatos consistentes para que grep pueda encontrar información fácilmente.
