@@ -60,6 +60,57 @@ done
     - `nombre` toma el valor de cada elemento (Sergio, luego Ana, etc.)
     - `do ... done` → comandos que se repiten
 
+Como hemos visto en el ejemplo anterior, se produce una interación por cada uno de los elementos separados por espacios en blanco que tenemos. Por lo tanto si usamos una variable con diferentes elementos separados por espacios en blanco, será lo mismo:
+
+!!!example "Ejemplo: Lista de nombres dentro de variable"
+
+    ```bash
+    #!/bin/bash
+
+    # Lista de elementos separados por comas, entre comillas
+    lista="Sergio Ana María Juan"
+    for nombre in $lista
+    do
+        echo "Hola $nombre"
+    done
+    ```
+
+    **Salida: (la mismma que en el ejemplo anterior)**
+    ```
+    Hola Sergio
+    Hola Ana
+    Hola María
+    Hola Juan
+    ```
+
+y si damos una vuelta a lo que acabamos de hacer, supongamos que ejecutamos un comando, por ejemplo el comando `ls` y el resultado de su ejecución lo mentemos en una variable en forma de lista. El resultado será que el bucle recorre todos los elementos de la lista
+
+!!!example "Ejemplo: Lista de nombres dentro de variable"
+
+    ```bash
+    #!/bin/bash
+
+    # Lista de los ficheros que se encuentren en esta carpeta
+    lista=$(ls)
+    for nombre in $lista
+    do
+        echo "Fichero: $nombre"
+    done
+    ```
+
+    **Salida: Lista de archivos de la carpeta**
+    ```
+    Fichero: Archivo1.txt
+    Fichero: Archivo2.txt
+    Fichero: Archivo3.txt
+    ...
+    ```
+
+    **Explicación:**
+
+    - en la variable `lista` ahora tenemos el resultado de ejecutar el comando `ls`
+    - se puede ejecutar cualquier comando que tenga como resultado elementos separados por espacios en blanco, por ejemplo `cat listado.txt` (listado de nombres en un fichero), `cat /etc/passwd | cut -f1 -d:` (listado de usuarios del sistema), ...
+    
 
 ## Bucle for con Rangos Numéricos
 
@@ -228,7 +279,7 @@ done
     for usuario in $(cat usuarios.txt)
     do
         sudo useradd -m "$usuario"
-        echo "✓ Usuario creado: $usuario"
+        echo "Usuario creado: $usuario"
     done
 
     echo "Proceso completado"
@@ -253,7 +304,7 @@ done
     for servidor in $(cat servidores.txt)
     do
         if ping -c 1 "$servidor" &> /dev/null; then
-            echo "✓ $servidor - Accesible"
+            echo "$servidor - Accesible"
         else
             echo "✗ $servidor - No accesible"
         fi
@@ -294,7 +345,7 @@ done
     do
         if [ -s "$archivo" ]; then
             cp "$archivo" backup/
-            echo "✓ Copiado: $archivo (no vacío)"
+            echo "Copiado: $archivo (no vacío)"
         else
             echo "✗ Omitido: $archivo (vacío)"
         fi
@@ -319,7 +370,7 @@ done
         echo "Creado: archivo$i.txt"
     done
 
-    echo "✓ 10 archivos creados"
+    echo "10 archivos creados"
     ```
 
 !!! example "Ejemplo 2: Mostrar información de archivos"
@@ -369,7 +420,7 @@ done
             
             if [ "$fecha_mod" = "$fecha_hoy" ]; then
                 cp "$archivo" "backup_$fecha_hoy/"
-                echo "✓ Respaldado: $archivo"
+                echo "Respaldado: $archivo"
                 contador=$((contador + 1))
             fi
         fi
@@ -404,7 +455,7 @@ done
         for i in {1..5}
         do
             mkdir "carpeta$i"
-            echo "✓ Creada: carpeta$i"
+            echo "Creada: carpeta$i"
         done
 
         echo "=========================================="
@@ -438,7 +489,7 @@ done
         # Crear directorio de backup
         if [ ! -d "backup_txt" ]; then
             mkdir backup_txt
-            echo "✓ Directorio backup_txt creado"
+            echo "Directorio backup_txt creado"
         fi
 
         # Contador
@@ -452,7 +503,7 @@ done
             # Verificar que existe (por si no hay .txt)
             if [ -f "$archivo" ]; then
                 cp "$archivo" backup_txt/
-                echo "✓ Copiado: $archivo"
+                echo "Copiado: $archivo"
                 contador=$((contador + 1))
             fi
         done
@@ -540,7 +591,7 @@ done
 
     Crear un script que organice archivos en carpetas según su extensión:
 
-        ??? success "Solución: Intenta resolver sin mirar solución"
+    ??? success "Solución: Intenta resolver sin mirar solución"
 
         ```bash
         #!/bin/bash
@@ -560,19 +611,19 @@ done
                 # Obtener extensión
                 if [[ "$archivo" == *.jpg ]] || [[ "$archivo" == *.png ]]; then
                     mv "$archivo" imagenes/
-                    echo "✓ $archivo → imagenes/"
+                    echo "$archivo → imagenes/"
                     
                 elif [[ "$archivo" == *.txt ]] || [[ "$archivo" == *.pdf ]]; then
                     mv "$archivo" documentos/
-                    echo "✓ $archivo → documentos/"
+                    echo "$archivo → documentos/"
                     
                 elif [[ "$archivo" == *.sh ]]; then
                     mv "$archivo" scripts/
-                    echo "✓ $archivo → scripts/"
+                    echo "$archivo → scripts/"
                     
                 else
                     mv "$archivo" otros/
-                    echo "✓ $archivo → otros/"
+                    echo "$archivo → otros/"
                 fi
             fi
         done
@@ -692,7 +743,7 @@ done
             if [ -f "$script" ]; then
                 if [ ! -x "$script" ]; then
                     chmod +x "$script"
-                    echo "✓ Permisos añadidos a: $script"
+                    echo "Permisos añadidos a: $script"
                     modificados=$((modificados + 1))
                 else
                     echo "○ $script ya es ejecutable"
