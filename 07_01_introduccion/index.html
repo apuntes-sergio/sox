@@ -1,0 +1,3164 @@
+<!DOCTYPE html><html lang="es" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Gestión de sistemas Linux. Integración de Ubuntu Desktop y Server en entornos Windows">
+      
+      
+        <meta name="author" content="Sergio Rey Martínez">
+      
+      
+        <link rel="canonical" href="https://sergio-apuntes.github.io/sox/07_01_introduccion/">
+      
+      
+        <link rel="prev" href="../06_12_actualizacion_despliegue/">
+      
+      
+        <link rel="next" href="../07_02_ubuntudesktop/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Introducción. Redes heterogéneas - Apuntes Sistemas Operativos en Red</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#introduccion-a-las-redes-heterogeneas" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href=".." title="Apuntes Sistemas Operativos en Red" class="md-header__button md-logo" aria-label="Apuntes Sistemas Operativos en Red" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Apuntes Sistemas Operativos en Red
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Introducción. Redes heterogéneas
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Cambiar a modo oscuro" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Cambiar a modo claro" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Apuntes Sistemas Operativos en Red" class="md-nav__button md-logo" aria-label="Apuntes Sistemas Operativos en Red" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    Apuntes Sistemas Operativos en Red
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1">
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href=".." class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Presentación
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Presentación
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD01 Introducción a los Sistemas Operativos de Servidor
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD01 Introducción a los Sistemas Operativos de Servidor
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_1_introducci%C3%B3n/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_2_arquitectura_cliente_servidor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura cliente/servidor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_3_funciones_SO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Funciones de Sistemas Operativos en Red
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_4_sistemas_operativos_servidor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principales sistemas operativos servidor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_5_recordatorio_red/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Repaso conceptos de red
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD02 Instalación de sistemas operativos de servidor privativos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD02 Instalación de sistemas operativos de servidor privativos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_1_instalacion_SO_introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_2_instalacion_windows_server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instalación de Windows Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_3_config_basica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración básica
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_4_documentar_instalacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_5_administrar_discos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administrar discos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_6_dominio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD03 Administración de usuarios y grupos en Windows Server
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD03 Administración de usuarios y grupos en Windows Server
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_01_objetos_dominios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Objetos del Dominio en Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_02_usuarios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cuentas de Usuario en un Dominio Windows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_03_grupos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grupos en Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_04_equipos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Equipos en Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_05_unidades_organizativas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidades Organizativas en Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_06_herramientas_administracion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Herramientas de administración en Windows Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_07_perfiles_usuarios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Perfiles de usuario en Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD04 Gestión de recursos compartidos en Windows Server
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD04 Gestión de recursos compartidos en Windows Server
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_01_permisos_derechos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Permisos y derechos en sistemas Windows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_02_servidor_archivos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    El servidor de archivos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_03_compartir_impresoras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compartir impresoras en red
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6">
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD05 Directivas de grupo en Windows Server
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD05 Directivas de grupo en Windows Server
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_01_introduccion_directivas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción a las directivas de grupo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_02_creacion_directivas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creación y ámbito de aplicación de GPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_03_herencia_directivas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Herencia de directivas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_04_configuacion_directivas_comunes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración de directivas comunes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_05_verificacion_problemas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Verificación y resolución de problemas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7">
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD06 Configuración avanzada de Windows Server
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD06 Configuración avanzada de Windows Server
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_01_configuraciones_adicionales/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración avanzada de Windows Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_02_carpetas_compartidas_ocultas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Recursos Compartidos Ocultos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_03_cuotas_discos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cuotas de discos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_04_servidor_dhcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Servidor DHCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_05_escritorio_remoto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Escritorio Remoto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_06_redes_virtuales_VPN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Red VPN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_07_rsat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Herramientas de Administración Remota del Servidor (RSAT)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_08_backups/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Copias de seguridad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_09_controlador_secundario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Controlador de Dominio Secundario
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_10_supervision_monitorizacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización Windows Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_11_servicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Servicios en Windows Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_12_actualizacion_despliegue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WSUS &amp; WDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD07 Instalación de sistemas operativos libres
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD07 Instalación de sistemas operativos libres
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción. Redes heterogéneas
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción. Redes heterogéneas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduccion-a-las-redes-heterogeneas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introducción a las redes heterogéneas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introducción a las redes heterogéneas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#por-que-mezclar-windows-y-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Por qué mezclar Windows y Linux
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-reto-que-todo-funcione-junto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El reto: que todo funcione junto
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linux-conceptos-basicos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linux: conceptos básicos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Linux: conceptos básicos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#que-es-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué es Linux
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diferencias-clave-con-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diferencias clave con Windows
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-hacer-en-este-tema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué vamos a hacer en este tema
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Qué vamos a hacer en este tema">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bloque-1-ubuntu-desktop-primeros-pasos-con-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloque 1: Ubuntu Desktop - Primeros pasos con Linux
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloque-2-ubuntu-server-instalacion-y-configuracion-basica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloque 2: Ubuntu Server - Instalación y configuración básica
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloque-3-servicios-de-comparticion-samba-y-active-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloque 3: Servicios de compartición - Samba y Active Directory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloque-4-administracion-avanzada-automatizacion-y-copias-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloque 4: Administración avanzada - Automatización y copias de seguridad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloque-5-mantenimiento-y-control-monitorizacion-y-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloque 5: Mantenimiento y control - Monitorización y logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#estructura-del-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estructura del aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_02_ubuntudesktop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ubuntu Desktop. Primeros pasos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_03_ubuntudesktop_red/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ubuntu Desktop. Configuración de red con Netplan y NetworkManager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_04_ubuntudesktop_varios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ubuntu Desktop. Organización de discos y carpetas en Linux
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_05_ubuntudesktop_ad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ubuntu Desktop. Integración con Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9">
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD08 Linux Server e integración básica con Windows
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD08 Linux Server e integración básica con Windows
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_01_instalacion_ubuntu_server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instalación de Ubuntu Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_02_configuracion_red_netplan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración de red estática con Netplan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_03_gestion_almacenamiento_linux/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gestión básica de almacenamiento en Linux
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_04_gestion_almacenamiento_lvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gestión de almacenamiento con LVM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_05_instalacion_configuracion_samba/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instalación y configuración básica de Samba
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_06_integracion_active_directory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Active Directory usando Winbind
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_07_cron-rsync/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administración avanzada - Automatización y copias de seguridad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_08_mantenimiento_logs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mantenimiento y control - Monitorización y logs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10">
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD09 Script de administración en Linux
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD09 Script de administración en Linux
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_01_introduccion_scripts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción y scripts básicos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_02_condicionales/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Condicionales y Verificación de Archivos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_03_bucles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bucles for y Procesamiento de Archivos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_04_backups_tar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso Profesional de tar para Backups
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_05_rsync_cron/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sincronización con rsync y Automatización con cron
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_06_logs_grep/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logs y Control con Redirección
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduccion-a-las-redes-heterogeneas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introducción a las redes heterogéneas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introducción a las redes heterogéneas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#por-que-mezclar-windows-y-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Por qué mezclar Windows y Linux
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-reto-que-todo-funcione-junto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El reto: que todo funcione junto
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linux-conceptos-basicos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linux: conceptos básicos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Linux: conceptos básicos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#que-es-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué es Linux
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diferencias-clave-con-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diferencias clave con Windows
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-hacer-en-este-tema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué vamos a hacer en este tema
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Qué vamos a hacer en este tema">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bloque-1-ubuntu-desktop-primeros-pasos-con-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloque 1: Ubuntu Desktop - Primeros pasos con Linux
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloque-2-ubuntu-server-instalacion-y-configuracion-basica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloque 2: Ubuntu Server - Instalación y configuración básica
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloque-3-servicios-de-comparticion-samba-y-active-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloque 3: Servicios de compartición - Samba y Active Directory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloque-4-administracion-avanzada-automatizacion-y-copias-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloque 4: Administración avanzada - Automatización y copias de seguridad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloque-5-mantenimiento-y-control-monitorizacion-y-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloque 5: Mantenimiento y control - Monitorización y logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#estructura-del-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estructura del aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>Introducción. Redes heterogéneas</h1>
+
+<h2 id="introduccion-a-las-redes-heterogeneas">Introducción a las redes heterogéneas</h2>
+<p>Hasta ahora hemos trabajado exclusivamente con Windows Server. Hemos montado un dominio, compartido recursos y aplicado directivas en un entorno completamente Microsoft. Sin embargo, cuando visitéis empresas medianas o grandes, os daréis cuenta de que lo habitual es encontrar <strong>Windows y Linux trabajando juntos</strong>. A esto se le llama una <strong>red heterogénea</strong>.</p>
+<figure align="center">
+  <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../imgs/ubuntu/redes_heterogenea.png" data-desc-position="bottom"><img alt="Image title" src="../imgs/ubuntu/redes_heterogenea.png" width="70%"></a>
+<br>
+<figcaption>Esquema de redes heterogéneas</figcaption>
+</figure>
+<h3 id="por-que-mezclar-windows-y-linux">Por qué mezclar Windows y Linux</h3>
+<p>Las empresas no mezclan sistemas operativos por capricho. Existen razones muy concretas que justifican esta decisión:</p>
+<p><strong>Ahorro de costes</strong>: Windows Server requiere licencias que cuestan cientos de euros por servidor y por cliente. Linux, en cambio, es gratuito. Una empresa con 10 servidores puede ahorrarse miles de euros anuales usando Linux donde sea técnicamente viable.</p>
+<p><strong>Cada sistema tiene sus fortalezas</strong>: </p>
+<p>Windows destaca en gestión centralizada mediante Active Directory, integración perfecta con Office y Exchange, y soporte nativo para aplicaciones empresariales que solo existen en este ecosistema (por ejemplo, muchas aplicaciones de gestión empresarial, contabilidad o ERP).</p>
+<p>Linux destaca en servidores web (la mayoría de sitios web del mundo corren en Linux), estabilidad excepcional (servidores que funcionan meses sin reiniciar), mayor seguridad por diseño y rendimiento óptimo incluso con recursos limitados.</p>
+<p><strong>Aplicaciones modernas</strong>: Muchas tecnologías actuales como Docker, Kubernetes y la mayoría de frameworks de desarrollo web están optimizadas para Linux. Si una empresa quiere usar estas tecnologías, necesita servidores Linux en su infraestructura.</p>
+<h3 id="el-reto-que-todo-funcione-junto">El reto: que todo funcione junto</h3>
+<p>El desafío no es técnico en sí mismo, sino de integración. Los usuarios finales no deben notar que existen sistemas diferentes trabajando detrás. Cuando un empleado accede a una carpeta compartida, no debería importarle si está físicamente en Windows o en Linux. Debe poder usar las mismas credenciales para todo y el sistema debe comportarse de manera uniforme.</p>
+<p>Para conseguir esta transparencia usamos <strong>protocolos estándar</strong> que ambos sistemas entienden:</p>
+<ul>
+<li>
+<p><strong>SMB/CIFS</strong>: protocolo para compartir archivos. Windows lo usa nativamente y en Linux lo implementamos mediante Samba.</p>
+</li>
+<li>
+<p><strong>LDAP</strong>: protocolo de directorios de usuarios que permite consultar y gestionar información de autenticación de forma centralizada.</p>
+</li>
+<li>
+<p><strong>Kerberos</strong>: sistema de autenticación segura que usa tokens cifrados para verificar identidades.</p>
+</li>
+<li>
+<p><strong>DNS</strong>: sistema de resolución de nombres que permite usar nombres de equipo en lugar de direcciones IP.</p>
+</li>
+</ul>
+<hr>
+<h2 id="linux-conceptos-basicos">Linux: conceptos básicos</h2>
+<h3 id="que-es-linux">Qué es Linux</h3>
+<p>Linux no es un sistema operativo completo, es un <strong>kernel</strong> (núcleo del sistema). Las <strong>distribuciones</strong> toman ese kernel y le añaden todo lo necesario: herramientas del sistema, gestores de paquetes, servicios, interfaces gráficas, etc.</p>
+<p>Nosotros usaremos <strong>Ubuntu 24.04 LTS</strong> en sus dos variantes: Desktop para estaciones de trabajo y Server para servicios de red. Ambas comparten la misma base, lo que facilita la transición entre una y otra.</p>
+<p>Ubuntu es completamente gratuita y tiene soporte oficial hasta 2029. Cuenta con una comunidad enorme, lo que facilita encontrar ayuda y documentación. Es la distribución más usada tanto en escritorios Linux como en entornos cloud (AWS, Azure, Google Cloud), por lo que lo que aprendáis aquí os servirá en entornos profesionales reales. Además, es especialmente adecuada para aprender por su facilidad de uso y abundante documentación.</p>
+<h3 id="diferencias-clave-con-windows">Diferencias clave con Windows</h3>
+<p><strong>Interfaz de administración</strong>: Windows tiene ventanas, menús y herramientas gráficas para todo. Linux Desktop también tiene interfaz gráfica muy completa, pero Linux Server se administra principalmente por <strong>terminal</strong> (línea de comandos). Aunque pueda parecer más difícil al principio, consume muchísimos menos recursos y facilita enormemente la automatización de tareas mediante scripts.</p>
+<p><strong>Sistema de archivos</strong>: </p>
+<p>En Windows tenemos letras de unidad separadas (C:, D:, E:) para cada disco o partición. En Linux existe un único árbol jerárquico que empieza en <code>/</code> (raíz). Los discos adicionales se "montan" como carpetas dentro de este árbol.</p>
+<p>Por ejemplo, en Windows tendríamos <code>D:\datos</code>. En Linux sería <code>/datos</code> y el disco físico se monta en esa ubicación.</p>
+<p><strong>Instalación de programas</strong>:</p>
+<p>En Windows descargamos ejecutables .exe y hacemos doble clic. En Linux usamos <strong>gestores de paquetes</strong> como <code>apt</code> o <code>snap</code>, que funcionan como una tienda de aplicaciones pero mucho más potente.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>nombre_programa
+</span></code></pre></div>
+<p>Este comando descarga el programa, lo instala, configura dependencias y lo deja listo para usar, todo automáticamente.</p>
+<p><strong>Usuarios y permisos</strong>: </p>
+<p>Linux es multiusuario desde su diseño original. Existe un superusuario llamado <strong>root</strong> (equivalente a Administrador en Windows), pero por seguridad nunca trabajamos directamente como root. Usamos el comando <code>sudo</code> para ejecutar comandos específicos con privilegios elevados.</p>
+<p><strong>Configuración del sistema</strong>: </p>
+<p>En Windows la configuración está en el Registro, una base de datos binaria compleja. En Linux, toda la configuración son <strong>archivos de texto plano</strong> ubicados principalmente en <code>/etc/</code>. Esto tiene enormes ventajas: puedes editarlos con cualquier editor, copiarlos fácilmente, hacer backups simples y compartirlos entre sistemas.</p>
+<hr>
+<h2 id="que-vamos-a-hacer-en-este-tema">Qué vamos a hacer en este tema</h2>
+<p>Vamos a trabajar con Linux de forma progresiva y práctica, integrándolo completamente en nuestra red ISCASOX. No serán sistemas aislados, sino parte integral de nuestra infraestructura empresarial.</p>
+<p>El tema se estructura en cinco bloques principales que siguen un orden lógico de complejidad creciente:</p>
+<h3 id="bloque-1-ubuntu-desktop-primeros-pasos-con-linux">Bloque 1: Ubuntu Desktop - Primeros pasos con Linux</h3>
+<p>Comenzaremos con Ubuntu Desktop porque es más familiar para quienes venís de Windows. Este primer contacto incluye:</p>
+<p><strong>Instalación y configuración inicial</strong>: Crearemos una máquina virtual con Ubuntu Desktop y realizaremos la configuración post-instalación básica. Instalaremos Guest Additions de VirtualBox para mejorar la experiencia de uso.</p>
+<p><strong>Gestión de software</strong>: Aprenderemos a instalar aplicaciones usando <code>apt</code>, <code>snap</code> y la tienda gráfica de Ubuntu. Entenderemos las diferencias entre estos sistemas y cuándo usar cada uno.</p>
+<p><strong>Configuración de red</strong>: Veremos cómo funciona NetworkManager y Netplan, configurando la red tanto desde interfaz gráfica como mediante archivos de configuración.</p>
+<p><strong>Integración con Active Directory</strong>: Uniremos el equipo Ubuntu Desktop al dominio Windows, permitiendo que los usuarios corporativos inicien sesión con sus credenciales del dominio.</p>
+<p>Este bloque servirá como introducción y repaso a sistemas Linux y tiene como objetivo dar una base sólida de Linux desde el punto de vista del usuario final, teniendo en cuenta que la finalidad es usar este sistema dentro de dominios Windows y antes de pasar a la administración de servidores.</p>
+<h3 id="bloque-2-ubuntu-server-instalacion-y-configuracion-basica">Bloque 2: Ubuntu Server - Instalación y configuración básica</h3>
+<p>Una vez familiarizados con Linux Desktop, pasaremos a Ubuntu Server. Este bloque incluye:</p>
+<p><strong>Instalación de Ubuntu Server</strong>: Crearemos un servidor sin interfaz gráfica, gestionable únicamente por terminal.</p>
+<p><strong>Configuración de red con Netplan</strong>: Aprenderemos a configurar IPs estáticas y parámetros de red mediante archivos YAML.</p>
+<p><strong>SSH para administración remota</strong>: Configuraremos el acceso remoto seguro al servidor, permitiéndonos administrarlo desde nuestro equipo Windows sin necesidad de acceder físicamente a la consola.</p>
+<p><strong>LVM (Logical Volume Manager)</strong>: Dominaremos la gestión avanzada de almacenamiento, creando y ampliando volúmenes lógicos de forma flexible sin interrumpir servicios.</p>
+<h3 id="bloque-3-servicios-de-comparticion-samba-y-active-directory">Bloque 3: Servicios de compartición - Samba y Active Directory</h3>
+<p>Este es el bloque de integración entre Windows y Linux:</p>
+<p><strong>Samba básico</strong>: Instalaremos y configuraremos Samba para compartir archivos con clientes Windows, creando recursos compartidos básicos.</p>
+<p><strong>Integración con Active Directory usando Winbind</strong>: Uniremos el servidor Linux al dominio Windows, configurando Samba para que respete permisos y grupos del Active Directory. Los usuarios del dominio podrán autenticarse en Linux y acceder a recursos compartidos con sus credenciales corporativas.</p>
+<p><strong>Gestión de permisos</strong>: Aprenderemos a gestionar ACLs de Windows en carpetas Linux, permitiendo configurar permisos desde la interfaz gráfica de Windows que se respetarán en el servidor Linux.</p>
+<h3 id="bloque-4-administracion-avanzada-automatizacion-y-copias-de-seguridad">Bloque 4: Administración avanzada - Automatización y copias de seguridad</h3>
+<p>Con la infraestructura funcionando, aprenderemos a mantenerla y automatizar tareas:</p>
+<p><strong>Planificación de tareas con cron</strong>: Automatizaremos tareas periódicas como copias de seguridad, limpieza de logs, actualizaciones programadas, etc. Entenderemos la sintaxis de cron y crearemos nuestros propios trabajos programados.</p>
+<p><strong>Copias de seguridad con rsync y tar</strong>: Implementaremos estrategias de backup utilizando <code>rsync</code> para sincronización incremental de archivos y <code>tar</code> para archivos comprimidos. Crearemos scripts automatizados de backup.</p>
+<p><strong>Systemd timers</strong>: Como alternativa moderna a cron, aprenderemos a usar systemd timers para tareas programadas con mejor integración en el sistema.</p>
+<p>Este bloque os dará las herramientas necesarias para que vuestros servidores funcionen de forma autónoma y fiable.</p>
+<h3 id="bloque-5-mantenimiento-y-control-monitorizacion-y-logs">Bloque 5: Mantenimiento y control - Monitorización y logs</h3>
+<p>Finalizaremos con las herramientas de diagnóstico y resolución de problemas:</p>
+<p><strong>Gestión de logs con journald</strong>: Aprenderemos a usar <code>journalctl</code> para consultar y analizar los registros del sistema, diagnosticando problemas y monitorizando la actividad.</p>
+<p><strong>Monitorización del sistema</strong>: Utilizaremos herramientas como <code>htop</code>, <code>iotop</code>, <code>netstat</code> y comandos de análisis de rendimiento para vigilar el estado del servidor.</p>
+<p><strong>Análisis de espacio en disco</strong>: Herramientas como <code>df</code>, <code>du</code> y <code>ncdu</code> para controlar el uso del almacenamiento.</p>
+<p><strong>Resolución de incidencias</strong>: Metodología para diagnosticar y resolver problemas comunes en servidores Linux.</p>
+<p>Este bloque cierra el ciclo de administración de sistemas, dotándoos de herramientas para mantener servidores en producción y resolver problemas cuando surjan.</p>
+<hr>
+<h2 id="estructura-del-aprendizaje">Estructura del aprendizaje</h2>
+<p>Esta organización no es casual, sino que sigue una progresión pedagógica pensada:</p>
+<p><strong>De lo familiar a lo desconocido</strong>: Empezamos con Desktop porque su interfaz gráfica es más parecida a Windows, reduciendo la barrera de entrada.</p>
+<p><strong>De cliente a servidor</strong>: Primero usamos Linux como cliente (Desktop en el dominio), después como servidor (Server ofreciendo servicios). Esto replica cómo funcionan las redes reales.</p>
+<p><strong>De lo básico a lo avanzado</strong>: Primero instalamos y configuramos, después compartimos recursos, y finalmente automatizamos y monitorizamos.</p>
+<p><strong>De la teoría a la práctica</strong>: Cada concepto se aplica inmediatamente en nuestro proyecto ISCASOX, dándole sentido práctico.</p>
+<p>Cada unos de los bloques indicados se deben realizar en tiempo y forma adecuado, de forma que se plantearán una o dos actividades entregables en cada uno de los bloques.</p>
+<hr>
+<div class="admonition tip">
+<p class="admonition-title">Cómo trabajar en este tema</p>
+<p><strong>En clase</strong> explicaremos los conceptos fundamentales y haremos demostraciones en vivo de los procesos más complejos.</p>
+<p><strong>En los apuntes</strong> encontraréis guías paso a paso muy detalladas que podréis seguir a vuestro ritmo.</p>
+<p><strong>Aspectos importantes a tener en cuenta</strong>:</p>
+<p>Haced <strong>snapshots</strong> (instantáneas) de las máquinas virtuales antes de realizar cambios importantes. Si algo falla, simplemente restauráis la instantánea y volvéis a intentarlo sin perder todo el trabajo anterior.</p>
+<p>No tengáis miedo a "romper" el sistema. Estáis trabajando en máquinas virtuales, así que experimentad tranquilamente. Los errores son parte del aprendizaje y en un entorno virtualizado no hay riesgo real.</p>
+<p><strong>No copiéis comandos sin leer qué hacen</strong>. Es fundamental que entendáis cada comando antes de ejecutarlo. Los errores en Linux suelen ser muy informativos si os tomáis el tiempo de leerlos con atención.</p>
+<p><strong>Cuando algo no funcione</strong>, seguid estos pasos:</p>
+<p>Primero, leed el mensaje de error completo, palabra por palabra. Los mensajes de error en Linux suelen ser muy descriptivos y a menudo indican exactamente qué está mal.</p>
+<p>Segundo, buscad el error exacto en Google (copiad el mensaje tal cual). La comunidad Linux es enorme y es muy probable que alguien haya tenido el mismo problema.</p>
+<p>Tercero, consultad al profesor si seguís atascados después de intentar solucionarlo por vuestra cuenta. Traed anotado qué habéis probado para que podamos diagnosticar más eficientemente.</p>
+<p><strong>Herramientas de ayuda integradas</strong>: Linux tiene sistemas de ayuda muy potentes:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>man<span class="w"> </span>nombre_comando<span class="w">    </span><span class="c1"># Manual completo y detallado del comando</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>comando<span class="w"> </span>--help<span class="w">        </span><span class="c1"># Ayuda rápida con las opciones principales</span>
+</span></code></pre></div>
+<p>Los manuales (<code>man pages</code>) son extremadamente completos. Aprender a leerlos es una habilidad fundamental en Linux.</p>
+<p><strong>Documentación online</strong>: Ubuntu tiene documentación oficial excelente en <a href="https://help.ubuntu.com">help.ubuntu.com</a> y <a href="https://ubuntu.com/server/docs">ubuntu.com/server/docs</a>. Son recursos oficiales y fiables.</p>
+<p><strong>Entorno de trabajo recomendado</strong>:</p>
+<ul>
+<li>Tened una terminal abierta en el servidor Linux</li>
+<li>Tened estos apuntes abiertos en vuestro navegador</li>
+<li>Tened un editor de texto (Bloc de notas, Notepad++, VSCode) para anotar comandos y configuraciones</li>
+<li>Usad SSH desde Windows para administrar el servidor cómodamente (lo configuraremos en el tema)</li>
+</ul>
+<p><strong>Existen también herramientas gráficas opcionales</strong> como <strong>Webmin</strong> o <strong>Cockpit</strong> que proporcionan paneles web de administración. No son obligatorias ni las usaremos en el curso, pero pueden ayudar cuando estéis empezando a familiarizaros con el sistema si queréis explorarlas por vuestra cuenta.</p>
+</div>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie">
+        
+          
+          <a href="../06_12_actualizacion_despliegue/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: WSUS &amp; WDS">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                WSUS &amp; WDS
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../07_02_ubuntudesktop/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Ubuntu Desktop. Primeros pasos">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                Ubuntu Desktop. Primeros pasos
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Sergio Rey Martínez - SMX - SOX - 2025
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.indexes", "navigation.footer", "navigation.instant", "navigation.instant.progress", "toc.follow", "navigation.top", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

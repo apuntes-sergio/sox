@@ -1,0 +1,3349 @@
+<!DOCTYPE html><html lang="es" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Instalar un dominio o Active Directory en Windows Server">
+      
+      
+        <meta name="author" content="Sergio Rey Martínez">
+      
+      
+        <link rel="canonical" href="https://sergio-apuntes.github.io/sox/02_6_dominio/">
+      
+      
+        <link rel="prev" href="../02_5_administrar_discos/">
+      
+      
+        <link rel="next" href="../03_01_objetos_dominios/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Active Directory - Apuntes Sistemas Operativos en Red</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#administracion-centralizada-de-redes-con-active-directory" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href=".." title="Apuntes Sistemas Operativos en Red" class="md-header__button md-logo" aria-label="Apuntes Sistemas Operativos en Red" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Apuntes Sistemas Operativos en Red
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Active Directory
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Cambiar a modo oscuro" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Cambiar a modo claro" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Apuntes Sistemas Operativos en Red" class="md-nav__button md-logo" aria-label="Apuntes Sistemas Operativos en Red" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    Apuntes Sistemas Operativos en Red
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1">
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href=".." class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Presentación
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Presentación
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD01 Introducción a los Sistemas Operativos de Servidor
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD01 Introducción a los Sistemas Operativos de Servidor
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_1_introducci%C3%B3n/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_2_arquitectura_cliente_servidor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura cliente/servidor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_3_funciones_SO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Funciones de Sistemas Operativos en Red
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_4_sistemas_operativos_servidor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principales sistemas operativos servidor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_5_recordatorio_red/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Repaso conceptos de red
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD02 Instalación de sistemas operativos de servidor privativos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD02 Instalación de sistemas operativos de servidor privativos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_1_instalacion_SO_introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_2_instalacion_windows_server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instalación de Windows Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_3_config_basica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración básica
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_4_documentar_instalacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_5_administrar_discos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administrar discos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Active Directory
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#el-servidor-en-redes-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El servidor en redes Windows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="El servidor en redes Windows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#el-directorio-nucleo-de-la-administracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El directorio: núcleo de la administración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dominio-y-controlador-de-dominio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dominio y controlador de dominio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arboles-y-bosques-de-dominios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Árboles y bosques de dominios
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relaciones-de-confianza-entre-dominios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relaciones de confianza entre dominios
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#la-funcion-del-dominio-en-una-red-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        La función del dominio en una red Windows
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#instalacion-y-configuracion-de-dominios-en-windows-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalación y configuración de dominios en Windows Server
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Instalación y configuración de dominios en Windows Server">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#instalacion-del-rol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalación del rol
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-del-dominio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración del dominio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#degradar-un-controlador-de-dominio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Degradar un controlador de dominio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creacion-de-otros-dominios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creación de otros dominios
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#instalacion-de-un-dominio-desde-powershell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalación de un dominio desde PowerShell
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anadir-un-cliente-al-dominio-en-windows-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Añadir un cliente al dominio en Windows Server
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Añadir un cliente al dominio en Windows Server">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requisitos-previos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos previos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proceso-de-union-al-dominio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proceso de unión al dominio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD03 Administración de usuarios y grupos en Windows Server
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD03 Administración de usuarios y grupos en Windows Server
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_01_objetos_dominios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Objetos del Dominio en Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_02_usuarios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cuentas de Usuario en un Dominio Windows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_03_grupos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grupos en Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_04_equipos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Equipos en Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_05_unidades_organizativas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidades Organizativas en Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_06_herramientas_administracion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Herramientas de administración en Windows Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_07_perfiles_usuarios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Perfiles de usuario en Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD04 Gestión de recursos compartidos en Windows Server
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD04 Gestión de recursos compartidos en Windows Server
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_01_permisos_derechos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Permisos y derechos en sistemas Windows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_02_servidor_archivos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    El servidor de archivos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_03_compartir_impresoras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compartir impresoras en red
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6">
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD05 Directivas de grupo en Windows Server
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD05 Directivas de grupo en Windows Server
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_01_introduccion_directivas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción a las directivas de grupo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_02_creacion_directivas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creación y ámbito de aplicación de GPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_03_herencia_directivas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Herencia de directivas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_04_configuacion_directivas_comunes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración de directivas comunes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_05_verificacion_problemas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Verificación y resolución de problemas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7">
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD06 Configuración avanzada de Windows Server
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD06 Configuración avanzada de Windows Server
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_01_configuraciones_adicionales/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración avanzada de Windows Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_02_carpetas_compartidas_ocultas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Recursos Compartidos Ocultos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_03_cuotas_discos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cuotas de discos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_04_servidor_dhcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Servidor DHCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_05_escritorio_remoto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Escritorio Remoto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_06_redes_virtuales_VPN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Red VPN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_07_rsat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Herramientas de Administración Remota del Servidor (RSAT)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_08_backups/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Copias de seguridad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_09_controlador_secundario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Controlador de Dominio Secundario
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_10_supervision_monitorizacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización Windows Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_11_servicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Servicios en Windows Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_12_actualizacion_despliegue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WSUS &amp; WDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8">
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD07 Instalación de sistemas operativos libres
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD07 Instalación de sistemas operativos libres
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_01_introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción. Redes heterogéneas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_02_ubuntudesktop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ubuntu Desktop. Primeros pasos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_03_ubuntudesktop_red/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ubuntu Desktop. Configuración de red con Netplan y NetworkManager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_04_ubuntudesktop_varios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ubuntu Desktop. Organización de discos y carpetas en Linux
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_05_ubuntudesktop_ad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ubuntu Desktop. Integración con Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9">
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD08 Linux Server e integración básica con Windows
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD08 Linux Server e integración básica con Windows
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_01_instalacion_ubuntu_server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instalación de Ubuntu Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_02_configuracion_red_netplan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración de red estática con Netplan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_03_gestion_almacenamiento_linux/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gestión básica de almacenamiento en Linux
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_04_gestion_almacenamiento_lvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gestión de almacenamiento con LVM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_05_instalacion_configuracion_samba/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instalación y configuración básica de Samba
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_06_integracion_active_directory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Active Directory usando Winbind
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_07_cron-rsync/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administración avanzada - Automatización y copias de seguridad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_08_mantenimiento_logs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mantenimiento y control - Monitorización y logs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10">
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD09 Script de administración en Linux
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD09 Script de administración en Linux
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_01_introduccion_scripts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción y scripts básicos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_02_condicionales/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Condicionales y Verificación de Archivos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_03_bucles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bucles for y Procesamiento de Archivos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_04_backups_tar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso Profesional de tar para Backups
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_05_rsync_cron/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sincronización con rsync y Automatización con cron
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_06_logs_grep/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logs y Control con Redirección
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#el-servidor-en-redes-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El servidor en redes Windows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="El servidor en redes Windows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#el-directorio-nucleo-de-la-administracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El directorio: núcleo de la administración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dominio-y-controlador-de-dominio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dominio y controlador de dominio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arboles-y-bosques-de-dominios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Árboles y bosques de dominios
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relaciones-de-confianza-entre-dominios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relaciones de confianza entre dominios
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#la-funcion-del-dominio-en-una-red-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        La función del dominio en una red Windows
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#instalacion-y-configuracion-de-dominios-en-windows-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalación y configuración de dominios en Windows Server
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Instalación y configuración de dominios en Windows Server">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#instalacion-del-rol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalación del rol
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-del-dominio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración del dominio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#degradar-un-controlador-de-dominio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Degradar un controlador de dominio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creacion-de-otros-dominios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creación de otros dominios
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#instalacion-de-un-dominio-desde-powershell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalación de un dominio desde PowerShell
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anadir-un-cliente-al-dominio-en-windows-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Añadir un cliente al dominio en Windows Server
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Añadir un cliente al dominio en Windows Server">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requisitos-previos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos previos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proceso-de-union-al-dominio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proceso de unión al dominio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="administracion-centralizada-de-redes-con-active-directory">Administración centralizada de redes con Active Directory</h1>
+<p>En la actualidad, los ordenadores de cualquier organización suelen estar conectados en red, lo que permite compartir información, recursos y servicios de forma eficiente. Esta conectividad, sin embargo, requiere una administración adecuada para garantizar la seguridad, el rendimiento y la disponibilidad de los sistemas.</p>
+<p>Una forma de simplificar la gestión de la red es <strong>centralizar la administración</strong> mediante un servidor que almacene y controle toda la información sobre los elementos conectados: usuarios, equipos, impresoras, carpetas compartidas, etc.</p>
+<h2 id="el-servidor-en-redes-windows">El servidor en redes Windows</h2>
+<p>En entornos Windows, el servidor que gestiona la red ejecuta una versión del sistema operativo <strong>Windows Server</strong>, como:</p>
+<ul>
+<li>Windows Server 2012  </li>
+<li>Windows Server 2016  </li>
+<li>Windows Server 2019  </li>
+<li><strong>Windows Server 2022</strong>  </li>
+<li><strong>Windows Server 2025</strong> (versión más reciente, con mejoras en seguridad, virtualización y administración remota)</li>
+</ul>
+<p>Este servidor no solo proporciona servicios básicos, sino que también se encarga de la autenticación de usuarios, la aplicación de políticas de grupo, la gestión de recursos compartidos y la seguridad de la red.</p>
+<h3 id="el-directorio-nucleo-de-la-administracion">El directorio: núcleo de la administración</h3>
+<p>La información de la red se organiza en una estructura jerárquica llamada <strong>directorio</strong> o <strong>Active Directory</strong>, que almacena objetos como:</p>
+<ul>
+<li>Equipos y servidores  </li>
+<li>Usuarios y grupos  </li>
+<li>Impresoras  </li>
+<li>Carpetas compartidas  </li>
+<li>Políticas de seguridad  </li>
+</ul>
+<figure align="center">
+  <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../imgs/instalacion/logo-active-directory-720.png" data-desc-position="bottom"><img alt="Image title" src="../imgs/instalacion/logo-active-directory-720.png" width="50%"></a>
+<br>
+<figcaption>Active Directory (AD)</figcaption>
+</figure>
+<p>Microsoft denomina a su servicio de directorio <strong>Active Directory (AD)</strong>. Este sistema sigue el estándar <strong>LDAP (Lightweight Directory Access Protocol)</strong>, lo que permite interoperabilidad con otros sistemas que también lo utilizan, como OpenLDAP en GNU/Linux.</p>
+<h3 id="dominio-y-controlador-de-dominio">Dominio y controlador de dominio</h3>
+<p>La estructura lógica que representa la red administrada se llama <strong>dominio</strong>. Al instalar el rol de <strong>Servicios de dominio de Active Directory</strong> en un servidor Windows, este se convierte en un <strong>controlador de dominio (DC)</strong>.</p>
+<p>En una red con arquitectura cliente-servidor, debe existir al menos un <strong>controlador de dominio principal</strong>, aunque es habitual contar con <strong>controladores secundarios</strong> que replican la información del directorio para mejorar la disponibilidad y la tolerancia a fallos.</p>
+<p>Cada dominio tiene un <strong>nombre único</strong> que sigue la notación de DNS, como por ejemplo <code>iesconsueloaranda.es</code>. Por ello, es imprescindible contar con un <strong>servidor DNS</strong> que resuelva los nombres de los equipos y servicios del dominio. Si no se dispone de uno, Windows Server instala y configura automáticamente el servicio DNS al activar Active Directory.</p>
+<h3 id="arboles-y-bosques-de-dominios">Árboles y bosques de dominios</h3>
+<p>Un dominio puede tener <strong>subdominios</strong>, como <code>www.iesconsueloaranda.es</code> o <code>moodle.iesconsueloaranda.es</code>. El conjunto formado por el dominio principal y sus subdominios se denomina <strong>árbol de dominios</strong>, siendo el dominio principal el <strong>dominio raíz</strong>.</p>
+<p>En organizaciones más complejas, puede haber <strong>varios dominios independientes</strong>, como <code>departamentos.lan</code>, con subdominios como <code>departamento1.departamentos.lan</code>, <code>departamento2.departamentos.lan</code>, etc. El conjunto de varios árboles de dominios se llama <strong>bosque</strong>.</p>
+<figure align="center">
+  <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../imgs/instalacion/active_directory_tree.jpg" data-desc-position="bottom"><img alt="Image title" src="../imgs/instalacion/active_directory_tree.jpg" width="80%"></a>
+<br>
+<figcaption>Active Directory Tree and Forest</figcaption>
+</figure>
+<h3 id="relaciones-de-confianza-entre-dominios">Relaciones de confianza entre dominios</h3>
+<p>Active Directory permite establecer <strong>relaciones de confianza</strong> entre dominios, incluso si pertenecen a árboles o bosques distintos. Estas relaciones permiten que los usuarios de un dominio puedan acceder a recursos de otro, siempre que se haya configurado la confianza correspondiente.</p>
+<p>Cuando en una empresa hay más de un dominio en ocasiones un usuario de un dominio puede necesitar acceder a un recurso de otro dominio. Para evitar que el usuario tenga que tener una cuenta en cada dominio y autenticarse en cada uno cuando necesita un recurso de ese dominio se establecen relaciones de confianza entre los diferentes dominios. </p>
+<p>Tipos de relaciones de confianza:</p>
+<ul>
+<li><strong>Confianzas transitivas</strong>: automáticas entre dominios del mismo bosque.</li>
+<li><strong>Confianzas externas</strong>: entre dominios de bosques distintos.</li>
+<li><strong>Confianzas de bosque</strong>: permiten la autenticación entre bosques completos.</li>
+<li><strong>Confianzas de reino</strong>: para conectar con dominios no basados en Active Directory (por ejemplo, Kerberos en sistemas UNIX).</li>
+</ul>
+<figure align="center">
+  <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../imgs/instalacion/active-directory_confianza.png" data-desc-position="bottom"><img alt="Image title" src="../imgs/instalacion/active-directory_confianza.png" width="80%"></a>
+<br>
+<figcaption>Active Directory relaciones de confianza</figcaption>
+</figure>
+<p>Estas relaciones se basan en protocolos como <strong>Kerberos v5</strong>, aunque también se admite <strong>NTLM</strong> y autenticación mediante <strong>SSL/TLS</strong>.</p>
+<p>Puedes ampliar esta información en la <a href="https://es.wikipedia.org/wiki/Active_Directory#Intercambio_entre_dominios.5B2.5D">entrada de Active Directory en Wikipedia</a>.</p>
+<hr>
+<h2 id="la-funcion-del-dominio-en-una-red-windows">La función del dominio en una red Windows</h2>
+<p>En una red con arquitectura cliente-servidor, el <strong>dominio</strong> es la estructura lógica que permite centralizar la administración de todos los recursos conectados. Esta centralización se logra mediante el uso de un <strong>directorio</strong>, que actúa como una base de datos jerárquica y estructurada, gestionada por el servidor a través de <strong>Active Directory</strong>.</p>
+<p>El <strong>directorio</strong> tiene como función principal <strong>almacenar información sobre los objetos de la red</strong>. Estos objetos pueden clasificarse en tres grandes grupos:</p>
+<ul>
+<li><strong>Recursos</strong>: dispositivos físicos o virtuales que ofrecen servicios a los usuarios, como impresoras, carpetas compartidas, unidades de red, etc.</li>
+<li><strong>Servicios</strong>: funcionalidades que se ejecutan en la red, como correo electrónico, acceso remoto, autenticación, DNS, DHCP, entre otros.</li>
+<li><strong>Usuarios</strong>: cuentas individuales, grupos de usuarios, roles administrativos, etc., que representan a las personas o entidades que interactúan con la red.</li>
+</ul>
+<p>Cada objeto en el directorio posee una serie de <strong>atributos</strong> que lo identifican y definen. Por ejemplo:</p>
+<ul>
+<li>Un usuario puede tener atributos como nombre completo, nombre de inicio de sesión, dirección de correo electrónico, departamento, etc.</li>
+<li>Una impresora puede tener atributos como marca, modelo, ubicación física, tipo de conexión, etc.</li>
+</ul>
+<p>Además, los objetos pueden <strong>contener otros objetos</strong>. Por ejemplo, un grupo de seguridad puede incluir múltiples cuentas de usuario, y una unidad organizativa puede agrupar equipos, usuarios y políticas.</p>
+<p>La centralización de la información en el dominio ofrece<strong> múltiples beneficios</strong>:</p>
+<ul>
+<li><strong>Inicio de sesión único (Single Sign-On)</strong>: el usuario se autentica una sola vez y, si tiene los permisos adecuados, puede acceder a todos los recursos del dominio sin necesidad de volver a identificarse.</li>
+<li><strong>Aplicación de políticas comunes</strong>: mediante las <strong>Directivas de Grupo (GPO)</strong>, el administrador puede definir configuraciones estándar para todos los equipos o usuarios, como restricciones de acceso, configuración del escritorio, instalación de software, etc.</li>
+<li><strong>Despliegue de actualizaciones y software</strong>: es posible instalar programas o aplicar parches de seguridad de forma remota y simultánea en múltiples equipos.</li>
+<li><strong>Control de acceso y seguridad</strong>: se pueden establecer permisos precisos sobre cada recurso, definir contraseñas seguras, auditar accesos y aplicar medidas de protección a nivel de red.</li>
+<li><strong>Escalabilidad</strong>: el dominio puede crecer fácilmente, añadiendo nuevos usuarios, equipos o servicios sin perder el control ni la coherencia en la administración.</li>
+</ul>
+<hr>
+<h2 id="instalacion-y-configuracion-de-dominios-en-windows-server">Instalación y configuración de dominios en Windows Server</h2>
+<p>Para que un servidor Windows actúe como <strong>controlador de dominio (DC)</strong>, es necesario instalar el rol de <strong>Servicios de dominio de Active Directory (AD DS)</strong>. Este proceso consta de dos fases: la instalación del rol y su posterior configuración.</p>
+<h3 id="instalacion-del-rol">Instalación del rol</h3>
+<p>Se realiza desde el <strong>Administrador del servidor</strong>, en la sección: <strong>Administrar → Agregar roles y características → Servicios de dominio de Active Directory</strong></p>
+<figure align="center">
+  <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../imgs/instalacion/instalacion_rol_active_directory.png" data-desc-position="bottom"><img alt="Image title" src="../imgs/instalacion/instalacion_rol_active_directory.png" width="80%"></a>
+<br>
+<figcaption>Agregar rol de Active Directory</figcaption>
+</figure>
+<p>Una vez finalizada la instalación, se puede iniciar la configuración desde el asistente que aparece automáticamente o ejecutando el comando:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>dcpromo.exe
+</span></code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>En versiones modernas como <strong>Windows Server 2022</strong> y <strong>Windows Server 2025</strong>, el comando <code>dcpromo.exe</code> ha sido reemplazado por el asistente gráfico y por cmdlets de PowerShell como <code>Install-ADDSForest</code>.</p>
+</div>
+<h3 id="configuracion-del-dominio">Configuración del dominio</h3>
+<p>Durante la configuración, se deben tomar decisiones clave:</p>
+<ul>
+<li><strong>Agregar un nuevo bosque</strong>: Esta opción se selecciona cuando no existe ningún dominio previo en la red. Se crea el dominio raíz del bosque.</li>
+<li><strong>Nombre del dominio</strong>: Debe tener al menos dos niveles, por ejemplo <code>iesconsueloaranda.lan</code>, siguiendo la notación DNS.</li>
+<li><strong>Nivel funcional del bosque y del dominio</strong>: Se recomienda seleccionar el nivel más alto compatible con todos los controladores de dominio. En entornos nuevos, se puede establecer <strong>Windows Server 2025</strong> para aprovechar todas sus funcionalidades.</li>
+<li><strong>Instalación del servicio DNS</strong>: Si no hay un servidor DNS en la red, el asistente instalará y configurará uno automáticamente.</li>
+<li><strong>Ubicación de los componentes del dominio</strong>: Si el servidor tiene varios discos, se recomienda distribuir los archivos de base de datos, registros y SYSVOL para mejorar el rendimiento. En instalaciones básicas, se puede dejar todo en <code>C:\</code>.</li>
+</ul>
+<p>Una vez completada la configuración, el servidor se reinicia y pasa a ser un <strong>controlador de dominio</strong>.</p>
+<h3 id="degradar-un-controlador-de-dominio">Degradar un controlador de dominio</h3>
+<p>Si es necesario <strong>eliminar el rol de controlador de dominio</strong>, el proceso se realiza desde el mismo asistente o mediante PowerShell.</p>
+<ul>
+<li>Si el servidor es el <strong>último controlador del dominio</strong>, se debe marcar la opción correspondiente para <strong>eliminar el dominio completo</strong>, lo que implica la pérdida de toda la información del directorio.</li>
+<li>Si existen otros controladores, el servidor simplemente se degrada a <strong>servidor miembro</strong>, conservando su pertenencia al dominio pero sin funciones de control.</li>
+</ul>
+<p>En versiones modernas, el proceso se realiza con el cmdlet:</p>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">Uninstall-ADDSDomainController</span>
+</span></code></pre></div>
+<h3 id="creacion-de-otros-dominios">Creación de otros dominios</h3>
+<p>Aunque lo habitual es trabajar con un único dominio, en algunas organizaciones se requiere crear <strong>subdominios</strong> o <strong>dominios adicionales</strong> dentro del mismo bosque. Esto puede deberse a razones geográficas, organizativas o de seguridad.</p>
+<p>Para crear un nuevo dominio en un bosque existente:</p>
+<ul>
+<li>Se selecciona la opción <strong>Agregar un nuevo dominio en un bosque existente</strong>.</li>
+<li>Se indica el nombre del <strong>dominio raíz</strong> del bosque.</li>
+<li>Se configura el nuevo dominio como <strong>hijo</strong> del dominio principal o como <strong>dominio paralelo</strong>.</li>
+</ul>
+<p>Cada dominio debe tener al menos <strong>un controlador de dominio propio</strong>, que puede estar ubicado en la sede correspondiente.</p>
+<p>Aquí tienes la explicación completa y detallada del proceso de instalación de un dominio en Windows Server desde PowerShell, utilizando el ejemplo del dominio <strong>ACME.LAN</strong>. He corregido y ampliado el script para que sea más claro y funcional, además de explicar cada paso con precisión.</p>
+<hr>
+<h2 id="instalacion-de-un-dominio-desde-powershell">Instalación de un dominio desde PowerShell</h2>
+<p>En entornos donde se busca automatizar la configuración del servidor o trabajar sin entorno gráfico (Server Core), PowerShell permite instalar y configurar un dominio de forma rápida y eficiente.</p>
+<p><strong>Ejemplo</strong>: creación del dominio <strong>ACME.LAN</strong>"</p>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Definimos las variables</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$dominioFQDN</span> <span class="p">=</span> <span class="s2">"ACME.LAN"</span>                      <span class="c"># Nombre completo del dominio (FQDN)</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">$dominioNETBIOS</span> <span class="p">=</span> <span class="s2">"ACME"</span>                       <span class="c"># Nombre NetBIOS del dominio</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nv">$adminPass</span> <span class="p">=</span> <span class="s2">"abc@1234."</span>                       <span class="c"># Contraseña para el modo seguro de recuperación</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c"># Instalamos los roles necesarios: Active Directory y DNS</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nb">Install-WindowsFeature</span> <span class="n">AD-Domain-Services</span><span class="p">,</span> <span class="n">DNS</span> <span class="n">-IncludeAllSubFeature</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c"># Importamos el módulo de despliegue de Active Directory</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nb">Import-Module</span> <span class="n">ADDSDeployment</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c"># Ejecutamos la instalación del bosque y del dominio</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nb">Install-ADDSForest</span> <span class="p">`</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="n">-DomainName</span> <span class="nv">$dominioFQDN</span> <span class="p">`</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    <span class="n">-DomainNetBiosName</span> <span class="nv">$dominioNETBIOS</span> <span class="p">`</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="n">-SafeModeAdministratorPassword</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="n">-String</span> <span class="nv">$adminPass</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span> <span class="p">`</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>    <span class="n">-DomainMode</span> <span class="n">WinThreshold</span> <span class="p">`</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    <span class="n">-ForestMode</span> <span class="n">WinThreshold</span> <span class="p">`</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>    <span class="n">-InstallDNS</span> <span class="p">`</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>    <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+</span></code></pre></div>
+<p><strong>Explicación de cada parámetro</strong></p>
+<ul>
+<li><code>-DomainName</code>: nombre completo del dominio (por ejemplo, <code>empresa.local</code> o <code>acme.lan</code>)</li>
+<li><code>-DomainNetBiosName</code>: nombre corto del dominio, usado en redes antiguas y para compatibilidad</li>
+<li><code>-SafeModeAdministratorPassword</code>: contraseña para el modo de recuperación de servicios de directorio (DSRM)</li>
+<li><code>-DomainMode</code> y <code>-ForestMode</code>: nivel funcional del dominio y del bosque. <code>WinThreshold</code> es el identificador para Windows Server 2025</li>
+<li><code>-InstallDNS</code>: instala y configura el servidor DNS si no existe uno en la red</li>
+<li><code>-Confirm:$false</code>: evita que se solicite confirmación manual durante la ejecución</li>
+</ul>
+<div class="admonition nota">
+<p class="admonition-title">Nota</p>
+<p>El servidor se reiniciará automáticamente al finalizar la instalación. Al volver a arrancar, ya será un <strong>controlador de dominio (DC)</strong>.</p>
+</div>
+<hr>
+<h2 id="anadir-un-cliente-al-dominio-en-windows-server">Añadir un cliente al dominio en Windows Server</h2>
+<p>Para que un equipo cliente pueda formar parte de un dominio gestionado por Active Directory, es necesario cumplir una serie de requisitos previos y seguir un proceso de unión al dominio. Este procedimiento permite que el cliente sea administrado centralizadamente, acceda a recursos compartidos y se autentique mediante las políticas del dominio.</p>
+<h3 id="requisitos-previos">Requisitos previos</h3>
+<p>Antes de iniciar el proceso de unión, debemos asegurarnos de que el cliente y el servidor están correctamente conectados y configurados:</p>
+<ol>
+<li>
+<p>Conectividad de red</p>
+<ul>
+<li><strong>Direcciones IP compatibles</strong>: Ambos equipos deben tener direcciones IP dentro de la misma subred o en redes que puedan comunicarse entre sí mediante enrutamiento.</li>
+<li><strong>Conexión física</strong>: Los cables de red deben estar conectados al mismo switch o a switches interconectados. En entornos virtuales, deben estar en la misma red virtual o puente.</li>
+</ul>
+</li>
+<li>
+<p>Configuración del DNS</p>
+<ul>
+<li>El <strong>servidor DNS del cliente</strong> debe ser la <strong>IP del controlador de dominio</strong>, ya que es el único capaz de resolver correctamente el nombre del dominio.</li>
+<li>Esta configuración se realiza desde las propiedades de la tarjeta de red del cliente, en el apartado de IPv4.</li>
+</ul>
+</li>
+<li>
+<p>Verificación de conectividad</p>
+<p>Desde la terminal del cliente, se puede comprobar la conexión con el servidor mediante:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ping nombre_del_servidor
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>nslookup nombre_del_dominio
+</span></code></pre></div>
+<p>Si ambos comandos responden correctamente, el cliente está listo para unirse al dominio.</p>
+</li>
+</ol>
+<h3 id="proceso-de-union-al-dominio">Proceso de unión al dominio</h3>
+<p>Una vez verificada la conectividad, seguimos estos pasos desde el equipo cliente (Windows 10, 11 o equivalente):</p>
+<ol>
+<li>
+<p><strong>Abrir Configuración del sistema</strong><br>
+   Ir a:<br>
+<code>Panel de control → Sistema → Cambiar configuración (nombre del equipo)</code></p>
+</li>
+<li>
+<p><strong>Cambiar nombre del equipo y dominio</strong><br>
+   En la ventana de propiedades del sistema:  </p>
+</li>
+<li>Hacer clic en “Cambiar…”  </li>
+<li>Introducir el <strong>nombre del dominio</strong> (por ejemplo, <code>iesconsueloaranda.lan</code>)  </li>
+<li>
+<p>Confirmar</p>
+</li>
+<li>
+<p><strong>Autenticación</strong><br>
+   Se solicitarán credenciales de un usuario con permisos para unir equipos al dominio (normalmente un administrador del dominio).</p>
+</li>
+<li>
+<p><strong>Reinicio del equipo</strong><br>
+   Tras la unión, el sistema pedirá reiniciar el equipo para aplicar los cambios.</p>
+</li>
+<li>
+<p><strong>Inicio de sesión en el dominio</strong><br>
+   Al reiniciar, en la pantalla de inicio de sesión aparecerá la opción de iniciar sesión con una cuenta del dominio. Se debe usar el formato:<br>
+<code>DOMINIO\nombre_usuario</code></p>
+</li>
+</ol>
+<p>Veamos el proceso en el siguiente video:</p>
+<div style="position: relative; width: 70%; padding-bottom: 39.375%; margin: 0 auto;">
+  <iframe src="https://www.youtube-nocookie.com/embed/LxbwB-8b-wg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="YouTube video player">
+  </iframe>
+</div>
+
+<h3 id="verificacion">Verificación</h3>
+<p>Una vez unido al dominio, se puede comprobar desde:</p>
+<ul>
+<li><code>Sistema → Información del equipo</code>: debe aparecer el nombre del dominio.</li>
+<li><code>Usuarios y grupos locales</code>: los usuarios del dominio ya pueden iniciar sesión.</li>
+<li><code>Active Directory</code>: el nuevo equipo aparecerá como objeto en la unidad organizativa correspondiente.</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie">
+        
+          
+          <a href="../02_5_administrar_discos/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Administrar discos">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Administrar discos
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../03_01_objetos_dominios/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Objetos del Dominio en Active Directory">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                Objetos del Dominio en Active Directory
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Sergio Rey Martínez - SMX - SOX - 2025
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.indexes", "navigation.footer", "navigation.instant", "navigation.instant.progress", "toc.follow", "navigation.top", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

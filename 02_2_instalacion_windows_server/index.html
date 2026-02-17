@@ -1,0 +1,3501 @@
+<!DOCTYPE html><html lang="es" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Instalación de sistemas operativos de servidor privativos - Windows Server">
+      
+      
+        <meta name="author" content="Sergio Rey Martínez">
+      
+      
+        <link rel="canonical" href="https://sergio-apuntes.github.io/sox/02_2_instalacion_windows_server/">
+      
+      
+        <link rel="prev" href="../02_1_instalacion_SO_introduccion/">
+      
+      
+        <link rel="next" href="../02_3_config_basica/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Instalación de Windows Server - Apuntes Sistemas Operativos en Red</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#eleccion-del-sistema-operativo" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href=".." title="Apuntes Sistemas Operativos en Red" class="md-header__button md-logo" aria-label="Apuntes Sistemas Operativos en Red" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Apuntes Sistemas Operativos en Red
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Instalación de Windows Server
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Cambiar a modo oscuro" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Cambiar a modo claro" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Apuntes Sistemas Operativos en Red" class="md-nav__button md-logo" aria-label="Apuntes Sistemas Operativos en Red" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    Apuntes Sistemas Operativos en Red
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1">
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href=".." class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Presentación
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Presentación
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD01 Introducción a los Sistemas Operativos de Servidor
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD01 Introducción a los Sistemas Operativos de Servidor
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_1_introducci%C3%B3n/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_2_arquitectura_cliente_servidor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura cliente/servidor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_3_funciones_SO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Funciones de Sistemas Operativos en Red
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_4_sistemas_operativos_servidor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principales sistemas operativos servidor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_5_recordatorio_red/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Repaso conceptos de red
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD02 Instalación de sistemas operativos de servidor privativos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD02 Instalación de sistemas operativos de servidor privativos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_1_instalacion_SO_introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instalación de Windows Server
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instalación de Windows Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#eleccion-del-sistema-operativo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Elección del sistema operativo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Elección del sistema operativo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requisitos-del-hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos del hardware
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planificacion-de-la-instalacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planificación de la instalación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eleccion-de-la-version-y-edicion-del-sistema-operativo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Elección de la versión y edición del sistema operativo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pasos-previos-a-la-instalacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pasos previos a la instalación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consideraciones-adicionales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consideraciones adicionales
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pasos-para-la-instalacion-grafica-de-windows-server-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pasos para la instalación gráfica de Windows Server 2025
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#finalizar-la-instalacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finalizar la instalación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-basica-inicial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración básica inicial
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración básica inicial">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#informacion-del-equipo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Información del equipo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-de-red" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración de red
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actualizacion-del-servidor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actualización del servidor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#roles-y-caracteristicas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Roles y características
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versión de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-inicial-del-servidor-desde-la-terminal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración inicial del servidor desde la terminal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración inicial del servidor desde la terminal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comandos-utiles-en-powershell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comandos útiles en PowerShell
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_3_config_basica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración básica
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_4_documentar_instalacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_5_administrar_discos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administrar discos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_6_dominio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD03 Administración de usuarios y grupos en Windows Server
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD03 Administración de usuarios y grupos en Windows Server
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_01_objetos_dominios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Objetos del Dominio en Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_02_usuarios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cuentas de Usuario en un Dominio Windows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_03_grupos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grupos en Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_04_equipos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Equipos en Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_05_unidades_organizativas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidades Organizativas en Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_06_herramientas_administracion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Herramientas de administración en Windows Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_07_perfiles_usuarios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Perfiles de usuario en Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD04 Gestión de recursos compartidos en Windows Server
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD04 Gestión de recursos compartidos en Windows Server
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_01_permisos_derechos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Permisos y derechos en sistemas Windows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_02_servidor_archivos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    El servidor de archivos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_03_compartir_impresoras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compartir impresoras en red
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6">
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD05 Directivas de grupo en Windows Server
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD05 Directivas de grupo en Windows Server
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_01_introduccion_directivas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción a las directivas de grupo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_02_creacion_directivas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creación y ámbito de aplicación de GPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_03_herencia_directivas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Herencia de directivas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_04_configuacion_directivas_comunes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración de directivas comunes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_05_verificacion_problemas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Verificación y resolución de problemas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7">
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD06 Configuración avanzada de Windows Server
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD06 Configuración avanzada de Windows Server
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_01_configuraciones_adicionales/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración avanzada de Windows Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_02_carpetas_compartidas_ocultas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Recursos Compartidos Ocultos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_03_cuotas_discos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cuotas de discos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_04_servidor_dhcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Servidor DHCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_05_escritorio_remoto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Escritorio Remoto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_06_redes_virtuales_VPN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Red VPN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_07_rsat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Herramientas de Administración Remota del Servidor (RSAT)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_08_backups/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Copias de seguridad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_09_controlador_secundario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Controlador de Dominio Secundario
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_10_supervision_monitorizacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización Windows Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_11_servicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Servicios en Windows Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_12_actualizacion_despliegue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WSUS &amp; WDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8">
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD07 Instalación de sistemas operativos libres
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD07 Instalación de sistemas operativos libres
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_01_introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción. Redes heterogéneas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_02_ubuntudesktop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ubuntu Desktop. Primeros pasos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_03_ubuntudesktop_red/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ubuntu Desktop. Configuración de red con Netplan y NetworkManager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_04_ubuntudesktop_varios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ubuntu Desktop. Organización de discos y carpetas en Linux
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_05_ubuntudesktop_ad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ubuntu Desktop. Integración con Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9">
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD08 Linux Server e integración básica con Windows
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD08 Linux Server e integración básica con Windows
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_01_instalacion_ubuntu_server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instalación de Ubuntu Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_02_configuracion_red_netplan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración de red estática con Netplan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_03_gestion_almacenamiento_linux/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gestión básica de almacenamiento en Linux
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_04_gestion_almacenamiento_lvm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gestión de almacenamiento con LVM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_05_instalacion_configuracion_samba/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instalación y configuración básica de Samba
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_06_integracion_active_directory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integración con Active Directory usando Winbind
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_07_cron-rsync/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administración avanzada - Automatización y copias de seguridad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_08_mantenimiento_logs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mantenimiento y control - Monitorización y logs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10">
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD09 Script de administración en Linux
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD09 Script de administración en Linux
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_01_introduccion_scripts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción y scripts básicos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_02_condicionales/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Condicionales y Verificación de Archivos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_03_bucles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bucles for y Procesamiento de Archivos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_04_backups_tar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso Profesional de tar para Backups
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_05_rsync_cron/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sincronización con rsync y Automatización con cron
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_06_logs_grep/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logs y Control con Redirección
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#eleccion-del-sistema-operativo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Elección del sistema operativo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Elección del sistema operativo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requisitos-del-hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos del hardware
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planificacion-de-la-instalacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planificación de la instalación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eleccion-de-la-version-y-edicion-del-sistema-operativo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Elección de la versión y edición del sistema operativo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pasos-previos-a-la-instalacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pasos previos a la instalación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consideraciones-adicionales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consideraciones adicionales
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pasos-para-la-instalacion-grafica-de-windows-server-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pasos para la instalación gráfica de Windows Server 2025
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#finalizar-la-instalacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finalizar la instalación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-basica-inicial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración básica inicial
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración básica inicial">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#informacion-del-equipo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Información del equipo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-de-red" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración de red
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actualizacion-del-servidor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actualización del servidor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#roles-y-caracteristicas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Roles y características
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versión de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-inicial-del-servidor-desde-la-terminal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración inicial del servidor desde la terminal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración inicial del servidor desde la terminal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comandos-utiles-en-powershell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comandos útiles en PowerShell
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>Instalación de Windows Server</h1>
+
+<p>El <strong>sistema operativo (SO)</strong> es el componente esencial que permite que el hardware de un equipo funcione correctamente y que el usuario pueda interactuar con él. La elección del sistema operativo influye directamente en:</p>
+<ul>
+<li>La <strong>compatibilidad con el software</strong> disponible  </li>
+<li>El <strong>rendimiento y aprovechamiento del hardware</strong>  </li>
+<li>La <strong>experiencia de usuario</strong> y las funcionalidades accesibles  </li>
+<li>La <strong>seguridad</strong> y la <strong>estabilidad</strong> del sistema</li>
+</ul>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<p>Ejemplo: Un sistema operativo ligero como Linux puede aprovechar mejor recursos limitados, mientras que Windows ofrece mayor compatibilidad con software comercial.</p>
+</div>
+<h2 id="eleccion-del-sistema-operativo">Elección del sistema operativo</h2>
+<p>Cambiar de sistema operativo no es una tarea trivial. Implica:</p>
+<ul>
+<li>Instalar el nuevo sistema  </li>
+<li>Configurar el entorno y los servicios  </li>
+<li>Instalar y adaptar el software necesario  </li>
+<li>Migrar datos y perfiles de usuario  </li>
+<li>Verificar compatibilidad con periféricos y redes</li>
+</ul>
+<p>Por ello, es crucial <strong>elegir el sistema operativo que mejor se adapte a las necesidades del usuario o del entorno</strong>, ya sea en un equipo personal, empresarial o servidor.</p>
+<h3 id="requisitos-del-hardware">Requisitos del hardware</h3>
+<p>Antes de instalar un sistema operativo, hay que evaluar cuidadosamente el equipo:</p>
+<ul>
+<li>¿Cumple los <strong>requisitos mínimos</strong> del sistema?  </li>
+<li>¿Tiene recursos suficientes para un funcionamiento <strong>fluido y estable</strong>?  </li>
+<li>¿Es compatible con los <strong>controladores (drivers)</strong> necesarios?</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Instalar un sistema en un equipo con recursos limitados puede provocar lentitud, errores o incluso fallos de instalación.</p>
+</div>
+<h3 id="planificacion-de-la-instalacion">Planificación de la instalación</h3>
+<p>Una vez elegido el sistema operativo, especialmente en entornos de servidor, es fundamental <strong>planificar la instalación</strong>:</p>
+<ul>
+<li>Definir el <strong>tipo de instalación</strong> (limpia, dual boot, virtualizada)  </li>
+<li>Preparar el <strong>disco duro</strong> (particiones, formato de archivos)  </li>
+<li>Establecer políticas de <strong>seguridad y usuarios</strong>  </li>
+<li>Documentar cada paso para facilitar el mantenimiento posterior  </li>
+<li>Realizar pruebas de funcionamiento y rendimiento</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Una instalación bien planificada evita problemas futuros y garantiza una base sólida para el sistema.</p>
+</div>
+<p>Detallamos a continuación los aspectos a tener en cuenta en la planificación. </p>
+<h3 id="eleccion-de-la-version-y-edicion-del-sistema-operativo">Elección de la versión y edición del sistema operativo</h3>
+<p>El primer paso en cualquier instalación es decidir qué sistema operativo vamos a utilizar, teniendo en cuenta las necesidades reales de la empresa. Si optamos por un entorno Windows, es fundamental conocer las versiones disponibles y asegurarnos de que el hardware cumple sobradamente con los requisitos técnicos.</p>
+<p>Las versiones más comunes de Windows Server son:</p>
+<ul>
+<li>Windows Server 2019  </li>
+<li>Windows Server 2022  </li>
+<li>Windows Server 2025  </li>
+</ul>
+<p>Lo habitual es instalar la versión más reciente disponible, siempre que sea compatible con el hardware y el software que vamos a utilizar. Sin embargo, también es importante elegir la <strong>edición adecuada</strong> dentro de cada versión (Standard, Datacenter, Essentials, etc.), ya que cada una ofrece características distintas y precios diferentes.</p>
+<figure align="center">
+  <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../imgs/instalacion/Pantalla-de-instalacion-de-Windows-Server-2025-1.png" data-desc-position="bottom"><img alt="Image title" src="../imgs/instalacion/Pantalla-de-instalacion-de-Windows-Server-2025-1.png" width="70%"></a>
+<br>
+<figcaption>Windows Server 2025 selección de versión</figcaption>
+</figure>
+<p>No tiene sentido pagar por una edición como Datacenter si no vamos a aprovechar sus ventajas, como la virtualización ilimitada o el almacenamiento definido por software. La elección debe responder tanto a las necesidades actuales como a las previsiones de crecimiento a medio plazo.</p>
+<h3 id="pasos-previos-a-la-instalacion">Pasos previos a la instalación</h3>
+<p>Instalar un sistema operativo en un servidor no es una tarea que se deba hacer a la ligera. El servidor será el núcleo de la red, por lo que hay que tener muy claro qué uso se le va a dar y qué cambios podrían surgir en el futuro. Tanto si se trata de una instalación nueva como de una actualización, es imprescindible planificar bien el proceso.</p>
+<p>Planificar significa:</p>
+<ul>
+<li>Definir las tareas a realizar  </li>
+<li>Estimar el tiempo necesario  </li>
+<li>Asignar los recursos humanos y técnicos adecuados  </li>
+</ul>
+<p>Los pasos previos más habituales incluyen:</p>
+<ol>
+<li>
+<p><strong>Copia de seguridad</strong>: Si el equipo ya contiene datos importantes, hay que hacer una copia antes de comenzar. En nuestro caso, al tratarse de una instalación nueva, este paso no será necesario.</p>
+</li>
+<li>
+<p><strong>Verificación del hardware</strong>: Comprobar que el equipo cumple con los requisitos del sistema operativo. Esto incluye procesador, memoria RAM, espacio en disco y compatibilidad con periféricos.</p>
+</li>
+<li>
+<p><strong>Diseño de particiones</strong>: Decidir cómo se dividirá el disco. Esto implica elegir entre MBR o GPT, definir el sistema de archivos (NTFS, ReFS, etc.) y decidir si se usarán discos básicos o dinámicos. Herramientas como <em>GParted</em> pueden ayudar en esta tarea, aunque el propio asistente de instalación también permite crear particiones.</p>
+</li>
+<li>
+<p><strong>Descarga del software y drivers</strong>: Tener preparada la imagen ISO del sistema operativo y los controladores necesarios, especialmente si se usan dispositivos RAID o SCSI que no están incluidos por defecto.</p>
+</li>
+<li>
+<p><strong>Preparación del medio de instalación</strong>: Crear un USB, DVD o configurar una instalación por red (PXE) según el entorno.</p>
+</li>
+<li>
+<p><strong>Configuración de la BIOS/UEFI</strong>: Ajustar la secuencia de arranque para que el equipo inicie desde el medio de instalación.</p>
+</li>
+<li>
+<p><strong>Instalación del sistema operativo</strong>: El proceso varía según el sistema elegido, pero suele ser guiado por un asistente.</p>
+</li>
+<li>
+<p><strong>Configuración post-instalación</strong>: Ajustar el sistema a las necesidades del usuario o de la empresa, incluyendo la red, usuarios, servicios y políticas de seguridad.</p>
+</li>
+<li>
+<p><strong>Verificación del funcionamiento</strong>: Comprobar que todo funciona correctamente y que el sistema responde como se espera.</p>
+</li>
+<li>
+<p><strong>Documentación</strong>: Registrar todo el proceso, incluyendo configuraciones realizadas, incidencias detectadas y soluciones aplicadas. Esta documentación será clave para futuras intervenciones o auditorías.</p>
+</li>
+</ol>
+<h3 id="consideraciones-adicionales">Consideraciones adicionales</h3>
+<p>En instalaciones de servidor, es habitual plantearse el uso de <strong>RAID</strong> para mejorar el rendimiento o la seguridad de los datos. También hay que decidir si se utilizarán <strong>discos básicos o dinámicos</strong>, según las necesidades de flexibilidad y gestión.</p>
+<p>Si se utilizan controladoras RAID o dispositivos SCSI que no están en la lista de compatibilidad del sistema, será necesario <strong>localizar y preparar los drivers</strong> antes de iniciar la instalación, ya que el asistente puede solicitarlos en el proceso.</p>
+<p>Aquí tienes el contenido revisado, mejorado y adaptado a un estilo técnico más fluido, sin excesiva estructura artificial, y formateado en <strong>Markdown</strong> para que puedas integrarlo fácilmente en tus apuntes o documentación:</p>
+<hr>
+<p>¡Vamos allá, Sergio! Aquí tienes una guía clara y completa para realizar la <strong>instalación gráfica de Windows Server 2025</strong>, ideal si estás montando un servidor desde cero o en entorno virtual.</p>
+<hr>
+<h2 id="pasos-para-la-instalacion-grafica-de-windows-server-2025">Pasos para la instalación gráfica de Windows Server 2025</h2>
+<ol>
+<li>
+<p><strong>Descargar la imagen ISO oficial</strong></p>
+<ul>
+<li>Visita el <a href="https://www.microsoft.com/es-es/evalcenter/download-windows-server-2025">Centro de evaluación de Microsoft</a> y descarga la ISO de Windows Server 2025.</li>
+<li>Puedes elegir entre versiones como <strong>Standard</strong>, <strong>Datacenter</strong> o <strong>Datacenter Azure Edition</strong>, según tus necesidades.</li>
+</ul>
+</li>
+<li>
+<p><strong>Crear una máquina virtual (si aplica)</strong></p>
+<ul>
+<li>Usa VirtualBox, VMware o Hyper-V.</li>
+<li>Asigna al menos:<ul>
+<li>2 núcleos de CPU</li>
+<li>4 GB de RAM (mínimo recomendado)</li>
+<li>60 GB de disco duro</li>
+</ul>
+</li>
+<li>Monta la ISO como unidad de arranque.</li>
+</ul>
+</li>
+<li>
+<p><strong>Iniciar la instalación</strong></p>
+<ul>
+<li>Al arrancar desde la ISO, verás el asistente gráfico.</li>
+<li>Selecciona:<ul>
+<li>Idioma</li>
+<li>Formato de hora y moneda</li>
+<li>Teclado</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Instalar ahora</strong></p>
+<ul>
+<li>Haz clic en “Instalar ahora”.</li>
+<li>Elige la edición que deseas instalar (con o sin interfaz gráfica).</li>
+<li>Acepta los términos de licencia.</li>
+</ul>
+</li>
+<li>
+<p><strong>Tipo de instalación</strong></p>
+<ul>
+<li>Selecciona “Instalación personalizada” para una instalación limpia.</li>
+<li>Elige el disco donde se instalará el sistema. Puedes crear particiones si lo deseas.</li>
+</ul>
+</li>
+<li>
+<p><strong>Proceso de instalación</strong></p>
+<ul>
+<li>El sistema copiará archivos, instalará características y reiniciará automáticamente.</li>
+<li>Este proceso puede tardar entre 10 y 30 minutos según el hardware.</li>
+</ul>
+</li>
+<li>
+<p><strong>Configurar contraseña de administrador</strong></p>
+<ul>
+<li>Al finalizar, se te pedirá establecer la contraseña del usuario <strong>Administrador</strong>.</li>
+</ul>
+</li>
+<li>
+<p><strong>Primer inicio de sesión</strong></p>
+<ul>
+<li>Inicia sesión con la contraseña que acabas de crear.</li>
+<li>Se abrirá el <strong>Administrador del servidor</strong>, desde donde podrás:<ul>
+<li>Cambiar el nombre del equipo</li>
+<li>Unirte a un dominio</li>
+<li>Configurar la red</li>
+<li>Instalar roles y características</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Procesos detallados paso a paso en internet</p>
+<p>Puedes ver capturas de pantalla detalladas en esta <a href="https://somebooks.es/instalar-windows-server-2025-con-interfaz-grafica-paso-a-paso/">guía paso a paso de SomeBooks.es</a>.</p>
+<p>y aquí tienes enlaces con imágenes reales del proceso de otras guías:</p>
+<ul>
+<li><a href="https://somebooks.es/instalar-windows-server-2025-con-interfaz-grafica-paso-a-paso/">Instalación paso a paso con capturas</a></li>
+<li><a href="https://rdr-it.com/es/instalacion-de-windows-server-2025/">Guía visual desde RDR-IT</a></li>
+<li><a href="https://www.youtube.com/watch?v=0OI8i9K0ZbE">Tutorial en vídeo (YouTube)</a></li>
+</ul>
+</div>
+<hr>
+<h2 id="finalizar-la-instalacion">Finalizar la instalación</h2>
+<p>Una vez completada la instalación del sistema operativo, es recomendable realizar una serie de comprobaciones antes de comenzar con la configuración:</p>
+<ul>
+<li><strong>Estado de los dispositivos</strong>: Desde el Administrador de dispositivos, verificamos que todo el hardware esté correctamente detectado y que no haya problemas con los controladores.</li>
+<li><strong>Configuración de red</strong>: Es fundamental que la red esté bien configurada. Podemos comprobar la conectividad con comandos como <code>ping</code> o <code>tracert</code>, y también desde el Centro de redes y recursos compartidos.</li>
+<li><strong>Registros de sucesos</strong>: El Visor de eventos nos permite detectar errores o advertencias que podrían indicar fallos en el sistema.</li>
+<li><strong>Particiones</strong>: Conviene asegurarse de que el sistema reconoce correctamente todos los discos y particiones.</li>
+</ul>
+<p>Una vez revisado todo, se recomienda reiniciar el equipo para confirmar que el arranque se realiza sin problemas.</p>
+<h2 id="configuracion-basica-inicial">Configuración básica inicial</h2>
+<p>Desde el panel <strong>Administrador del servidor → Servidor local</strong>, realizamos las siguientes tareas:</p>
+<h3 id="informacion-del-equipo">Información del equipo</h3>
+<ul>
+<li><strong>Nombre del equipo</strong>: Debe ser único dentro del dominio, no superar los 15 caracteres y utilizar únicamente letras, números o guiones.</li>
+<li><strong>Dominio o grupo de trabajo</strong>: Si el servidor se integrará en un dominio existente, indicamos su nombre. Si será el controlador de dominio o no se usará dominio, lo dejamos como grupo de trabajo (más adelante se podrá crear el dominio).</li>
+<li><strong>Firewall de Windows</strong>: Debe estar activado y correctamente configurado.</li>
+<li><strong>Escritorio remoto</strong>: Podemos habilitarlo si los usuarios van a conectarse al servidor mediante Terminal Server.</li>
+<li><strong>Zona horaria</strong>: Es recomendable verificarla y ajustarla si es necesario.</li>
+</ul>
+<h3 id="configuracion-de-red">Configuración de red</h3>
+<p>En servidores, lo habitual es utilizar <strong>direcciones IP estáticas</strong>, ya que suelen actuar como servidores DHCP para los clientes. Si no se ha hecho durante la instalación, ahora es el momento de asignar las IPs correspondientes a cada tarjeta de red.</p>
+<figure align="center">
+  <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../imgs/instalacion/ConexionesDeRed.png" data-desc-position="bottom"><img alt="Image title" src="../imgs/instalacion/ConexionesDeRed.png" width="80%"></a>
+<br>
+<figcaption>Panel de control. Conexiones de Red</figcaption>
+</figure>
+<p><strong>Como caso particular</strong>, si el servidor va a actuar como <strong>servidor de comunicaciones</strong> y puerta de enlace hacia Internet, debe contar con al menos <strong>dos tarjetas de red</strong>:</p>
+<ul>
+<li>
+<p><strong>Tarjeta externa</strong>: Conectada al router o dispositivo que proporciona acceso a Internet. Se configura con una IP estática en la misma subred que el gateway, y se especifica la puerta de enlace correspondiente. En entornos virtuales (como VirtualBox), la IP dependerá del tipo de adaptador (puente o NAT).</p>
+</li>
+<li>
+<p><strong>Tarjeta interna</strong>: Conectada al switch que enlaza con los clientes. No se configura gateway en esta tarjeta, ya que la salida será la tarjeta externa. Se asigna una IP estática en la misma subred que los clientes (por ejemplo, 192.168.224.1).</p>
+</li>
+</ul>
+<p>Para que los clientes puedan acceder a Internet a través del servidor, es necesario <strong>encaminar el tráfico entre ambas tarjetas</strong>. Esto se logra instalando el <strong>Servicio de enrutamiento</strong>, disponible dentro de “Acceso y directivas de red”.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Si no se va a utilizar IPv6 en la red, es recomendable desactivarlo para evitar conflictos o configuraciones innecesarias.</p>
+</div>
+<h3 id="actualizacion-del-servidor">Actualización del servidor</h3>
+<p>Mantener el servidor actualizado es esencial para garantizar la seguridad y estabilidad del sistema. A diferencia de los equipos cliente, un servidor expuesto a vulnerabilidades puede comprometer toda la red.</p>
+<p>Sin embargo, hay que tener precaución:</p>
+<ul>
+<li>Algunas actualizaciones requieren reiniciar el sistema, lo que puede afectar la disponibilidad del servicio.</li>
+<li>En casos poco frecuentes, una actualización puede generar incompatibilidades con hardware o software instalado.</li>
+</ul>
+<p>Por ello, muchos administradores prefieren que las actualizaciones se <strong>descarguen automáticamente pero no se instalen</strong>, permitiendo aplicar los cambios manualmente en momentos de baja actividad. Esta es la configuración por defecto en Windows Server.</p>
+<div class="admonition warning">
+<p class="admonition-title">Cuidado</p>
+<p>En nuestro caso, desactivaremos las actualizaciones automáticas para evitar saturar la red del instituto.</p>
+</div>
+<h3 id="roles-y-caracteristicas">Roles y características</h3>
+<p>Desde el Administrador del servidor (en modo gráfico) o mediante PowerShell, podemos <strong>agregar o quitar roles y características</strong>:</p>
+<figure align="center">
+  <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../imgs/instalacion/WindowsServerRolesCaracgaristicas.png" data-desc-position="bottom"><img alt="Image title" src="../imgs/instalacion/WindowsServerRolesCaracgaristicas.png" width="70%"></a>
+<br>
+<figcaption>Agregar roles y características</figcaption>
+</figure>
+<ul>
+<li><strong>Roles</strong>: Servicios principales del servidor (DNS, DHCP, Active Directory, etc.)</li>
+<li><strong>Características</strong>: Funcionalidades adicionales como copias de seguridad, cifrado, balanceo de carga, etc.</li>
+</ul>
+<h3 id="version-de-evaluacion">Versión de evaluación</h3>
+<p>Windows nos ofrece un tiempo de cortesía antes de activar la licencia para poder probar este sistema.</p>
+<p>Si hemos instalado una versión de evaluación de Windows Server, podemos consultar el tiempo restante con:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>slmgr.vbs -dli
+</span></code></pre></div>
+<figure align="center">
+  <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../imgs/instalacion/WindowsServerPeriodoPrueba.png" data-desc-position="bottom"><img alt="Image title" src="../imgs/instalacion/WindowsServerPeriodoPrueba.png" width="70%"></a>
+<br>
+<figcaption>Agregar roles y características</figcaption>
+</figure>
+<p>Y ampliar el periodo de prueba con:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>slmgr.vbs -rearm
+</span></code></pre></div>
+<div class="admonition tìp">
+<p class="admonition-title">Tìp</p>
+<p>Ejecuta esta orden solo cuando se acerque la fecha de expiración. Requiere reiniciar el sistema tras su ejecución.</p>
+</div>
+<h2 id="configuracion-inicial-del-servidor-desde-la-terminal">Configuración inicial del servidor desde la terminal</h2>
+<p>Cuando instalamos <strong>Windows Server sin entorno gráfico (Server Core)</strong>, la configuración debe realizarse desde la terminal. Al iniciar el sistema, se abre automáticamente la herramienta <strong><code>sconfig</code></strong>, que permite configurar de forma sencilla aspectos básicos como el nombre del equipo, la red, el dominio, actualizaciones, etc.</p>
+<figure align="center">
+  <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../imgs/instalacion/ServerCore.png" data-desc-position="bottom"><img alt="Image title" src="../imgs/instalacion/ServerCore.png" width="80%"></a>
+<br>
+<figcaption>Server Core. Configuración con sconfig</figcaption>
+</figure>
+<p>Además, podemos utilizar directamente <strong>PowerShell</strong>, que ofrece un control más avanzado y flexible.</p>
+<hr>
+<h3 id="comandos-utiles-en-powershell">Comandos útiles en PowerShell</h3>
+<ul>
+<li>Cambiar el nombre del servidor</li>
+</ul>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Rename-Computer</span> <span class="n">-NewName</span> <span class="s2">"MISERVIDOR"</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Restart-Computer</span> <span class="n">-Force</span>
+</span></code></pre></div>
+<ul>
+<li>Configurar la red</li>
+</ul>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Get-NetAdapter</span> <span class="err">–</span><span class="n">Name</span> <span class="s2">"Ethernet"</span> <span class="p">|</span> <span class="nb">Remove-NetIPAddress</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-NetAdapter</span> <span class="err">–</span><span class="n">Name</span> <span class="s2">"Ethernet"</span> <span class="p">|</span> <span class="nb">New-NetIPAddress</span> <span class="err">–</span><span class="n">AddressFamily</span> <span class="n">IPv4</span> <span class="err">–</span><span class="n">IpAddress</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">1</span><span class="p">.</span><span class="n">25</span> <span class="n">-PrefixLength</span> <span class="n">24</span> <span class="n">-DefaultGateway</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">1</span><span class="p">.</span><span class="n">1</span>
+</span></code></pre></div>
+<ul>
+<li>Habilitar DHCP</li>
+</ul>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Set-NetIPInterface</span> <span class="n">-InterfaceAlias</span> <span class="s2">"Ethernet"</span> <span class="n">-Dhcp</span> <span class="n">Enabled</span>
+</span></code></pre></div>
+<ul>
+<li>Ver tabla de enrutamiento</li>
+</ul>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Get-NetRoute</span>
+</span></code></pre></div>
+<ul>
+<li>Establecer servidores DNS</li>
+</ul>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Set-DNSClientServerAddress</span> <span class="n">-InterfaceAlias</span> <span class="s2">"Ethernet"</span> <span class="n">-ServerAddresses</span> <span class="p">(</span><span class="s2">"192.168.1.1"</span><span class="p">,</span> <span class="s2">"8.8.8.8"</span><span class="p">)</span>
+</span></code></pre></div>
+<ul>
+<li>Deshabilitar IPv6</li>
+</ul>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">Disable-NetAdapterBinding</span> <span class="err">–</span><span class="n">Name</span> <span class="s2">"Ethernet"</span> <span class="n">-ComponentID</span> <span class="n">ms_tcpip6</span>
+</span></code></pre></div>
+<ul>
+<li>Para ver los componentes disponibles:</li>
+</ul>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">Get-NetAdapterBinding</span>
+</span></code></pre></div>
+<ul>
+<li>Para ver las interfaces de red:</li>
+</ul>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">Get-NetIPInterface</span>
+</span></code></pre></div>
+<ul>
+<li>Configuración del Firewall</li>
+</ul>
+<p>En <strong>Windows Server 2022</strong>, el firewall bloquea por defecto el tráfico ICMP (ping) desde equipos fuera del dominio. Para comprobar la red, podemos desactivarlo temporalmente:</p>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">Set-NetFirewallProfile</span> <span class="n">-Profile</span> <span class="n">Domain</span><span class="p">,</span><span class="n">Public</span><span class="p">,</span><span class="n">Private</span> <span class="n">-Enabled</span> <span class="n">False</span>
+</span></code></pre></div>
+<p>Y volver a activarlo:</p>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">Set-NetFirewallProfile</span> <span class="n">-Profile</span> <span class="n">Domain</span><span class="p">,</span><span class="n">Public</span><span class="p">,</span><span class="n">Private</span> <span class="n">-Enabled</span> <span class="n">True</span>
+</span></code></pre></div>
+<ul>
+<li>Crear regla para permitir pings (ICMPv4)</li>
+</ul>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">New-NetFirewallRule</span> <span class="n">-DisplayName</span> <span class="s2">"Allow inbound ICMPv4"</span> <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="n">-Protocol</span> <span class="n">ICMPv4</span> <span class="n">-IcmpType</span> <span class="n">8</span> <span class="n">-RemoteAddress</span> <span class="s2">"192.168.200.0/24"</span> <span class="n">-Action</span> <span class="n">Allow</span>
+</span></code></pre></div>
+<p>Para múltiples rangos de IP:</p>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nv">$ips</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">"192.168.0.11-192.168.0.40"</span><span class="p">,</span> <span class="s2">"192.168.100.10-192.168.100.200"</span><span class="p">,</span> <span class="s2">"192.168.200.0/24"</span><span class="p">)</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">New-NetFirewallRule</span> <span class="n">-DisplayName</span> <span class="s2">"Allow inbound ICMPv4"</span> <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="n">-Protocol</span> <span class="n">ICMPv4</span> <span class="n">-IcmpType</span> <span class="n">8</span> <span class="n">-RemoteAddress</span> <span class="nv">$ips</span> <span class="n">-Action</span> <span class="n">Allow</span>
+</span></code></pre></div>
+<ul>
+<li>Deshabilitar una regla:</li>
+</ul>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">Disable-NetFirewallRule</span> <span class="err">–</span><span class="n">DisplayName</span> <span class="s2">"Allow inbound ICMPv4"</span>
+</span></code></pre></div>
+<ul>
+<li>Eliminar una regla (⚠️ nunca sin <code>DisplayName</code>):</li>
+</ul>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nb">Remove-NetFirewallRule</span> <span class="err">–</span><span class="n">DisplayName</span> <span class="s2">"Allow inbound ICMPv4"</span>
+</span></code></pre></div>
+<ul>
+<li>Ver todas las reglas:</li>
+</ul>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nb">Get-NetFirewallRule</span>
+</span></code></pre></div>
+<ul>
+<li>Ver IPs y puertos de una regla:</li>
+</ul>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nb">Get-NetFirewallRule</span> <span class="n">-DisplayName</span> <span class="s2">"Allow inbound ICMPv4"</span> <span class="p">|</span> <span class="nb">Get-NetFirewallAddressFilter</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nb">Get-NetFirewallRule</span> <span class="n">-DisplayName</span> <span class="s2">"Allow inbound ICMPv4"</span> <span class="p">|</span> <span class="nb">Get-NetFirewallPortFilter</span>
+</span></code></pre></div>
+<ul>
+<li>Mostrar reglas activas en formato tabla:</li>
+</ul>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nb">Get-NetFirewallRule</span> <span class="n">-Action</span> <span class="n">Allow</span> <span class="n">-Enabled</span> <span class="n">True</span> <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="p">|</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nb">Format-Table</span> <span class="n">-Property</span> <span class="n">Name</span><span class="p">,</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="p">@{</span><span class="n">Name</span><span class="p">=</span><span class="s2">"Protocol"</span><span class="p">;</span><span class="n">Expression</span><span class="p">={(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-NetFirewallPortFilter</span><span class="p">).</span><span class="n">Protocol</span><span class="p">}},</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="p">@{</span><span class="n">Name</span><span class="p">=</span><span class="s2">"LocalPort"</span><span class="p">;</span><span class="n">Expression</span><span class="p">={(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-NetFirewallPortFilter</span><span class="p">).</span><span class="n">LocalPort</span><span class="p">}},</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="p">@{</span><span class="n">Name</span><span class="p">=</span><span class="s2">"RemotePort"</span><span class="p">;</span><span class="n">Expression</span><span class="p">={(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-NetFirewallPortFilter</span><span class="p">).</span><span class="n">RemotePort</span><span class="p">}},</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="p">@{</span><span class="n">Name</span><span class="p">=</span><span class="s2">"RemoteAddress"</span><span class="p">;</span><span class="n">Expression</span><span class="p">={(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-NetFirewallAddressFilter</span><span class="p">).</span><span class="n">RemoteAddress</span><span class="p">}},</span>
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="n">Enabled</span><span class="p">,</span> <span class="n">Profile</span><span class="p">,</span> <span class="n">Direction</span><span class="p">,</span> <span class="n">Action</span>
+</span></code></pre></div>
+<ul>
+<li>
+<p><strong>Alternativa con <code>netsh</code> para configurar el firewall</strong></p>
+</li>
+<li>
+<p>Añadir regla:</p>
+</li>
+</ul>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>netsh advfirewall firewall add rule name="Allow inbound ICMPv4" protocol=icmpv4:8,any dir=in action=allow
+</span></code></pre></div>
+<ul>
+<li>Bloquear regla:</li>
+</ul>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>netsh advfirewall firewall add rule name="Allow inbound ICMPv4" protocol=icmpv4:8,any dir=in action=block
+</span></code></pre></div>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie">
+        
+          
+          <a href="../02_1_instalacion_SO_introduccion/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Introducción">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Introducción
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../02_3_config_basica/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Configuración básica">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                Configuración básica
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Sergio Rey Martínez - SMX - SOX - 2025
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.indexes", "navigation.footer", "navigation.instant", "navigation.instant.progress", "toc.follow", "navigation.top", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
