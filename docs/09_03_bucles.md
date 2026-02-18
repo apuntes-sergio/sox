@@ -172,14 +172,17 @@ Y ahora de un incremento personalizado, en este caso, comenzamos por el 0 e incr
 
 Esta es una de las funcionalidades más útiles en administración de sistemas.
 
+Utilizamos el comando `ls` para obtener el listado de archivos y dejarlos dentro de una variable
+
 !!!example "Listar archivos por tipo"
 
     ```bash
     #!/bin/bash
 
+    archivos_txt=$(ls *.txt)
     echo "Archivos .txt encontrados:"
 
-    for archivo in *.txt
+    for archivo in $archivos_txt
     do
         echo "- $archivo"
     done
@@ -205,8 +208,11 @@ Esta es una de las funcionalidades más útiles en administración de sistemas.
         mkdir backup
     fi
 
+    # Obtenemos todos los archivos
+    archivos_txt=$(ls *.txt)
+
     # Copiar todos los .txt
-    for archivo in *.txt
+    for archivo in $archivos_txt
     do
         cp "$archivo" backup/
         echo "Copiado: $archivo"
@@ -220,8 +226,11 @@ Esta es una de las funcionalidades más útiles en administración de sistemas.
     ```bash
     #!/bin/bash
 
+    # Obtenemos todos los archivos
+    archivos_txt=$(ls *.txt)
+
     # Cambiar extensión .txt a .bak
-    for archivo in *.txt
+    for archivo in $archivos_txt
     do
         nuevo="${archivo%.txt}.bak"
         mv "$archivo" "$nuevo"
@@ -249,7 +258,7 @@ juan
 maria
 ```
 
-Podemos procesar cada línea así:
+Podemos procesar cada línea usando una variable como hemos hecho antes o directamente usando el comando en el propio bucle `for` de esta forma:
 
 ```bash
 #!/bin/bash
@@ -325,7 +334,7 @@ done
     ```bash
     #!/bin/bash
 
-    for archivo in *.txt
+    for archivo in $(ls *.txt)
     do
         if [ -f "$archivo" ]; then
             echo "Procesando: $archivo"
@@ -341,7 +350,7 @@ done
 
     mkdir -p backup
 
-    for archivo in *.txt
+    for archivo in $(ls *.txt)
     do
         if [ -s "$archivo" ]; then
             cp "$archivo" backup/
@@ -433,6 +442,122 @@ done
     ```
 
 
+## Bucle `while`
+
+A diferencia del `for`, que recorre una lista de elementos conocida de antemano, el bucle `while` **repite un bloque de código mientras se cumpla una condición**. Es útil cuando no sabemos cuántas veces necesitamos repetir algo.
+
+**Sintaxis:**
+
+```bash
+while [ condición ]
+do
+    # Comandos a repetir
+done
+```
+
+El bucle comprueba la condición antes de cada iteración. Cuando la condición deja de cumplirse, el bucle termina.
+
+!!!example "Ejemplo 1: Contador básico"
+
+    ```bash
+    #!/bin/bash
+
+    contador=1
+
+    while [ $contador -le 5 ]
+    do
+        echo "Iteración número: $contador"
+        contador=$((contador + 1))
+    done
+
+    echo "Bucle terminado"
+    ```
+
+    **Salida:**
+    ```
+    Iteración número: 1
+    Iteración número: 2
+    Iteración número: 3
+    Iteración número: 4
+    Iteración número: 5
+    Bucle terminado
+    ```
+
+    **Explicación:**
+
+    - Iniciamos `contador` en 1
+    - El bucle continúa mientras `contador` sea menor o igual a 5 (`-le`)
+    - En cada iteración incrementamos el contador en 1
+    - Cuando llega a 6, la condición es falsa y el bucle termina
+
+!!!example "Ejemplo 2: Esperar a que un archivo exista"
+
+    Un uso muy práctico en administración de sistemas es esperar a que ocurra algo antes de continuar:
+
+    ```bash
+    #!/bin/bash
+
+    echo "Esperando a que aparezca el archivo datos.txt..."
+
+    while [ ! -f "datos.txt" ]
+    do
+        echo "Archivo no encontrado. Reintentando en 5 segundos..."
+        sleep 5
+    done
+
+    echo "¡Archivo encontrado! Continuando..."
+    ```
+
+    **Explicación:**
+
+    - `! -f "datos.txt"` → mientras el archivo NO exista
+    - `sleep 5` → espera 5 segundos antes de volver a comprobar
+    - En cuanto el archivo aparezca, el bucle termina y el script continúa
+
+!!!example "Ejemplo 3: Leer un archivo línea a línea con `while read`"
+
+    Esta es la forma **correcta y recomendada** de leer archivos con líneas que pueden contener espacios:
+
+    ```bash
+    #!/bin/bash
+
+    # Archivo usuarios.txt:
+    # Juan Pérez
+    # Ana García
+    # María López
+
+    while read linea
+    do
+        echo "Procesando: $linea"
+    done < usuarios.txt
+    ```
+
+    **Salida:**
+    ```
+    Procesando: Juan Pérez
+    Procesando: Ana García
+    Procesando: María López
+    ```
+
+    **Ventaja frente al `for`:** A diferencia de `for $(cat archivo)`, aquí cada línea completa (aunque tenga espacios) se procesa correctamente.
+
+!!! warning "¡Cuidado con los bucles infinitos!"
+
+    Si la condición del `while` nunca se vuelve falsa, el script se quedará ejecutando para siempre. Siempre asegúrate de que algo dentro del bucle cambia el valor que controla la condición.
+
+    ```bash
+    # ❌ Bucle infinito - el contador nunca cambia
+    contador=1
+    while [ $contador -le 5 ]
+    do
+        echo "Esto no termina nunca..."
+        # Falta: contador=$((contador + 1))
+    done
+    ```
+
+    Para detener un bucle infinito accidentalmente lanzado: `Ctrl + C`
+
+
 ## Ejercicios Prácticos
 
 
@@ -498,7 +623,7 @@ done
         # Copiar archivos
         echo "Iniciando backup..."
 
-        for archivo in *.txt
+        for archivo in $(ls *.txt)
         do
             # Verificar que existe (por si no hay .txt)
             if [ -f "$archivo" ]; then
@@ -587,6 +712,66 @@ done
     - Usa un contador: `contador=$((contador + 1))`
 
 
+---
+
+!!! question "Ejercicio 4: Contador Regresivo con while"
+
+    **Objetivo:** Crear un script que haga una cuenta atrás y muestre un mensaje final.
+
+    **Instrucciones:**
+
+    1. Crear archivo `cuenta_atras.sh`
+    2. El script debe recibir como parámetro el número desde el que empieza la cuenta
+    3. Mostrar la cuenta atrás de uno en uno hasta llegar a 0
+    4. Al terminar mostrar el mensaje `¡Despegue!`
+
+    **Ejemplo de ejecución:**
+    ```bash
+    ./cuenta_atras.sh 5
+    ```
+
+    **Salida esperada:**
+    ```
+    Iniciando cuenta atrás desde 5...
+    5...
+    4...
+    3...
+    2...
+    1...
+    ¡Despegue!
+    ```
+
+    ??? success "Solución: Intenta resolver sin mirar solución"
+        ```bash
+        #!/bin/bash
+
+        # Verificar que se pasó un parámetro
+        if [ -z "$1" ]; then
+            echo "Uso: $0 NUMERO"
+            exit 1
+        fi
+
+        numero=$1
+        echo "Iniciando cuenta atrás desde $numero..."
+
+        while [ $numero -gt 0 ]
+        do
+            echo "$numero..."
+            sleep 1
+            numero=$((numero - 1))
+        done
+
+        echo "¡Despegue!"
+        ```
+
+    **Probar:**
+    ```bash
+    chmod +x cuenta_atras.sh
+    ./cuenta_atras.sh 5
+    ```
+
+---
+
 !!! question "Ejercicio Avanzado (Opcional). Organizador de Archivos por Extensión"
 
     Crear un script que organice archivos en carpetas según su extensión:
@@ -652,9 +837,9 @@ done
 
 !!! example "Procesar archivos"
     ```bash
-    for archivo in *.txt; do      # Todos los .txt
-    for archivo in *.sh; do       # Todos los .sh
-    for archivo in *; do          # Todos los archivos
+    for archivo in $(ls *.txt); do      # Todos los .txt
+    for archivo in $(ls *.sh); do       # Todos los .sh
+    for archivo in $(ls); do            # Todos los archivos
     ```
 
 !!! example "Manipulación de nombres"
@@ -760,7 +945,7 @@ done
 !!! tip "1. Siempre verificar que los archivos existen"
 
     ```bash
-    for archivo in *.txt
+    for archivo in $(ls *.txt)
     do
         if [ -f "$archivo" ]; then
             # Procesar archivo
