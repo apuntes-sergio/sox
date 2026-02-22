@@ -3,40 +3,42 @@ title: Uso Profesional de tar para Backups
 description: Crear, comprimir y gestionar backups con tar
 ---
 
+## El comando `tar` (⭐)
 `tar` (Tape ARchive) es la herramienta estándar de Linux para crear archivos comprimidos. Se utiliza principalmente para backups porque empaqueta múltiples archivos en uno solo, comprime para ahorrar espacio y preserva permisos y estructura de directorios.
 
 **Usos comunes:**
+
 - Backup de documentos importantes
 - Backup de configuraciones del sistema
 - Archivar proyectos completos
 - Distribuir software
 
-## Comandos Básicos
-
-La sintaxis básica para crear un backup comprimido es:
+La **sintaxis** básica para crear un backup comprimido es:
 
 ```bash
 tar -czf backup.tar.gz /ruta/a/respaldar
 ```
 
 **Opciones explicadas:**
+
 - `-c` → crear archivo (create)
 - `-z` → comprimir con gzip
+- `-v` → modo vervoso, muestra información por pantalla
 - `-f` → especificar nombre del archivo (file)
 
 !!! warning "El orden importa"
-    Siempre usa `-czf` para crear o `-xzf` para extraer. El orden de las opciones es importante.
+    Siempre usa `-czvf` para crear o `-xzvf` para extraer. El orden de las opciones es importante.
 
 !!! example "Ejemplo básico: Backup de Documentos"
 
     ```bash
     # Hacer backup de Documentos
-    tar -czf backup_documentos.tar.gz /home/usuario/Documentos
+    tar -czvf backup_documentos.tar.gz /home/usuario/Documentos
     ```
 
     Esto crea el archivo `backup_documentos.tar.gz` con todo el contenido de Documentos comprimido.
 
-## Añadir Fecha al Nombre
+### Añadir Fecha al Nombre
 
 Es fundamental incluir la fecha en el nombre del backup para saber cuándo se creó y mantener múltiples versiones.
 
@@ -66,7 +68,7 @@ echo $fecha
 
     **Resultado:** `backup_20260213.tar.gz`
 
-## Extraer Backups
+### Extraer Backups
 
 Para recuperar los datos de un backup, usamos la opción `-x` (extract):
 
@@ -87,11 +89,12 @@ tar -xzf backup.tar.gz -C /ruta/destino/
     tar -tzf backup.tar.gz | head -n 10
     ```
 
-## Excluir Archivos Innecesarios
+### Excluir Archivos Innecesarios
 
 No todos los archivos deben incluirse en el backup. Hay archivos temporales, cachés y descargas que ocupan mucho espacio sin aportar valor.
 
 **Archivos comunes a excluir:**
+
 - `*.tmp` → Archivos temporales
 - `*.cache` → Archivos de caché
 - `*~` → Copias de respaldo de editores
@@ -125,7 +128,7 @@ No todos los archivos deben incluirse en el backup. Hay archivos temporales, cac
         /home/usuario/Documentos
     ```
 
-## Verificar Tamaño y Contenido
+### Verificar Tamaño y Contenido
 
 Después de crear un backup, es útil verificar su tamaño:
 
@@ -164,7 +167,7 @@ du -h backup.tar.gz
     echo "Tamaño comprimido: $comprimido"
     ```
 
-## Verificar Integridad del Backup
+### Verificar Integridad del Backup
 
 Es crucial verificar que el backup se creó correctamente y no está corrupto.
 
@@ -184,6 +187,7 @@ fi
 
 !!! note "Código de salida"
     La variable `$?` contiene el código de salida del último comando:
+
     - `0` = éxito
     - Cualquier otro número = error
 
@@ -214,6 +218,7 @@ find /backups -name "backup_*.tar.gz" -mtime +7 -delete
 ```
 
 **Explicación:**
+
 - `find /backups` → buscar en /backups
 - `-name "backup_*.tar.gz"` → archivos que coincidan con el patrón
 - `-mtime +7` → modificados hace más de 7 días
@@ -375,6 +380,7 @@ find /backups -name "backup_*.tar.gz" -mtime +7 -delete
     **Objetivo:** Crear un script de backup simple con fecha.
 
     **Instrucciones:**
+
     1. Crear archivo `backup_simple.sh`
     2. Hacer backup de `~/Documentos`
     3. Guardar en `~/backups/`
@@ -420,6 +426,7 @@ find /backups -name "backup_*.tar.gz" -mtime +7 -delete
     **Objetivo:** Crear backup excluyendo archivos innecesarios.
 
     **Instrucciones:**
+
     1. Crear archivo `backup_limpio.sh`
     2. Hacer backup de tu home
     3. Excluir: `.cache`, `Descargas`, `*.tmp`
@@ -466,6 +473,7 @@ find /backups -name "backup_*.tar.gz" -mtime +7 -delete
     **Objetivo:** Crear un sistema de backup que mantenga solo los últimos 7 días.
 
     **Requisitos:**
+
     1. El script debe llamarse `backup_rotacion.sh`
     2. Debe hacer backup de `~/Documentos` en `~/backups/`
     3. Debe incluir fecha y hora en el nombre
@@ -561,6 +569,7 @@ find /backups -name "backup_*.tar.gz" -mtime +7 -delete
 !!! question "Tarea 1: Backup Múltiple"
 
     Crear un script `backup_multiple.sh` que:
+
     1. Haga backup de 3 directorios diferentes:
        - Documentos
        - Imágenes  
@@ -588,6 +597,7 @@ find /backups -name "backup_*.tar.gz" -mtime +7 -delete
 !!! question "Tarea 2: Script de Restauración"
 
     Crear un script `restaurar.sh` que:
+
     1. Muestre lista de backups disponibles en `~/backups/`
     2. Pida al usuario que elija uno (por número)
     3. Pregunte dónde restaurar

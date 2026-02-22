@@ -1,160 +1,14 @@
 ---
-title: Sincronización con rsync y Automatización con cron
+title: Automatización con cron y Sincronización con rsync
 description: Copias incrementales con rsync y programación de tareas con cron
 ---
 
-En esta sesión aprenderemos dos herramientas fundamentales: `rsync` para sincronizar directorios de forma eficiente (copiando solo cambios) y `cron` para automatizar tareas y ejecutar scripts a horas programadas sin intervención manual.
-
-# PARTE 1: rsync - Sincronización de Directorios
-
-## ¿Qué es rsync?
-
-`rsync` es una herramienta que sincroniza directorios copiando solo los archivos nuevos o modificados, lo que lo hace mucho más eficiente que copiar todo cada vez.
-
-**Diferencias con tar:**
-
-| Característica | tar | rsync |
-|----------------|-----|-------|
-| Resultado | Archivo comprimido | Copia de directorios |
-| Velocidad | Siempre copia todo | Solo copia cambios |
-| Uso | Backups archivados | Sincronización, backups incrementales |
-| Espacio | Un archivo por backup | Mantiene estructura de carpetas |
-
-**Cuándo usar cada uno:**
-- **tar**: Backups que quieres archivar y comprimir
-- **rsync**: Mantener dos directorios sincronizados
-
-## Comandos Básicos
-
-La sintaxis básica es:
-
-```bash
-rsync -av origen/ destino/
-```
-
-**Opciones importantes:**
-- `-a` → modo archivo (preserva permisos, fechas, enlaces)
-- `-v` → verbose (muestra qué está haciendo)
-
-!!! warning "La barra final importa"
-    - `origen/` → copia el **CONTENIDO** de origen
-    - `origen` → copia la **CARPETA** origen completa
-
-!!! example "Sincronizar Documentos a backup"
-
-    ```bash
-    # Sincronizar Documentos a backup
-    rsync -av ~/Documentos/ ~/backup_documentos/
-    ```
-
-    **Primera vez:** Copia todo  
-    **Siguientes veces:** Solo copia archivos nuevos o modificados
-
-## Opciones Útiles
-
-**Ver qué haría sin copiar (simulación):**
-
-```bash
-rsync -avn origen/ destino/
-```
-
-La opción `-n` hace una simulación (dry-run) sin ejecutar nada. Muy útil para verificar qué se va a copiar antes de hacerlo.
-
-!!! example "Simular sincronización"
-
-    ```bash
-    # Ver qué se copiaría sin copiar realmente
-    rsync -avn ~/Documentos/ ~/backup_documentos/
-    ```
-
-**Mostrar progreso:**
-
-```bash
-rsync -av --progress origen/ destino/
-```
-
-**Excluir archivos:**
-
-```bash
-rsync -av --exclude='*.tmp' --exclude='.cache' origen/ destino/
-```
-
-**Sincronización espejo (elimina en destino lo que no está en origen):**
-
-```bash
-rsync -av --delete origen/ destino/
-```
-
-!!! warning "Cuidado con --delete"
-    La opción `--delete` elimina archivos en destino que no existen en origen. Usar con precaución.
-
-## Script de Sincronización Básico
-
-!!! example "Script simple de sincronización"
-
-    ```bash
-    #!/bin/bash
-    # Script de sincronización con rsync
-
-    ORIGEN="$HOME/Documentos/"
-    DESTINO="$HOME/backup_sync/"
-
-    echo "Sincronizando $ORIGEN a $DESTINO..."
-
-    rsync -av --progress "$ORIGEN" "$DESTINO"
-
-    if [ $? -eq 0 ]; then
-        echo "✓ Sincronización completada"
-    else
-        echo "✗ Error en la sincronización"
-    fi
-    ```
-
-## Backup Incremental con rsync
-
-Una de las ventajas principales de rsync es que solo copia lo que ha cambiado, ahorrando tiempo y espacio.
-
-!!! example "Backup incremental"
-
-    ```bash
-    #!/bin/bash
-    # Backup incremental
-
-    ORIGEN="$HOME/Documentos/"
-    DESTINO="$HOME/backup_incremental/"
-
-    # Crear destino si no existe
-    mkdir -p "$DESTINO"
-
-    echo "Realizando backup incremental..."
-    echo "Solo se copiarán archivos nuevos o modificados"
-
-    rsync -av \
-        --exclude='*.tmp' \
-        --exclude='.cache' \
-        "$ORIGEN" "$DESTINO"
-
-    if [ $? -eq 0 ]; then
-        echo "✓ Backup completado"
-        
-        # Mostrar estadísticas
-        total=$(find "$DESTINO" -type f | wc -l)
-        espacio=$(du -sh "$DESTINO" | cut -f1)
-        
-        echo "  Archivos totales: $total"
-        echo "  Espacio usado: $espacio"
-    fi
-    ```
-
----
-
-# PARTE 2: cron - Automatización de Tareas
-
-## ¿Qué es cron?
+## `cron`- Automatización de Tareas (⭐)
 
 `cron` es un servicio que ejecuta comandos o scripts automáticamente en horarios programados. Funciona continuamente en segundo plano revisando si hay tareas que ejecutar.
 
 **Usos comunes:**
+
 - Backup todas las noches a las 2 AM
 - Limpiar archivos temporales cada domingo
 - Actualizar el sistema semanalmente
@@ -162,11 +16,13 @@ Una de las ventajas principales de rsync es que solo copia lo que ha cambiado, a
 - Verificar servicios cada 5 minutos
 
 **¿Cómo funciona?**
+
 1. Cron revisa constantemente tu tabla de tareas (crontab)
 2. Cuando llega la hora programada, ejecuta el comando
 3. Todo sucede automáticamente, incluso sin estar conectado
 
-## Sintaxis de crontab
+
+**Sintaxis de crontab**
 
 Cada línea en el crontab tiene este formato:
 
@@ -218,7 +74,7 @@ Cada línea en el crontab tiene este formato:
     30 18 * * 1,5 /ruta/script.sh
     ```
 
-## Gestionar crontab
+### Gestionar `crontab`
 
 **Ver tu crontab actual:**
 
@@ -246,7 +102,7 @@ crontab -r
 !!! warning "Sin confirmación"
     Este comando borra todas tus tareas sin preguntar.
 
-## Añadir Tareas a cron - Paso a Paso
+### Añadir Tareas a cron - Paso a Paso
 
 **1. Crear el script:**
 ```bash
@@ -280,6 +136,7 @@ crontab -e
 ```
 
 **5. Guardar y salir:**
+
 - En nano: `Ctrl+O`, `Enter`, `Ctrl+X`
 
 **6. Verificar:**
@@ -287,7 +144,7 @@ crontab -e
 crontab -l
 ```
 
-## Reglas Importantes para cron
+### Reglas Importantes para cron
 
 !!! warning "1. Usar rutas ABSOLUTAS"
 
@@ -322,10 +179,11 @@ crontab -l
     ```
 
     **Explicación:**
+
     - `>>` → Añade al archivo (no sobrescribe)
     - `2>&1` → Redirige errores también al mismo archivo
 
-## Ver Logs de cron
+### Ver Logs de cron
 
 **Ver ejecuciones de cron:**
 
@@ -346,6 +204,150 @@ Si tu script registra en un log propio:
 ```bash
 tail -f ~/logs/backup.log
 ```
+
+## `rsync` - Sincronización de Directorios
+
+`rsync` es una herramienta que sincroniza directorios copiando solo los archivos nuevos o modificados, lo que lo hace mucho más eficiente que copiar todo cada vez.
+
+**Diferencias con tar:**
+
+| Característica | tar | rsync |
+|----------------|-----|-------|
+| Resultado | Archivo comprimido | Copia de directorios |
+| Velocidad | Siempre copia todo | Solo copia cambios |
+| Uso | Backups archivados | Sincronización, backups incrementales |
+| Espacio | Un archivo por backup | Mantiene estructura de carpetas |
+
+**Cuándo usar cada uno:**
+
+- **tar**: Backups que quieres archivar y comprimir
+- **rsync**: Mantener dos directorios sincronizados
+
+### Comandos Básicos
+
+La sintaxis básica es:
+
+```bash
+rsync -av origen/ destino/
+```
+
+**Opciones importantes:**
+
+- `-a` → modo archivo (preserva permisos, fechas, enlaces)
+- `-v` → verbose (muestra qué está haciendo)
+
+!!! warning "La barra final importa"
+    - `origen/` → copia el **CONTENIDO** de origen
+    - `origen` → copia la **CARPETA** origen completa
+
+!!! example "Sincronizar Documentos a backup"
+
+    ```bash
+    # Sincronizar Documentos a backup
+    rsync -av ~/Documentos/ ~/backup_documentos/
+    ```
+
+    **Primera vez:** Copia todo  
+    **Siguientes veces:** Solo copia archivos nuevos o modificados
+
+### Opciones Útiles
+
+**Ver qué haría sin copiar (simulación):**
+
+```bash
+rsync -avn origen/ destino/
+```
+
+La opción `-n` hace una simulación (dry-run) sin ejecutar nada. Muy útil para verificar qué se va a copiar antes de hacerlo.
+
+!!! example "Simular sincronización"
+
+    ```bash
+    # Ver qué se copiaría sin copiar realmente
+    rsync -avn ~/Documentos/ ~/backup_documentos/
+    ```
+
+**Mostrar progreso:**
+
+```bash
+rsync -av --progress origen/ destino/
+```
+
+**Excluir archivos:**
+
+```bash
+rsync -av --exclude='*.tmp' --exclude='.cache' origen/ destino/
+```
+
+**Sincronización espejo (elimina en destino lo que no está en origen):**
+
+```bash
+rsync -av --delete origen/ destino/
+```
+
+!!! warning "Cuidado con --delete"
+    La opción `--delete` elimina archivos en destino que no existen en origen. Usar con precaución.
+
+### Script de Sincronización Básico
+
+!!! example "Script simple de sincronización"
+
+    ```bash
+    #!/bin/bash
+    # Script de sincronización con rsync
+
+    ORIGEN="$HOME/Documentos/"
+    DESTINO="$HOME/backup_sync/"
+
+    echo "Sincronizando $ORIGEN a $DESTINO..."
+
+    rsync -av --progress "$ORIGEN" "$DESTINO"
+
+    if [ $? -eq 0 ]; then
+        echo "✓ Sincronización completada"
+    else
+        echo "✗ Error en la sincronización"
+    fi
+    ```
+
+### Backup Incremental con rsync
+
+Una de las ventajas principales de rsync es que solo copia lo que ha cambiado, ahorrando tiempo y espacio.
+
+!!! example "Backup incremental"
+
+    ```bash
+    #!/bin/bash
+    # Backup incremental
+
+    ORIGEN="$HOME/Documentos/"
+    DESTINO="$HOME/backup_incremental/"
+
+    # Crear destino si no existe
+    mkdir -p "$DESTINO"
+
+    echo "Realizando backup incremental..."
+    echo "Solo se copiarán archivos nuevos o modificados"
+
+    rsync -av \
+        --exclude='*.tmp' \
+        --exclude='.cache' \
+        "$ORIGEN" "$DESTINO"
+
+    if [ $? -eq 0 ]; then
+        echo "✓ Backup completado"
+        
+        # Mostrar estadísticas
+        total=$(find "$DESTINO" -type f | wc -l)
+        espacio=$(du -sh "$DESTINO" | cut -f1)
+        
+        echo "  Archivos totales: $total"
+        echo "  Espacio usado: $espacio"
+    fi
+    ```
+
+---
+
 
 ## Ejemplos Completos
 
@@ -465,6 +467,7 @@ tail -f ~/logs/backup.log
     **Objetivo:** Crear un script que sincronice Documentos.
 
     **Instrucciones:**
+
     1. Crear `sincronizar.sh`
     2. Sincronizar `~/Documentos/` a `~/backup_sync/`
     3. Excluir `.cache` y `*.tmp`
@@ -512,6 +515,7 @@ tail -f ~/logs/backup.log
     **Objetivo:** Programar un script simple que se ejecute cada 2 minutos (para pruebas).
 
     **Instrucciones:**
+
     1. Crear script `prueba_cron.sh` que escriba la fecha en un log
     2. Darle permisos
     3. Programarlo con cron para cada 2 minutos
@@ -562,12 +566,13 @@ tail -f ~/logs/backup.log
 
 ---
 
-!!! question "Ejercicio 3: Sistema de Backup Automatizado (PARA ENTREGAR)"
+!!! question "Ejercicio 3: Sistema de Backup Automatizado"
 
     **Objetivo:** Crear un sistema completo de backup automatizado con cron.
 
     **Requisitos:**
     1. Script llamado `backup_sistema.sh` que:
+
        - Haga backup de `~/Documentos` con tar
        - Lo guarde en `~/backups/` con fecha
        - Excluya `.cache` y `*.tmp`
@@ -576,6 +581,7 @@ tail -f ~/logs/backup.log
        - Muestre resumen al final del log
 
     2. Programar con cron para:
+
        - Ejecutarse todos los días a las 3 AM
        - Redirigir salida al log
 
@@ -652,31 +658,6 @@ tail -f ~/logs/backup.log
     0 8 * * 1-5        # Lunes a viernes 8 AM
     ```
 
-## Tareas Extra
-
-!!! question "Tarea 1: Doble Backup"
-
-    Crear un sistema que:
-    1. Haga backup con tar cada noche
-    2. Sincronice con rsync cada 6 horas
-    3. Ambos registren en logs separados
-    4. Programar ambos con cron
-
-!!! question "Tarea 2: Monitor de Sistema"
-
-    Crear un script `monitor.sh` que:
-    1. Verifique espacio en disco
-    2. Si está > 80%, registre alerta en log
-    3. Programarlo para ejecutarse cada hora
-
-    ??? tip "Pista"
-        ```bash
-        #!/bin/bash
-        uso=$(df -h / | tail -n 1 | awk '{print $5}' | sed 's/%//')
-        if [ $uso -gt 80 ]; then
-            echo "$(date): ALERTA - Disco al $uso%" >> ~/alertas.log
-        fi
-        ```
 
 ## Errores Comunes en cron
 
