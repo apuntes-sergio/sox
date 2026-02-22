@@ -72,6 +72,12 @@ Cada línea en el crontab tiene este formato:
 
     # Lunes y viernes a las 18:30
     30 18 * * 1,5 /ruta/script.sh
+
+    # Todos los días 1 y 15 de cada mes, a la 23:30
+    30 23 * 1,15 * /ruta/script.sh
+
+    # El 21 de diciembre a las 8 de la tarde
+    0 20 12 31 * /ruta/script.sh
     ```
 
 ### Gestionar `crontab`
