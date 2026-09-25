@@ -1,0 +1,1296 @@
+<!DOCTYPE html><html lang="es" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Simulación de una red empresarial con dos subredes, router MikroTik CHR y salida a Internet, como base para la práctica de dominio Windows Server">
+      
+      
+        <meta name="author" content="Sergio Rey Martínez">
+      
+      
+        <link rel="canonical" href="https://sergio-apuntes.github.io/sox/02_07_practica_gns3_mikrotik/">
+      
+      
+        <link rel="prev" href="../02_06_dominio/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Montaje del escenario de red en GNS3 - Apuntes Sistemas Operativos en Red</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#montaje-del-escenario-de-red-en-gns3" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href=".." title="Apuntes Sistemas Operativos en Red" class="md-header__button md-logo" aria-label="Apuntes Sistemas Operativos en Red" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Apuntes Sistemas Operativos en Red
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Montaje del escenario de red en GNS3
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Cambiar a modo oscuro" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Cambiar a modo claro" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Apuntes Sistemas Operativos en Red" class="md-nav__button md-logo" aria-label="Apuntes Sistemas Operativos en Red" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    Apuntes Sistemas Operativos en Red
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1">
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href=".." class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Presentación
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Presentación
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD01 Introducción a los Sistemas Operativos de Servidor
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD01 Introducción a los Sistemas Operativos de Servidor
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_01_introducci%C3%B3n/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_02_arquitectura_cliente_servidor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura cliente/servidor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_03_funciones_SO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Funciones de Sistemas Operativos en Red
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_04_sistemas_operativos_servidor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principales sistemas operativos servidor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_05_recordatorio_red/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Repaso conceptos de red
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UD02 Instalación de sistemas operativos de servidor privativos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UD02 Instalación de sistemas operativos de servidor privativos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_01_instalacion_SO_introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_02_instalacion_windows_server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instalación de Windows Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_03_config_basica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración básica
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_04_documentar_instalacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_05_administrar_discos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administrar discos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_06_dominio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Active Directory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Montaje del escenario de red en GNS3
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Montaje del escenario de red en GNS3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#aspectos-cubiertos-en-este-documento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aspectos cubiertos en este documento
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iniciar-gns3-y-crear-el-nuevo-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Iniciar GNS3 y crear el nuevo proyecto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#importar-o-crear-la-plantilla-de-mikrotik-chr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Importar o crear la plantilla de MikroTik CHR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configurar-la-emulacion-sin-kvm-machine-acceltcg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurar la emulación sin KVM (-machine accel=tcg)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anadir-el-router-y-los-nodos-al-lienzo-del-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Añadir el router y los nodos al lienzo del proyecto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encender-el-router-y-abrir-la-terminal-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encender el router y abrir la terminal CLI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-de-direccionamiento-nat-dns-y-firewall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración de direccionamiento, NAT, DNS y firewall
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#continuando-con-la-practica-siguientes-pasos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Continuando con la práctica: siguientes pasos
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#aspectos-cubiertos-en-este-documento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aspectos cubiertos en este documento
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iniciar-gns3-y-crear-el-nuevo-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Iniciar GNS3 y crear el nuevo proyecto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#importar-o-crear-la-plantilla-de-mikrotik-chr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Importar o crear la plantilla de MikroTik CHR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configurar-la-emulacion-sin-kvm-machine-acceltcg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurar la emulación sin KVM (-machine accel=tcg)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anadir-el-router-y-los-nodos-al-lienzo-del-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Añadir el router y los nodos al lienzo del proyecto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encender-el-router-y-abrir-la-terminal-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encender el router y abrir la terminal CLI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-de-direccionamiento-nat-dns-y-firewall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración de direccionamiento, NAT, DNS y firewall
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#continuando-con-la-practica-siguientes-pasos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Continuando con la práctica: siguientes pasos
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="montaje-del-escenario-de-red-en-gns3">Montaje del escenario de red en GNS3</h1>
+<p>Este apartado presenta los aspecto básico para montar el entorno en el que vamos a virtualizar la red de empresa que nos pide la práctica a realizar. </p>
+<p>Esta virtualización se puede realizar de forma simplificada utilizando únicamente <strong>Oracle VM VirtualBox</strong> y una solución de red que se adopte a lo que nos ofrece esta herramienta o en nuestro caso que vamos a utilizar una arquitectura más cercana a la que podemos encontrar en las empresa, necesitamos utilizar software como <strong>GNS3</strong> y routers.</p>
+<p>Aquí tenemos un tutorial de cómo configurar este escenario de forma detallada desde el principio.</p>
+<p><strong>GNS3</strong> no es solo virtualiza, sino que permite dibujar también la topología y conexiones de red, donde ubicamos y conectamos y <strong>ejecutamos sistemas operativos virtualizados</strong> (Windows Server, Windows 11) integrados con dispositivos de red virtualizados (MikroTik CHR).</p>
+<h2 id="aspectos-cubiertos-en-este-documento">Aspectos cubiertos en este documento</h2>
+<ul>
+<li>Crear un proyecto GNS3 desde cero.</li>
+<li>Importar y configurar una plantilla de dispositivo (MikroTik CHR).</li>
+<li>Montar una topología con dos subredes separadas por un router/firewall.</li>
+<li>Configurar el router asi como las reglas de aislamiento entre subredes.</li>
+<li>Dejar la red lista para poder añadir las VMs Windows Server y Windows 11.</li>
+</ul>
+<h2 id="iniciar-gns3-y-crear-el-nuevo-proyecto">Iniciar GNS3 y crear el nuevo proyecto</h2>
+<p><strong>Por qué:</strong> todo el trabajo en GNS3 se organiza en proyectos, que agrupan la topología, los nodos y su configuración. Crear el proyecto es el primer paso obligatorio antes de poder añadir ningún dispositivo.</p>
+<p><strong>Pasos:</strong></p>
+<ol>
+<li>Abre la aplicación GNS3 en el equipo.</li>
+<li>En la ventana emergente <em>New project</em>, asigna un nombre al proyecto y pulsa <strong>OK</strong> para abrir el lienzo de trabajo en blanco.</li>
+</ol>
+<p><strong>Verificación:</strong> el panel <em>Topology Summary</em> debe mostrar el servidor GNS3 en verde. Si aparece en rojo o naranja, el backend de GNS3 (servidor local o GNS3 VM) no está arrancado; revisar esto antes de continuar, ya que ningún nodo funcionará sin él.</p>
+<h2 id="importar-o-crear-la-plantilla-de-mikrotik-chr">Importar o crear la plantilla de MikroTik CHR</h2>
+<p><strong>Por qué:</strong> GNS3 no incluye por defecto dispositivos de fabricantes concretos; hay que importar una <em>appliance</em> (plantilla) que indique a GNS3 cómo arrancar la imagen de RouterOS. Se usa <strong>CHR (Cloud Hosted Router)</strong>, la versión de RouterOS pensada para entornos virtualizados, en lugar de una imagen de un router MikroTik físico.</p>
+<p>Si la plantilla de MikroTik no aparece en el panel de dispositivos de la izquierda:</p>
+<ol>
+<li>Pulsa el dispositivo de <strong>routers</strong> que hay en la parte superior izquierda y a continuación pulsa sobre el botón de <strong>New Template</strong> que hay en la parte inferior de la zona izquierda de la pantalla.
+    <figure markdown="span" align="center">
+        <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../imgs/gns3/gns3_new_template.png" data-desc-position="bottom"><img alt="Image title" src="../imgs/gns3/gns3_new_template.png" width="75%"></a>
+    </figure></li>
+<li>A continuación selecciona la opción de <strong>Install an appliance from the GNS3 server</strong>
+    <figure markdown="span" align="center">
+        <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../imgs/gns3/gns3_new_template_1.png" data-desc-position="bottom"><img alt="Image title" src="../imgs/gns3/gns3_new_template_1.png" width="70%"></a>
+    </figure></li>
+<li>Y busca un <strong>router</strong> llamado <strong>Mikrotik CHR</strong>. Selecciona y pulsa sobre el botón de <strong><em>Install</em></strong>
+    <figure markdown="span" align="center">
+        <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../imgs/gns3/gns3_new_template_2.png" data-desc-position="bottom"><img alt="Image title" src="../imgs/gns3/gns3_new_template_2.png" width="80%"></a>
+    </figure></li>
+<li>A continuación saldrá un listado de todas las versiones de Sistema Operativo del Router hasta la fecha, 
+    <figure markdown="span" align="center">
+        <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../imgs/gns3/gns3_new_template_3.png" data-desc-position="bottom"><img alt="Image title" src="../imgs/gns3/gns3_new_template_3.png" width="80%"></a>
+    </figure><ol>
+<li>selecciona uno, por ejemplo el primero que es el más actual. </li>
+<li>Pulsa sobre el botón <strong>Download</strong> con lo que descargarás un archivo <strong>zip</strong> con la imagen del router. Este archivo lo debes <strong>descomprimir</strong> y obtendrás un fichero <strong>.img</strong></li>
+<li>A continuación, pulsa el botón <strong>Import</strong> para importar el fichero anterior.</li>
+<li>Una vez instalado, lo verás de color verde con la leyenda <em>Ready to Install</em>, ya puedes instalar seleccionando el router y pulsando el botón <strong>Next</strong>.</li>
+</ol>
+</li>
+<li>El proceso estará finalizado y tendrás el router disponible para arrastrarlo y usarlo.</li>
+</ol>
+<p><strong>Verificación:</strong> el icono de MikroTik debe aparecer disponible en la sección de <em>Routers</em> del menú izquierdo.</p>
+<div class="admonition note">
+<p class="admonition-title">Licencia de CHR</p>
+<p>CHR sin licencia funciona con todas las funciones durante las primeras 24 horas; pasado ese tiempo, la licencia gratuita perpetua limita el rendimiento a 1 Mbps mientras el resto de funciones (NAT, firewall, DNS, etc.) siguen operativas. Para esta práctica de laboratorio no supone un problema, pero conviene explicárselo a los alumnos para que no interpreten una eventual lentitud como un fallo de su configuración.</p>
+</div>
+<h2 id="configurar-la-emulacion-sin-kvm-machine-acceltcg">Configurar la emulación sin KVM (<code>-machine accel=tcg</code>)</h2>
+<p><strong>Por qué:</strong> por defecto, GNS3 intenta arrancar los nodos QEMU (como el CHR) usando aceleración por hardware (KVM). En equipos donde KVM no está disponible, o donde convive con la virtualización que ya usa VirtualBox para las otras máquinas, el router puede quedarse colgado al arrancar. Forzar el modo de emulación por software (<code>tcg</code>) evita ese conflicto, a costa de un arranque más lento del router.</p>
+<ol>
+<li>En el menú de la izquierda, haz clic derecho sobre la plantilla de MikroTik y selecciona <strong>Edit template</strong> (o clic derecho sobre el nodo ya colocado en el lienzo y <strong>Configure node</strong>).</li>
+<li>Ve a la pestaña <strong>Advanced</strong>.</li>
+<li>En el campo <strong>Additional settings &gt; Options</strong>, añade al final del texto existente:</li>
+</ol>
+<p></p><div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>-machine accel=tcg
+</span></code></pre></div>
+4. Haz clic en <strong>Apply</strong> y <strong>OK</strong>.<p></p>
+<figure align="center">
+    <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../imgs/gns3/gns3_mikrotik_options.png" data-desc-position="bottom"><img alt="Image title" src="../imgs/gns3/gns3_mikrotik_options.png" width="70%"></a>
+</figure>
+<p><strong>Verificación:</strong> al revisar las propiedades del nodo, el campo de opciones de QEMU debe incluir la directiva <code>-machine accel=tcg</code> (también hace el mismo efecto <code>-no-kvm</code>).</p>
+<div class="admonition note">
+<p class="admonition-title">Efecto secundario esperado</p>
+<p>Con <code>tcg</code> el router tardará notablemente más en arrancar que con KVM. Avisar a los alumnos para que no reinicien el nodo pensando que se ha bloqueado.</p>
+</div>
+<h2 id="anadir-el-router-y-los-nodos-al-lienzo-del-proyecto">Añadir el router y los nodos al lienzo del proyecto</h2>
+<p><strong>Por qué:</strong> la topología reproduce una red empresarial típica: una red de "servidores" (donde irá el controlador de dominio) separada de una red de "aula/clientes", con un único punto de salida a Internet y de filtrado entre ambas. Esta segmentación es la que luego se explota en el firewall (apartado 2.7.6) para restringir el acceso del aula al servidor.</p>
+<ol>
+<li>Arrastra el nodo <strong>MikroTik</strong> desde el panel izquierdo hacia el lienzo principal.</li>
+<li>Arrastra el nodo <strong>NAT</strong> (salida a Internet, nodo nativo de GNS3) al lienzo.</li>
+<li>Conecta los cables virtuales (herramienta <em>Add a link</em>):</li>
+</ol>
+<p><strong>Verificación:</strong> todos los nodos deben quedar interconectados en el esquema visual del lienzo, sin puertos sueltos.</p>
+<h2 id="encender-el-router-y-abrir-la-terminal-cli">Encender el router y abrir la terminal CLI</h2>
+<p><strong>Por qué:</strong> antes de poder configurar direccionamiento o firewall, RouterOS exige completar su asistente inicial (licencia y contraseña) desde la consola.</p>
+<ol>
+<li>Haz clic derecho sobre el nodo MikroTik en el lienzo y pulsa <strong>Start</strong> (o el botón verde <em>Play</em> de la barra superior).</li>
+<li>Haz clic derecho sobre el nodo MikroTik y selecciona <strong>Console</strong>.</li>
+<li>Cuando la terminal cargue y pida credenciales, ingresa:</li>
+<li>Login: <code>admin</code></li>
+<li>Password: (pulsa Enter sin escribir nada).</li>
+<li>Pulsa <code>n</code> cuando pregunte si deseas ver la licencia.</li>
+<li>Asigna una contraseña nueva cuando la solicite.</li>
+</ol>
+<p><strong>Verificación:</strong> la línea de comandos debe mostrar el indicador <code>[admin@MikroTik] &gt;</code>.</p>
+<hr>
+<h2 id="configuracion-de-direccionamiento-nat-dns-y-firewall">Configuración de direccionamiento, NAT, DNS y firewall</h2>
+<p><strong>Por qué:</strong> en este bloque se le da al router sus tres funciones dentro del escenario: puerta de enlace de cada subred, traductor de direcciones para salir a Internet, y firewall que aísla el aula del servidor salvo por el tráfico estrictamente necesario.</p>
+<p>Copia y pega cada bloque en la terminal de MikroTik <strong>cambiando las IPs que sean necesarias</strong>:</p>
+<ul>
+<li><strong>Direccionamiento IP en las tres interfaces</strong></li>
+</ul>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/ip address add address=192.168.100.1/24 interface=ether2
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/ip address add address=192.168.0.1/24 interface=ether3
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>/ip dhcp-client add interface=ether1 disabled=no
+</span></code></pre></div>
+<p>Donde: </p>
+<ul>
+<li><strong><em>ether2</em></strong> (192.168.100.0/24) será la red del servidor</li>
+<li><strong><em>ether3</em></strong> (192.168.0.0/24), la red del aula. </li>
+<li><strong><em>ether1</em></strong> obtiene IP por DHCP del nodo NAT de GNS3, que hace de salida a Internet.</li>
+</ul>
+<p>Con estos comandos configuramos las IPs del Router. <strong>Se debe cambiar según la configuración de cada uno</strong></p>
+<ul>
+<li><strong>NAT para salida a Internet</strong></li>
+</ul>
+<p></p><div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>/ip firewall nat add chain=srcnat out-interface=ether1 action=masquerade
+</span></code></pre></div>
+El <em>masquerade</em> traduce el tráfico saliente de ambas subredes internas a la IP pública que el nodo NAT asigne a ether1, igual que haría un router doméstico.<p></p>
+<ul>
+<li><strong>DNS Relay</strong></li>
+</ul>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>/ip dns set allow-remote-requests=yes servers=8.8.8.8,1.1.1.1
+</span></code></pre></div>
+<p>Permite que los clientes usen el propio router como servidor DNS, reenviando las consultas a DNS públicos. Esto es provisional: cuando se instale el controlador de dominio, lo normal será que los clientes apunten a él como DNS y este reenvíe a Internet.</p>
+<ul>
+<li><strong>Aislamiento de subredes: el Aula solo accede al Servidor</strong></li>
+</ul>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>/ip firewall filter add chain=forward src-address=192.168.0.0/24 dst-address=192.168.100.2 action=accept
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/ip firewall filter add chain=forward src-address=192.168.0.0/24 dst-address=192.168.100.0/24 action=drop
+</span></code></pre></div>
+<p>Primero se acepta explícitamente el tráfico del aula hacia la IP del servidor; después se bloquea cualquier otro tráfico del aula hacia el resto de esa subred. Es la aplicación práctica del objetivo "bloquear accesos no autorizados" citado en la introducción de la unidad.</p>
+<div class="admonition tip">
+<p class="admonition-title">Verificación:</p>
+<p>ejecuta </p>
+<ul>
+<li><code>/ip address print</code> </li>
+<li><code>/ip firewall filter print</code> </li>
+</ul>
+<p>para confirmar que las direcciones IP y las dos reglas de filtrado están registradas, <strong>en ese orden</strong>.</p>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">Puntos que hay que resolver antes de que el firewall funcione</p>
+<ul>
+<li><strong>La regla de <code>accept</code> depende de que el Windows Server tenga la IP <code>192.168.100.2</code>.</strong> Esto no se ha configurado en ningún paso anterior. Hay que añadir un paso explícito (antes o al empezar 2.7.6) indicando a los alumnos que asignen esa IP estática a la tarjeta de red del servidor; si no, la regla de excepción no coincide con nada y el aula queda sin acceso al servidor.</li>
+<li><strong>El orden de las reglas es crítico.</strong> RouterOS procesa las reglas de <code>forward</code> de arriba a abajo y aplica la primera que coincide. Si algún alumno las teclea o las reordena al revés, el <code>drop</code> bloquearía también el tráfico hacia el servidor. Merece la pena que los alumnos verifiquen el orden con <code>/ip firewall filter print</code>, no solo su presencia.</li>
+<li><strong>No hay reglas en la chain <code>input</code>.</strong> Tal como está, la gestión del propio router (Winbox, API, etc.) queda accesible desde ambas subredes sin restricción. Para esta práctica de laboratorio es aceptable, pero si se quiere ser coherente con el objetivo "bloquear accesos no autorizados", es un buen punto para plantear como ampliación o pregunta de examen: "¿qué reglas de <code>input</code> añadirías y por qué?".</li>
+</ul>
+</div>
+<hr>
+<h2 id="continuando-con-la-practica-siguientes-pasos">Continuando con la práctica: siguientes pasos</h2>
+<p>Con el router configurado y verificado, el escenario de red queda listo. A partir de aquí, ya puedes añadir las máquinas VirtualBox que <strong><em>previamente debes haber creado y configurado</em></strong> en VirtualBox, pero siempre con la tarjeta de red <strong>No conectada</strong></p>
+<p>Para añadir tus máquinas VirtualBox:</p>
+<ol>
+<li>Pulsa sobre el botón de <em>End Devices</em>, que parece como un monitor y de nuevo sobre el botón <strong>New Template</strong></li>
+<li>Selecciona la 3ª opción <strong>Manually create a new template</strong> y pasarás a una pantalla que contiene la configuración de todas las plantillas de equipos disponibles en <strong>gns3</strong></li>
+<li>Selecciona <strong>VirtualBox VMs</strong> y pulsa el botón <strong>new</strong>, verás que aparece un desplegable con todas las máquinas que tienes en <strong>VirtualBox</strong>, selecciona la máquina adecuada y acepta, verás como aparece tu máquina disponible para usar. También puedes configurar las características de la máquina mediante el botón <strong>Edit</strong></li>
+<li>Finaliza la pantalla de preferencia y ya tendrás disponible la máquina para usarla tantas veces como quieras en tus escenarios gns3.</li>
+</ol>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie">
+        
+          
+          <a href="../02_06_dominio/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Active Directory">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Active Directory
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Sergio Rey Martínez - SMX - SOX - 2025
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.indexes", "navigation.footer", "navigation.instant", "navigation.instant.progress", "toc.follow", "navigation.top", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
