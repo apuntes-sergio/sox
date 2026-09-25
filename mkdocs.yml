@@ -69,19 +69,21 @@ nav:
     - index.md
 
   - UD01 Introducción a los Sistemas Operativos de Servidor:
-    - 01_1_introducción.md
-    - 01_2_arquitectura_cliente_servidor.md
-    - 01_3_funciones_SO.md
-    - 01_4_sistemas_operativos_servidor.md
-    - 01_5_recordatorio_red.md
+    - 01_01_introducción.md
+    - 01_02_arquitectura_cliente_servidor.md
+    - 01_03_funciones_SO.md
+    - 01_04_sistemas_operativos_servidor.md
+    - 01_05_recordatorio_red.md
 
-#   - UD02 Instalación de sistemas operativos de servidor privativos:
-#     - 02_1_instalacion_SO_introduccion.md
-#     - 02_2_instalacion_windows_server.md
-#     - 02_3_config_basica.md
-#     - 02_4_documentar_instalacion.md
-#     - 02_5_administrar_discos.md
-#     - 02_6_dominio.md
+  - UD02 Instalación de sistemas operativos de servidor privativos:
+    - 02_01_instalacion_SO_introduccion.md
+    - 02_02_instalacion_windows_server.md
+    - 02_03_config_basica.md
+    - 02_04_documentar_instalacion.md
+    - 02_05_administrar_discos.md
+    - 02_06_dominio.md
+    - 02_07_practica_gns3_mikrotik.md
+
 
 #   - UD03 Administración de usuarios y grupos en Windows Server:
 #     - 03_01_objetos_dominios.md

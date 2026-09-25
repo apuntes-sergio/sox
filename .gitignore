@@ -1,0 +1,26 @@
+# MkDocs build output
+site/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env/
+
+# Archivos de entorno / secretos
+.env
+
+# Archivos del sistema y metadatos de Windows/Mac
+*:Zone.Identifier*
+.DS_Store
+Thumbs.db
+
+# Configuración local de IDEs / Editores
+.vscode/
+.idea/
