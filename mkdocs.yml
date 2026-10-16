@@ -85,14 +85,14 @@ nav:
     - 02_07_practica_gns3_mikrotik.md
 
 
-#   - UD03 Administración de usuarios y grupos en Windows Server:
-#     - 03_01_objetos_dominios.md
-#     - 03_02_usuarios.md
-#     - 03_03_grupos.md
-#     - 03_04_equipos.md
-#     - 03_05_unidades_organizativas.md
-#     - 03_06_herramientas_administracion.md
-#     - 03_07_perfiles_usuarios.md
+  - UD03 Administración de usuarios y grupos en Windows Server:
+    - 03_01_objetos_dominios.md
+    - 03_02_usuarios.md
+    - 03_03_grupos.md
+    - 03_04_equipos.md
+    - 03_05_unidades_organizativas.md
+    - 03_06_herramientas_administracion.md
+    - 03_07_perfiles_usuarios.md
 
 #   - UD04 Gestión de recursos compartidos en Windows Server:
 #     - 04_01_permisos_derechos.md
