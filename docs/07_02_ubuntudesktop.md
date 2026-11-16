@@ -57,19 +57,17 @@ Este apartado está diseñado para que podáis seguirlo de forma autónoma, pero
 
 **Comparad con Windows**: Cuando aprendáis algo nuevo, preguntaos "¿cómo haría esto en Windows?". Las analogías os ayudarán a entender mejor.
 
-Comenzaremos instalando Ubuntu Desktop siguiendo una guía externa muy completa. Después configuraremos el sistema, instalaremos herramientas esenciales y finalmente lo integraremos con nuestro dominio Windows Server. Al final de este apartado, tendréis una comprensión sólida de cómo funciona Linux desde el punto de vista del usuario final.
+Comenzaremos instalando Ubuntu Desktop en una máquina virtual. Después configuraremos el sistema, instalaremos herramientas esenciales y finalmente lo integraremos con nuestro dominio Windows Server. Al final de este apartado, tendréis una comprensión sólida de cómo funciona Linux desde el punto de vista del usuario final.
 
 ---
 
-## Instalación de Ubuntu Desktop 22.04 LTS
+## Instalación de Ubuntu Desktop 26.04 LTS
 
-!!!warning "Ubuntu Desktop 22.04"
+!!!warning "Ajustes de la máquina virtual"
 
-    Vamos a usar la versión 22.04 para trabajar en clase con Oracle VirtualBox, puesto que la versión 24.04 en ocasiones tiene problemas de estabilidad al ser virtualizado.
+    Los ajustes de VirtualBox de este apartado son los que hemos comprobado con Ubuntu Desktop 26.04 y VirtualBox 7.2. Respetadlos, sobre todo el **controlador gráfico**: con otros valores el equipo se instala y arranca, pero la pantalla de inicio de sesión puede quedarse congelada al reiniciar.
 
-Para la instalación de Ubuntu Desktop vamos a utilizar una guía externa muy completa que explica paso a paso todo el proceso. No tiene sentido duplicar ese contenido aquí cuando ya existe documentación excelente.
-
-**Guía de instalación**: [Instalar Ubuntu 24.04 LTS (Noble Numbat) desde cero](https://somebooks.es/instalar-ubuntu-24-04-lts-noble-numbat-desde-cero/)
+Para la instalación de Ubuntu Desktop seguiremos el asistente del propio instalador. Es un proceso guiado de pocas pantallas, pero hay varios ajustes que debemos fijar para que todo funcione correctamente en nuestro entorno ISCASOX.
 
 ### Aspectos importantes a tener en cuenta durante la instalación
 
@@ -77,18 +75,32 @@ Antes de comenzar la instalación, tened en cuenta estos puntos específicos par
 
 **Configuración de la máquina virtual en VirtualBox**:
 
-- Nombre: `PCXXX_Ubuntu` (donde XXX es vuestro nombre)
-- Memoria RAM: 4096 MB (4 GB) - Desktop necesita más memoria que Server
-- Procesadores: 1 CPUs
-- Disco duro: 25 GB (reservado dinámicamente)
-- Memoria Video: 128MB + aceleración 3D
-- Tarjeta de red: Red interna `red_departamentos` (la misma que usan los PCs de empresa)
+| Parámetro | Valor |
+|-----------|-------|
+| Nombre | `PCXXX_Ubuntu` (donde XXX es vuestro nombre) |
+| Tipo y versión | Linux / Ubuntu (64-bit) |
+| Memoria RAM | 4096 MB (4 GB) |
+| Procesadores | 2 CPUs |
+| Disco duro | 25 GB (reservado dinámicamente) |
+| Memoria de vídeo | 128 MB |
+| Controlador gráfico | **VBoxSVGA** |
+| Aceleración 3D | Desactivada |
+| Tarjeta de red | Red interna `red_departamentos` (la misma que usan los PCs de empresa) |
 
-!!!tip "Memoria a asignar"
+!!!tip "Controlador gráfico: VBoxSVGA"
 
-    La recomencacion inicial es usar 4 GB para Ubuntu Desktop, aunque funciona pefectamente con 2 GB. Una 
+    Al crear la máquina, VirtualBox propone por defecto el controlador gráfico **VMSVGA** con solo 16 MB de memoria de vídeo. En nuestras pruebas, con VMSVGA (incluso subiendo la memoria a 128 MB) la pantalla de inicio de sesión de Ubuntu 26.04 se quedaba congelada después de reiniciar, mientras que con **VBoxSVGA** funcionaba con normalidad.
 
-    Una buena táctica sería asignar 4 GB durante la instalación para que sea más rápida y después bajar a 2 GB puesto que no vamos a realizar cargas pesadas sobre el equipo, tal solo configuraciones desde el terminal.
+    Se cambia en **Configuración → Pantalla → Pantalla → Controlador gráfico**. Si no veis ese desplegable, activad el modo **Experto** en la parte superior de la ventana de configuración.
+
+    <figure markdown="span" align="center">
+      ![](./imgs/ubuntu/desktop/virtualbox-pantalla.png){ width="80%" }
+      <figcaption>Configuración gráfica de la máquina virtual</figcaption>
+    </figure>
+
+!!!tip "Memoria RAM"
+
+    Usad 4 GB durante toda la práctica y no los reduzcáis. Con menos memoria el instalador de Ubuntu puede bloquearse en VirtualBox, y el escritorio se vuelve muy lento.
 
 **Durante la instalación**:
 
@@ -96,11 +108,20 @@ Cuando os pregunte por el tipo de instalación, elegid **Instalación normal** (
 
 Marcad la opción **Descargar actualizaciones mientras se instala Ubuntu** para tener el sistema actualizado desde el principio.
 
-Para el nombre del equipo, usad `pcXXX-ubuntu` (en minúsculas, con vuestro nombre).
+Para el nombre del equipo, usad `pcXXX-ubuntu` (en minúsculas, con vuestro nombre). **Máximo 15 caracteres**: este nombre será después el de la cuenta de equipo en Active Directory, que no admite más.
 
 Para el nombre de usuario, usad vuestro nombre en minúsculas (por ejemplo, `sergio`). Este será vuestro usuario administrador local.
 
 Elegid una contraseña sencilla de recordar (estamos en un entorno de laboratorio).
+
+!!!warning "No usar la opción de Active Directory del instalador"
+
+    En la pantalla donde se pide el nombre y el usuario, el instalador ofrece una casilla para unir el equipo a un dominio de Active Directory. **No la marquéis**. Haremos la unión manualmente más adelante, para entender cada paso, y en algunas versiones del instalador esta opción se ha llegado a quedar colgada.
+
+    <figure markdown="span" align="center">
+      ![](./imgs/ubuntu/desktop/instalador-usuario.png){ width="80%" }
+      <figcaption>Datos del equipo y del usuario. La casilla de Active Directory se deja sin marcar</figcaption>
+    </figure>
 
 **Configuración de red inicial**:
 
@@ -139,10 +160,11 @@ Abrid **Configuración** (icono de engranaje en el panel superior o en el Dock) 
 Abrid una **Terminal** (podéis buscarla escribiendo "terminal" en Actividades o pulsar `Ctrl+Alt+T`). Ejecutad:
 
 ```bash
-uname -a
+lsb_release -d
+uname -r
 ```
 
-Debería mostrar información del sistema confirmando que estáis usando Ubuntu 24.04.
+La primera línea debe indicar Ubuntu 26.04 LTS y la segunda, la versión del kernel en uso.
 
 Si todo esto funciona, estáis listos para continuar con la configuración post-instalación.
 
@@ -150,7 +172,7 @@ Si todo esto funciona, estáis listos para continuar con la configuración post-
 
 ## Configuración post-instalación
 
-Una vez instalado Ubuntu Desktop, hay varias configuraciones y ajustes que debemos realizar para tener un sistema completamente funcional y optimizado para trabajar en VirtualBox dentro de nuestra red ISCASOX.
+Una vez instalado Ubuntu Desktop, hay varias configuraciones y ajustes que debemos realizar para tener un sistema completamente funcional y optimizado para trabajar en VirtualBox dentro de nuestra red ISCASOX. **El orden de los pasos importa**: seguidlo tal cual.
 
 ### Actualización completa del sistema
 
@@ -170,11 +192,24 @@ sudo apt upgrade -y
 
 Este comando instala todas las actualizaciones disponibles. El parámetro `-y` responde automáticamente "sí" a las confirmaciones. La primera vez puede tardar varios minutos y descargar cientos de megabytes de actualizaciones.
 
-Cuando termine, es recomendable reiniciar el sistema para que todos los cambios tengan efecto:
+Cuando termine, **reiniciad el sistema**. No es opcional: si se ha instalado un kernel nuevo, el equipo sigue usando el antiguo hasta que 
+reinicia.
 
 ```bash
-sudo reboot
+reboot
 ```
+
+Una vez reiniciado, comprobamos la versión del kernel que se está usando:
+
+```bash
+uname -r
+```
+
+!!!warning "Actualizad siempre antes de instalar las Guest Additions"
+
+    Las Guest Additions incluyen módulos que se compilan para el kernel que está en ejecución. Si instalamos las Guest Additions y después una actualización cambia el kernel, los módulos tienen que recompilarse en el siguiente arranque, y eso solo es posible si las herramientas de compilación están instaladas.
+
+    En nuestras pruebas, el servicio de las Guest Additions (`vboxadd`) falló al arrancar precisamente por eso: no podía recompilar sus módulos porque faltaban las herramientas de compilación.
 
 ### Instalación de VirtualBox Guest Additions
 
@@ -189,8 +224,6 @@ Las Guest Additions son un conjunto de controladores y aplicaciones que mejoran 
 **Carpetas compartidas**: Permite acceder a carpetas del sistema host desde Ubuntu, facilitando el intercambio de archivos.
 
 **Integración del ratón**: El ratón entra y sale de la ventana de la máquina virtual sin necesidad de pulsar ninguna tecla especial.
-
-**Mejor rendimiento gráfico**: Aceleración 3D y mejor rendimiento general de la interfaz gráfica.
 
 #### Proceso de instalación
 
@@ -231,12 +264,93 @@ La instalación mostrará varias líneas indicando qué componentes se están co
 Una vez terminada la instalación, reiniciamos el sistema:
 
 ```bash
-sudo reboot
+reboot
 ```
 
-**Verificación**: Después del reinicio, probad a redimensionar la ventana de VirtualBox. La resolución de Ubuntu debería ajustarse automáticamente. También probad a copiar texto desde estos apuntes y pegarlo en la terminal de Ubuntu (`Ctrl+Shift+V` en terminal).
+#### Verificación
+
+Después del reinicio, comprobamos que el servicio de las Guest Additions ha arrancado correctamente:
+
+```bash
+systemctl status vboxadd --no-pager | head -5
+```
+
+!!!success "Resultado esperado"
+
+    ```
+    ● vboxadd.service
+         Loaded: loaded (/opt/VBoxGuestAdditions-7.2.x/init/vboxadd; enabled; preset: enabled)
+         Active: active (exited) since ...
+    ```
+
+    El estado debe ser `active (exited)`. Es normal que diga "exited": el servicio carga los módulos y termina.
+
+    <figure markdown="span" align="center">
+      ![](./imgs/ubuntu/desktop/vboxadd-status.png){ width="80%" }
+      <figcaption>Comprobación del servicio vboxadd</figcaption>
+    </figure>
+
+!!!failure "Si aparece `failed`"
+
+    No sigáis con el resto de apartados. Probad, por este orden:
+
+    1. Instalar (o reinstalar) las herramientas de compilación:
+
+        ```bash
+        sudo apt install -y build-essential dkms linux-headers-$(uname -r)
+        ```
+
+    2. Recompilar los módulos de las Guest Additions:
+
+        ```bash
+        sudo /sbin/rcvboxadd setup
+        ```
+
+    3. Reiniciar con `reboot` y volver a comprobar `systemctl status vboxadd`.
+
+    4. Si sigue fallando, mirad el final del registro y avisad al profesor:
+
+        ```bash
+        sudo tail -30 /var/log/vboxadd-setup.log
+        ```
+
+También comprobamos el resto de mejoras: probad a redimensionar la ventana de VirtualBox, la resolución de Ubuntu debería ajustarse automáticamente. Probad también a copiar texto desde estos apuntes y pegarlo en la terminal de Ubuntu (`Ctrl+Shift+V` en terminal).
 
 Si el portapapeles compartido no funciona, id a **Dispositivos → Portapapeles compartido → Bidireccional** en el menú de VirtualBox.
+
+!!!tip "Tras actualizar el kernel, comprobad vboxadd"
+
+    Cada vez que el sistema instale un kernel nuevo y reiniciéis, ejecutad de nuevo `systemctl status vboxadd --no-pager | head -5`. Si las herramientas de compilación están instaladas, las Guest Additions se recompilan solas, pero conviene comprobarlo.
+
+### Comprobar el inicio de sesión gráfico
+
+Antes de dar por buena la máquina base, reiniciadla una vez más y comprobad que la pantalla de inicio de sesión funciona con normalidad: debe aparecer vuestro usuario, pedir la contraseña y dejaros entrar al escritorio.
+
+```bash
+reboot
+```
+
+Si la pantalla se queda congelada o no aparece la lista de usuarios, revisad el controlador gráfico de la máquina virtual (VBoxSVGA, tal y como vimos al principio de este apartado) antes de continuar. Si no hacéis esta comprobación ahora y el problema aparece más adelante, no sabréis si lo ha causado la integración con el dominio o la propia máquina virtual.
+
+### Guardar la máquina base
+
+Con el sistema actualizado, las Guest Additions funcionando y el inicio de sesión comprobado, tenemos una máquina base fiable. Es el momento de: 
+
+- Crear una instantánea:
+
+    1. En el menú de VirtualBox, **Máquina → Tomar instantánea**
+    2. Nombre: `01-base-actualizada`
+    3. Descripción (opcional): `Ubuntu 26.04 actualizado, Guest Additions OK, login gráfico OK`
+
+    <!-- CAPTURA: ventana de VirtualBox con la instantánea 01-base-actualizada creada (panel de Instantáneas) -->
+    <figure markdown="span" align="center">
+      ![](./imgs/ubuntu/desktop/instantanea-base.png){ width="80%" }
+      <figcaption>Instantánea de la máquina base</figcaption>
+    </figure>
+
+- Dejar la máquina como esta y a partir de ella hacer un **clonado** para seguir trabajando
+
+A partir de aquí, si algo se rompe en los siguientes apartados, podréis volver a este punto sin repetir la instalación.
 
 ---
 
@@ -288,12 +402,12 @@ Podemos finalizar procesos que no respondan haciendo clic derecho → **Matar pr
 
 ### Editor de texto
 
-Ubuntu incluye **gedit**, un editor de texto simple pero potente. Es similar al Bloc de notas de Windows pero con más funciones (resaltado de sintaxis, numeración de líneas, etc.).
+Ubuntu incluye **Editor de texto** (GNOME Text Editor), un editor de texto simple pero potente. Es similar al Bloc de notas de Windows pero con más funciones (resaltado de sintaxis, numeración de líneas, etc.).
 
 Para abrirlo buscamos "Editor de texto" o ejecutamos:
 
 ```bash
-gedit &
+gnome-text-editor &
 ```
 
 También existe **nano** que ya conocemos de Ubuntu Server, disponible desde terminal. Es más básico pero útil cuando trabajamos sin interfaz gráfica.
@@ -568,7 +682,7 @@ conky &
 
 **Ejecutar Conky al inicio del sistema**:
 
-Para que Plank se inicie automáticamente cada vez que iniciamos sesión, lo añadimos a las aplicaciones de inicio:
+Para que Conky se inicie automáticamente cada vez que iniciamos sesión, lo añadimos a las aplicaciones de inicio:
 
 1. Abrimos **Configuración**
 2. Vamos a **Aplicaciones**
@@ -579,7 +693,7 @@ Para que Plank se inicie automáticamente cada vez que iniciamos sesión, lo añ
 7. Opcionalmente añadimos una descripción
 8. Guardamos
 
-Ahora Plank se iniciará automáticamente en cada inicio de sesión.
+Ahora Conky se iniciará automáticamente en cada inicio de sesión.
 
 Si queremos configurar cualquier programa para que se ejecute al inicio, seguimos el mismo proceso, solo necesitamos conocer el comando que lo ejecuta.
 

@@ -48,9 +48,9 @@ Para conseguir esta transparencia usamos **protocolos estándar** que ambos sist
 
 Linux no es un sistema operativo completo, es un **kernel** (núcleo del sistema). Las **distribuciones** toman ese kernel y le añaden todo lo necesario: herramientas del sistema, gestores de paquetes, servicios, interfaces gráficas, etc.
 
-Nosotros usaremos **Ubuntu 24.04 LTS** en sus dos variantes: Desktop para estaciones de trabajo y Server para servicios de red. Ambas comparten la misma base, lo que facilita la transición entre una y otra.
+Nosotros usaremos **Ubuntu 26.04 LTS** en sus dos variantes: Desktop para estaciones de trabajo y Server para servicios de red. Ambas comparten la misma base, lo que facilita la transición entre una y otra.
 
-Ubuntu es completamente gratuita y tiene soporte oficial hasta 2029. Cuenta con una comunidad enorme, lo que facilita encontrar ayuda y documentación. Es la distribución más usada tanto en escritorios Linux como en entornos cloud (AWS, Azure, Google Cloud), por lo que lo que aprendáis aquí os servirá en entornos profesionales reales. Además, es especialmente adecuada para aprender por su facilidad de uso y abundante documentación.
+Ubuntu es completamente gratuita y tiene soporte oficial hasta 2031. Cuenta con una comunidad enorme, lo que facilita encontrar ayuda y documentación. Es la distribución más usada tanto en escritorios Linux como en entornos cloud (AWS, Azure, Google Cloud), por lo que lo que aprendáis aquí os servirá en entornos profesionales reales. Además, es especialmente adecuada para aprender por su facilidad de uso y abundante documentación.
 
 ### Diferencias clave con Windows
 
@@ -98,7 +98,7 @@ Comenzaremos con Ubuntu Desktop porque es más familiar para quienes venís de W
 
 **Configuración de red**: Veremos cómo funciona NetworkManager y Netplan, configurando la red tanto desde interfaz gráfica como mediante archivos de configuración.
 
-**Integración con Active Directory**: Uniremos el equipo Ubuntu Desktop al dominio Windows, permitiendo que los usuarios corporativos inicien sesión con sus credenciales del dominio.
+**Integración con Active Directory**: Uniremos el equipo Ubuntu Desktop al dominio Windows, permitiendo que los usuarios corporativos inicien sesión con sus credenciales del dominio. Lo haremos paso a paso con `realmd` y SSSD, comprobando cada fase antes de pasar a la siguiente.
 
 Este bloque servirá como introducción y repaso a sistemas Linux y tiene como objetivo dar una base sólida de Linux desde el punto de vista del usuario final, teniendo en cuenta que la finalidad es usar este sistema dentro de dominios Windows y antes de pasar a la administración de servidores.
 
@@ -179,6 +179,8 @@ Cada unos de los bloques indicados se deben realizar en tiempo y forma adecuado,
     Haced **snapshots** (instantáneas) de las máquinas virtuales antes de realizar cambios importantes. Si algo falla, simplemente restauráis la instantánea y volvéis a intentarlo sin perder todo el trabajo anterior.
 
     No tengáis miedo a "romper" el sistema. Estáis trabajando en máquinas virtuales, así que experimentad tranquilamente. Los errores son parte del aprendizaje y en un entorno virtualizado no hay riesgo real.
+
+    **En las prácticas de integración con Active Directory**, tras cada fase hay una comprobación con el resultado que debéis obtener. Si no coincide, **parad**: no avancéis a la fase siguiente ni probéis cosas al azar. Volved a la instantánea anterior o avisad al profesor.
 
     **No copiéis comandos sin leer qué hacen**. Es fundamental que entendáis cada comando antes de ejecutarlo. Los errores en Linux suelen ser muy informativos si os tomáis el tiempo de leerlos con atención.
 

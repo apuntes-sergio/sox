@@ -3,7 +3,7 @@ title: Ubuntu Desktop. Configuración de red con Netplan y NetworkManager
 description: Gestión de sistemas Linux. Integración de Ubuntu Desktop y Server en entornos Windows
 ---
 
-En este apartado vamos a ver cómo configurar la red de nuestro equipo Ubuntu Desktop. Para que todo fucione correctamente:
+En este apartado vamos a ver cómo configurar la red de nuestro equipo Ubuntu Desktop. Para que todo funcione correctamente:
 
 - El servidor Windows Server debe estar iniciado
 - La red en virtual box debes configurarla para comunicarte con el servidor
@@ -63,6 +63,7 @@ Para acceder a la configuración de red:
 3. Se abre la aplicación de Configuración del sistema en la sección de Red
 
 Alternativamente, podemos:
+
 - Buscar "Red" o "Network" en Actividades
 - Abrir Configuración y buscar la sección Red
 
@@ -82,6 +83,7 @@ En la pestaña **IPv4**, veremos:
 - **Rutas automáticas**: Activado
 
 Con esta configuración, el equipo obtiene automáticamente:
+
 - Dirección IP
 - Máscara de red
 - Puerta de enlace (gateway)
@@ -99,10 +101,21 @@ Configuración necesaria para nuestro entorno ISCASOX:
 
 - **IP fija**: 192.168.100.50 (elegid una libre en vuestra red)
 - **Máscara**: 255.255.255.0 (equivalente a /24)
-- **Puerta de enlace**: 192.168.100.1 (el Windows Server)
-- **DNS primario**: 192.168.100.1 (el Windows Server - CRÍTICO)
-- **DNS secundario**: 1.1.1.1 (Cloudflare, como backup)
+- **Puerta de enlace**: 192.168.100.1 (el Windows Server, que da salida a Internet)
+- **DNS**: 192.168.100.1 (el Windows Server - CRÍTICO). **Solo este DNS, sin DNS secundario externo**
 - **Dominios de búsqueda**: DOMXXX.local
+
+!!!warning "Un solo DNS en equipos del dominio"
+
+    En un equipo que se va a unir a Active Directory, el único servidor DNS debe ser el controlador de dominio. Si añadimos un segundo DNS externo (por ejemplo `1.1.1.1`), el sistema puede acabar consultándolo, y ese DNS **no conoce** los registros del dominio: las búsquedas del controlador de dominio fallarían de forma intermitente, y en unos equipos funcionaría y en otros no.
+
+    Para que el equipo siga teniendo salida a Internet, configuramos un **reenviador** en el DNS del Windows Server: Administrador de DNS → clic derecho sobre el servidor → Propiedades → pestaña **Reenviadores** → añadimos `1.1.1.1`. Así el servidor resuelve los nombres de Internet en nombre de los clientes.
+
+<!-- CAPTURA: Administrador de DNS del Windows Server, propiedades del servidor, pestaña Reenviadores con 1.1.1.1 -->
+<figure markdown="span" align="center">
+  ![](./imgs/ubuntu/desktop/dns-reenviadores.png){ width="80%" }
+  <figcaption>Reenviador DNS configurado en el Windows Server</figcaption>
+</figure>
 
 <figure markdown="span" align="center">
   ![](./imgs/ubuntu/desktop/NetworkManager.png){ width="80%" }
@@ -122,7 +135,7 @@ Deberíamos ver nuestra interfaz (normalmente `enp0s3` o `ens33`) con la IP que 
 
 ```
 2: enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP>
-    inet 192.168.100.50/24 brd 192.168.100.255 scope global dynamic noprefixroute enp0s3
+    inet 192.168.100.50/24 brd 192.168.100.255 scope global noprefixroute enp0s3
 ```
 
 Verificamos el gateway:
@@ -149,7 +162,6 @@ En la sección de nuestra interfaz (`enp0s3` o similar) deberíamos ver:
 Link 2 (enp0s3)
     Current DNS Server: 192.168.100.1
            DNS Servers: 192.168.100.1
-                        1.1.1.1
             DNS Domain: DOMXXX.local
 ```
 
@@ -178,6 +190,8 @@ ping -c 3 google.com
 ```
 
 Si todos estos comandos funcionan, la red está perfectamente configurada.
+
+Si falla solo el ping a `google.com` y los anteriores funcionan, el problema está en el servidor (falta el reenviador DNS, o el enrutamiento/NAT hacia Internet), no en el cliente Ubuntu.
 
 ---
 
@@ -315,11 +329,11 @@ sudo nano /etc/netplan/01-static-config.yaml
 Y para probar o aplicar la configuración:
 
 ```bash
-# Verificar sintaxis
+# Probar la configuración (revierte sola si no confirmamos)
 sudo netplan try
 
 # Aplicar configuración
-sudo netplan aply
+sudo netplan apply
 ```
 
 El comando `netplan try` es MUY IMPORTANTE: aplica la configuración temporalmente y revierte automáticamente si no confirmamos en 120 segundos. Esto evita que nos quedemos sin acceso de red por un error de configuración.
@@ -384,17 +398,17 @@ Si la red funciona, pulsamos Enter para aceptar. Si algo falla o no respondemos,
         - `nameservers:`: configuración de DNS
           - `addresses:`: lista de servidores DNS
             - `192.168.100.1`: DNS primario (nuestro Windows Server)
-            - `1.1.1.1`: DNS secundario (Cloudflare)
+            - `1.1.1.1`: DNS secundario (Cloudflare). Solo para equipos que **no** están en un dominio Active Directory (ver ejemplo 3)
 
 
 !!!example "Ejemplo 3: Configuración para equipo en dominio Active Directory"
 
-    Esta es la configuración óptima para un equipo Ubuntu Desktop que se unirá a un dominio Windows:
+    Esta es la configuración que usaremos en nuestro equipo Ubuntu Desktop antes de unirlo al dominio Windows. Mantenemos `renderer: NetworkManager`, que es el que corresponde a un equipo Desktop: Netplan se limita a traducir este fichero a un perfil de NetworkManager.
 
     ```yaml
     network:
       version: 2
-      renderer: networkd
+      renderer: NetworkManager
       ethernets:
         enp0s3:
           dhcp4: false
@@ -406,37 +420,30 @@ Si la red funciona, pulsamos Enter para aceptar. Si algo falla o no respondemos,
               via: 192.168.100.1
           nameservers:
             search:
-              - DOMSERGIO.local
+              - DOMXXX.local
             addresses:
               - 192.168.100.1
-              - 1.1.1.1
     ```
 
     !!!note "Diferencias clave respecto al ejemplo anterior"
 
-        - `search:`: dominios de búsqueda DNS
-          - `- DOMSERGIO.local`: nuestro dominio Active Directory
+        - `renderer: NetworkManager`: seguimos delegando la ejecución en NetworkManager, como en cualquier Ubuntu Desktop. En el ejemplo anterior usábamos `networkd`, que es lo propio de un servidor.
+        - `search:` indica los dominios de búsqueda DNS (`DOMXXX.local`, nuestro dominio Active Directory).
+        - **Un único servidor DNS**: el controlador de dominio (`192.168.100.1`).
 
-        Esta línea `search` es CRÍTICA para Active Directory. Permite:
+        La línea `search` es CRÍTICA para Active Directory. Permite:
 
-        1. Resolver nombres cortos: escribir `ping servidor` en lugar de `ping servidor.domsergio.local`
+        1. Resolver nombres cortos: escribir `ping servidor` en lugar de `ping servidor.domxxx.local`
         2. Facilitar la unión al dominio
         3. Permitir que las aplicaciones encuentren servicios del dominio
 
-        **El orden de los DNS es importante**:
+        **Por qué solo el DNS del controlador de dominio**:
 
-        ```yaml
-        nameservers:
-          addresses:
-            - 192.168.100.1    # DNS PRIMARIO: el controlador de dominio
-            - 1.1.1.1          # DNS SECUNDARIO: backup para Internet
-        ```
+        - Active Directory requiere que los clientes usen su propio DNS.
+        - El DNS de AD contiene los registros SRV necesarios para localizar los servicios del dominio (Kerberos, LDAP...). Un DNS externo como `1.1.1.1` no los conoce.
+        - Con varios DNS en la misma interfaz, el sistema puede acabar consultando el externo, y las consultas del dominio fallarían de forma intermitente.
 
-        Siempre ponemos el controlador de dominio primero porque:
-
-        - Active Directory requiere que los clientes usen su DNS
-        - El DNS de AD contiene registros SRV necesarios para localizar servicios del dominio
-        - Si pusiera 1.1.1.1 primero, muchas consultas de dominio fallarían
+        Para que el equipo siga teniendo salida a Internet no hace falta un segundo DNS en el cliente: se configura un **reenviador** en el DNS del Windows Server (Administrador de DNS → clic derecho sobre el servidor → Propiedades → pestaña **Reenviadores** → añadir `1.1.1.1`).
 
 
 **Verificación específica para dominio**:
@@ -446,13 +453,13 @@ Si la red funciona, pulsamos Enter para aceptar. Si algo falla o no respondemos,
 resolvectl status
 
 # Probar resolución del dominio
-nslookup DOMSERGIO.local
+nslookup DOMXXX.local
 
 ```
 
 <figure markdown="span" align="center">
   ![](./imgs/ubuntu/desktop/nslookup.png){ width="80%" }
-  <figcaption>Verificación de la res</figcaption>
+  <figcaption>Verificación de la resolución del dominio</figcaption>
 </figure>
 
 

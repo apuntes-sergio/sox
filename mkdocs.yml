@@ -121,12 +121,12 @@ nav:
 #     - 06_12_actualizacion_despliegue.md
 # #    - 06_13_integracion_ubuntu_en_dominio.md
 
-#   - UD07 Instalación de sistemas operativos libres:
-#     - 07_01_introduccion.md
-#     - 07_02_ubuntudesktop.md
-#     - 07_03_ubuntudesktop_red.md
-#     - 07_04_ubuntudesktop_varios.md
-#     - 07_05_ubuntudesktop_ad.md
+  # - UD07 Instalación de sistemas operativos libres:
+  #   - 07_01_introduccion.md
+  #   - 07_02_ubuntudesktop.md
+  #   - 07_03_ubuntudesktop_red.md
+  #   - 07_04_ubuntudesktop_varios.md
+  #   - 07_05_ubuntudesktop_ad.md
 
 #   - UD08 Linux Server e integración básica con Windows:
 #     - 08_01_instalacion_ubuntu_server.md
